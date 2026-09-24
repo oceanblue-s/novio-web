@@ -43,7 +43,25 @@ import {
   Download,
   Copy,
   Share2,
+  Cloud,
+  CloudUpload,
+  RefreshCw,
+  Database,
+  ExternalLink,
 } from 'lucide-react';
+import {
+  STORAGE_SUPABASE_CONFIG_KEY,
+  getActiveSupabaseConfig,
+  isSupabaseConfigured,
+  SupabaseConfig,
+} from '@/lib/supabase';
+import {
+  fetchCloudSiteData,
+  saveCloudSection,
+  saveAllCloudSiteData,
+  testSupabaseConnection,
+  SUPABASE_SQL_SETUP,
+} from '@/lib/supabaseService';
 
 const ADMIN_PIN = 'novio2026';
 const STORAGE_PREFIX = 'novio_admin_';
@@ -114,6 +132,13 @@ interface SiteDataContextType {
   isSyncModalOpen: boolean;
   openSyncModal: () => void;
   closeSyncModal: () => void;
+
+  // Supabase Cloud Sync
+  isCloudConfigured: boolean;
+  cloudSyncStatus: 'idle' | 'syncing' | 'saved' | 'error' | 'not_configured';
+  supabaseConfig: SupabaseConfig;
+  saveSupabaseCredentials: (url: string, anonKey: string) => Promise<{ success: boolean; message: string; tableReady: boolean }>;
+  syncAllToCloud: () => Promise<boolean>;
 }
 
 const SiteDataContext = createContext<SiteDataContextType | undefined>(undefined);
@@ -164,6 +189,86 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [syncCodeInput, setSyncCodeInput] = useState('');
   const [syncCopied, setSyncCopied] = useState(false);
+
+  // Supabase Cloud State
+  const [supabaseConfig, setSupabaseConfig] = useState<SupabaseConfig>(getActiveSupabaseConfig());
+  const [isCloudConfigured, setIsCloudConfigured] = useState<boolean>(isSupabaseConfigured());
+  const [cloudSyncStatus, setCloudSyncStatus] = useState<'idle' | 'syncing' | 'saved' | 'error' | 'not_configured'>(
+    isSupabaseConfigured() ? 'idle' : 'not_configured'
+  );
+  const [showCloudSetup, setShowCloudSetup] = useState<boolean>(false);
+  const [inputSupabaseUrl, setInputSupabaseUrl] = useState<string>('');
+  const [inputSupabaseAnonKey, setInputSupabaseAnonKey] = useState<string>('');
+  const [cloudTestMessage, setCloudTestMessage] = useState<{ text: string; error?: boolean } | null>(null);
+  const [isTestingCloud, setIsTestingCloud] = useState<boolean>(false);
+
+  const saveSupabaseCredentials = async (
+    url: string,
+    anonKey: string
+  ): Promise<{ success: boolean; message: string; tableReady: boolean }> => {
+    setIsTestingCloud(true);
+    setCloudTestMessage(null);
+    try {
+      const trimmedUrl = url.trim();
+      const trimmedKey = anonKey.trim();
+      const testResult = await testSupabaseConnection(trimmedUrl, trimmedKey);
+
+      if (testResult.success) {
+        if (typeof window !== 'undefined') {
+          safeSetLocalStorage(
+            STORAGE_SUPABASE_CONFIG_KEY,
+            JSON.stringify({ url: trimmedUrl, anonKey: trimmedKey })
+          );
+        }
+        setSupabaseConfig({ url: trimmedUrl, anonKey: trimmedKey });
+        setIsCloudConfigured(true);
+        setCloudSyncStatus('syncing');
+
+        // Immediately push existing data to cloud
+        await saveAllCloudSiteData({
+          products,
+          blog: blogPosts,
+          portfolio: portfolioProjects,
+          services: servicePackages,
+          team: teamMembers,
+          customizer: customizerSettings,
+        });
+
+        setCloudSyncStatus('saved');
+        setCloudTestMessage({ text: testResult.message, error: false });
+        setTimeout(() => setCloudSyncStatus('idle'), 3000);
+      } else {
+        setCloudTestMessage({ text: testResult.message, error: true });
+        setCloudSyncStatus('error');
+      }
+      setIsTestingCloud(false);
+      return testResult;
+    } catch (err: any) {
+      setIsTestingCloud(false);
+      setCloudTestMessage({ text: err?.message || 'Gagal menguji koneksi.', error: true });
+      return { success: false, message: err?.message || 'Error', tableReady: false };
+    }
+  };
+
+  const syncAllToCloud = async (): Promise<boolean> => {
+    setCloudSyncStatus('syncing');
+    try {
+      const ok = await saveAllCloudSiteData({
+        products,
+        blog: blogPosts,
+        portfolio: portfolioProjects,
+        services: servicePackages,
+        team: teamMembers,
+        customizer: customizerSettings,
+      });
+      setCloudSyncStatus(ok ? 'saved' : 'error');
+      if (ok) setTimeout(() => setCloudSyncStatus('idle'), 3000);
+      return ok;
+    } catch {
+      setCloudSyncStatus('error');
+      return false;
+    }
+  };
 
   const importSyncData = (jsonStr: string): boolean => {
     try {
@@ -282,6 +387,56 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
         const cust = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
         if (cust) setCustomizerSettings((prev) => safeMergeSettings(prev, JSON.parse(cust)));
 
+        // Check and fetch from Supabase Cloud on mount (background cloud sync)
+        const activeCfg = getActiveSupabaseConfig();
+        setSupabaseConfig(activeCfg);
+        setInputSupabaseUrl(activeCfg.url);
+        setInputSupabaseAnonKey(activeCfg.anonKey);
+        const configured = isSupabaseConfigured();
+        setIsCloudConfigured(configured);
+
+        if (configured) {
+          setCloudSyncStatus('syncing');
+          fetchCloudSiteData()
+            .then((cloudData) => {
+              if (cloudData) {
+                if (cloudData.products && Array.isArray(cloudData.products) && cloudData.products.length > 0) {
+                  setProducts(cloudData.products);
+                  safeSetLocalStorage(`${STORAGE_PREFIX}products`, JSON.stringify(cloudData.products));
+                }
+                if (cloudData.blog && Array.isArray(cloudData.blog) && cloudData.blog.length > 0) {
+                  setBlogPosts(cloudData.blog);
+                  safeSetLocalStorage(`${STORAGE_PREFIX}blog`, JSON.stringify(cloudData.blog));
+                }
+                if (cloudData.portfolio && Array.isArray(cloudData.portfolio) && cloudData.portfolio.length > 0) {
+                  setPortfolioProjects(cloudData.portfolio);
+                  safeSetLocalStorage(`${STORAGE_PREFIX}portfolio`, JSON.stringify(cloudData.portfolio));
+                }
+                if (cloudData.services && Array.isArray(cloudData.services) && cloudData.services.length > 0) {
+                  setServicePackages(cloudData.services);
+                  safeSetLocalStorage(`${STORAGE_PREFIX}services`, JSON.stringify(cloudData.services));
+                }
+                if (cloudData.team && Array.isArray(cloudData.team) && cloudData.team.length > 0) {
+                  setTeamMembers(cloudData.team);
+                  safeSetLocalStorage(`${STORAGE_PREFIX}team`, JSON.stringify(cloudData.team));
+                }
+                if (cloudData.customizer) {
+                  setCustomizerSettings((prev) => safeMergeSettings(prev, cloudData.customizer));
+                  safeSetLocalStorage(STORAGE_CUSTOMIZER_KEY, JSON.stringify(cloudData.customizer));
+                }
+                setCloudSyncStatus('saved');
+                setTimeout(() => setCloudSyncStatus('idle'), 2500);
+              } else {
+                setCloudSyncStatus('idle');
+              }
+            })
+            .catch(() => {
+              setCloudSyncStatus('idle');
+            });
+        } else {
+          setCloudSyncStatus('not_configured');
+        }
+
         // Check for syncData in URL query or hash
         let syncParam = urlParams.get('syncData') || urlParams.get('sync');
         if (!syncParam && window.location.hash) {
@@ -372,6 +527,15 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const persistProducts = (updated: Product[]) => {
     setProducts(updated);
     safeSetLocalStorage(`${STORAGE_PREFIX}products`, JSON.stringify(updated));
+    if (isSupabaseConfigured()) {
+      setCloudSyncStatus('syncing');
+      saveCloudSection('products', updated)
+        .then((ok) => {
+          setCloudSyncStatus(ok ? 'saved' : 'error');
+          if (ok) setTimeout(() => setCloudSyncStatus('idle'), 3000);
+        })
+        .catch(() => setCloudSyncStatus('error'));
+    }
   };
 
   const saveProduct = (product: Product) => {
@@ -401,6 +565,15 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const persistBlog = (updated: BlogPost[]) => {
     setBlogPosts(updated);
     safeSetLocalStorage(`${STORAGE_PREFIX}blog`, JSON.stringify(updated));
+    if (isSupabaseConfigured()) {
+      setCloudSyncStatus('syncing');
+      saveCloudSection('blog', updated)
+        .then((ok) => {
+          setCloudSyncStatus(ok ? 'saved' : 'error');
+          if (ok) setTimeout(() => setCloudSyncStatus('idle'), 3000);
+        })
+        .catch(() => setCloudSyncStatus('error'));
+    }
   };
 
   const saveBlogPost = (post: BlogPost) => {
@@ -426,6 +599,15 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const persistPortfolio = (updated: PortfolioProject[]) => {
     setPortfolioProjects(updated);
     safeSetLocalStorage(`${STORAGE_PREFIX}portfolio`, JSON.stringify(updated));
+    if (isSupabaseConfigured()) {
+      setCloudSyncStatus('syncing');
+      saveCloudSection('portfolio', updated)
+        .then((ok) => {
+          setCloudSyncStatus(ok ? 'saved' : 'error');
+          if (ok) setTimeout(() => setCloudSyncStatus('idle'), 3000);
+        })
+        .catch(() => setCloudSyncStatus('error'));
+    }
   };
 
   const savePortfolioProject = (project: PortfolioProject) => {
@@ -452,6 +634,15 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const persistServices = (updated: ServicePackage[]) => {
     setServicePackages(updated);
     safeSetLocalStorage(`${STORAGE_PREFIX}services`, JSON.stringify(updated));
+    if (isSupabaseConfigured()) {
+      setCloudSyncStatus('syncing');
+      saveCloudSection('services', updated)
+        .then((ok) => {
+          setCloudSyncStatus(ok ? 'saved' : 'error');
+          if (ok) setTimeout(() => setCloudSyncStatus('idle'), 3000);
+        })
+        .catch(() => setCloudSyncStatus('error'));
+    }
   };
 
   const saveServicePackage = (service: ServicePackage) => {
@@ -476,6 +667,15 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const persistTeam = (updated: TeamMember[]) => {
     setTeamMembers(updated);
     safeSetLocalStorage(`${STORAGE_PREFIX}team`, JSON.stringify(updated));
+    if (isSupabaseConfigured()) {
+      setCloudSyncStatus('syncing');
+      saveCloudSection('team', updated)
+        .then((ok) => {
+          setCloudSyncStatus(ok ? 'saved' : 'error');
+          if (ok) setTimeout(() => setCloudSyncStatus('idle'), 3000);
+        })
+        .catch(() => setCloudSyncStatus('error'));
+    }
   };
 
   const saveTeamMember = (member: TeamMember) => {
@@ -500,6 +700,15 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
     setCustomizerSettings((prev) => {
       const merged = safeMergeSettings(prev, newSettings);
       safeSetLocalStorage(STORAGE_CUSTOMIZER_KEY, JSON.stringify(merged));
+      if (isSupabaseConfigured()) {
+        setCloudSyncStatus('syncing');
+        saveCloudSection('customizer', merged)
+          .then((ok) => {
+            setCloudSyncStatus(ok ? 'saved' : 'error');
+            if (ok) setTimeout(() => setCloudSyncStatus('idle'), 3000);
+          })
+          .catch(() => setCloudSyncStatus('error'));
+      }
       return merged;
     });
   };
@@ -659,6 +868,13 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
         isSyncModalOpen,
         openSyncModal: () => setIsSyncModalOpen(true),
         closeSyncModal: () => setIsSyncModalOpen(false),
+
+        // Supabase Cloud Sync
+        isCloudConfigured,
+        cloudSyncStatus,
+        supabaseConfig,
+        saveSupabaseCredentials,
+        syncAllToCloud,
       }}
     >
       {children}
@@ -2569,6 +2785,188 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               <p className="text-[12px] leading-relaxed text-emerald-900/80">
                 Fitur edit langsung di website ini menyimpan data ke dalam memori browser (<em>localStorage</em>) perangkat Anda. Karena memori laptop dan HP terpisah, Anda dapat menggunakan tombol di bawah ini untuk mengirim data ke HP secara instan!
               </p>
+            </div>
+
+            {/* Supabase Cloud Connection Card (PRIMARY) */}
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/5 via-forest/5 to-garden/10 border-2 border-garden/40 shadow-sm space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-forest text-emerald-400 flex items-center justify-center shrink-0 shadow-sm">
+                    <Cloud className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-charcoal flex items-center gap-2 flex-wrap">
+                      <span>Database Cloud (Supabase)</span>
+                      {isCloudConfigured ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          Aktif &amp; Terhubung
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                          Belum Terhubung
+                        </span>
+                      )}
+                    </h4>
+                    <p className="text-[11px] text-charcoal/70 leading-relaxed">
+                      {isCloudConfigured
+                        ? 'Setiap editan atau produk baru otomatis tersimpan permanen untuk seluruh pengunjung di dunia.'
+                        : 'Sambungkan ke Supabase (100% Gratis) agar editan otomatis permanen di semua HP & desktop.'}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowCloudSetup((prev) => !prev)}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-cream hover:bg-white text-charcoal border border-sage/50 text-[11px] font-bold transition-all shadow-xs"
+                >
+                  {showCloudSetup ? 'Tutup Form' : isCloudConfigured ? 'Pengaturan' : '⚡ Sambungkan'}
+                </button>
+              </div>
+
+              {isCloudConfigured && !showCloudSetup && (
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-sage/20 text-xs">
+                  <span className="text-charcoal/70 text-[11px] truncate max-w-[280px]">
+                    Project: <span className="font-mono font-semibold text-forest">{supabaseConfig.url}</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={syncAllToCloud}
+                    disabled={cloudSyncStatus === 'syncing'}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-forest hover:bg-forest-light text-softwhite font-bold text-[11px] tracking-wider transition-all disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${cloudSyncStatus === 'syncing' ? 'animate-spin' : ''}`} />
+                    <span>{cloudSyncStatus === 'syncing' ? 'Mengunggah...' : 'Unggah Data Lokal ke Cloud'}</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Setup / Configuration Form */}
+              {(showCloudSetup || !isCloudConfigured) && (
+                <div className="pt-3 border-t border-sage/30 space-y-3 text-xs">
+                  <div className="p-3 rounded-xl bg-amber-50/90 border border-amber-200 text-amber-950 text-[11px] space-y-2">
+                    <p className="font-semibold text-amber-900">
+                      3 Langkah Mudah Menghubungkan Supabase:
+                    </p>
+                    <ol className="list-decimal list-inside space-y-1.5 text-amber-900/90">
+                      <li>
+                        Buka{' '}
+                        <a
+                          href="https://supabase.com"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-bold underline text-emerald-800 hover:text-emerald-950 inline-flex items-center gap-0.5"
+                        >
+                          supabase.com <ExternalLink className="w-3 h-3 inline" />
+                        </a>{' '}
+                        lalu buat project baru (gratis).
+                      </li>
+                      <li>
+                        Masuk ke menu <strong>SQL Editor</strong> di dashboard Supabase, lalu jalankan skrip di bawah:
+                        <div className="mt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(SUPABASE_SQL_SETUP);
+                              alert('✅ Skrip SQL Supabase berhasil disalin ke clipboard! Silakan paste & Run di menu SQL Editor Supabase.');
+                            }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-200 hover:bg-amber-300 text-amber-950 font-bold text-[10px]"
+                          >
+                            <Copy className="w-3 h-3" />
+                            <span>Salin Skrip SQL Supabase</span>
+                          </button>
+                        </div>
+                      </li>
+                      <li>
+                        Masuk ke menu <strong>Project Settings &gt; API</strong>, salin <strong>Project URL</strong> dan <strong>anon/public API key</strong>, lalu masukkan ke form di bawah:
+                      </li>
+                    </ol>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div>
+                      <label className="font-bold text-charcoal text-[11px] block mb-1">
+                        Supabase Project URL
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://xyzcompany.supabase.co"
+                        value={inputSupabaseUrl}
+                        onChange={(e) => setInputSupabaseUrl(e.target.value)}
+                        className="w-full p-2.5 rounded-xl bg-cream border border-sage/40 text-charcoal font-mono text-[11px]"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-bold text-charcoal text-[11px] block mb-1">
+                        Supabase Anon / Public API Key
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        value={inputSupabaseAnonKey}
+                        onChange={(e) => setInputSupabaseAnonKey(e.target.value)}
+                        className="w-full p-2.5 rounded-xl bg-cream border border-sage/40 text-charcoal font-mono text-[11px]"
+                      />
+                    </div>
+                  </div>
+
+                  {cloudTestMessage && (
+                    <div
+                      className={`p-3 rounded-xl text-[11px] font-medium ${
+                        cloudTestMessage.error
+                          ? 'bg-rose-50 border border-rose-200 text-rose-800'
+                          : 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                      }`}
+                    >
+                      {cloudTestMessage.text}
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <button
+                      type="button"
+                      disabled={isTestingCloud}
+                      onClick={async () => {
+                        if (!inputSupabaseUrl.trim() || !inputSupabaseAnonKey.trim()) {
+                          alert('Mohon masukkan Project URL dan Anon Key Supabase.');
+                          return;
+                        }
+                        const res = await saveSupabaseCredentials(inputSupabaseUrl, inputSupabaseAnonKey);
+                        if (res.success) {
+                          alert('✅ Berhasil Terhubung ke Supabase!\nData Anda sekarang otomatis tersimpan dan aktif untuk seluruh pengunjung.');
+                          setShowCloudSetup(false);
+                        }
+                      }}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-forest hover:bg-forest-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all active:scale-95 disabled:opacity-50"
+                    >
+                      <CloudUpload className="w-4 h-4" />
+                      <span>{isTestingCloud ? 'Menguji & Menyimpan...' : 'Simpan & Hubungkan Database'}</span>
+                    </button>
+
+                    {isCloudConfigured && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (confirm('Apakah Anda yakin ingin memutuskan sambungan Supabase?')) {
+                            if (typeof window !== 'undefined') {
+                              window.localStorage.removeItem(STORAGE_SUPABASE_CONFIG_KEY);
+                            }
+                            setSupabaseConfig({ url: '', anonKey: '' });
+                            setIsCloudConfigured(false);
+                            setInputSupabaseUrl('');
+                            setInputSupabaseAnonKey('');
+                            setCloudSyncStatus('not_configured');
+                          }
+                        }}
+                        className="px-3 py-2.5 rounded-xl bg-cream hover:bg-rose-50 text-rose-700 border border-rose-200 font-bold text-xs transition-all"
+                      >
+                        Putus Koneksi
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Section 1: Kirim ke WhatsApp (Paling Cepat) */}

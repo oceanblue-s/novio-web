@@ -14,6 +14,8 @@ import {
   ChevronRight,
   ExternalLink,
   Smartphone,
+  Cloud,
+  RefreshCw,
 } from 'lucide-react';
 
 export default function VisualEditBar() {
@@ -24,6 +26,8 @@ export default function VisualEditBar() {
     disableEditMode,
     togglePreviewMode,
     openSyncModal,
+    isCloudConfigured,
+    cloudSyncStatus,
   } = useSiteData();
   const pathname = usePathname();
 
@@ -81,7 +85,51 @@ export default function VisualEditBar() {
                 Mode Edit Visual
               </span>
             </div>
-            <span className="hidden md:inline text-cream/70 text-[11px]">
+
+            {/* Cloud Auto-Save Status Pill */}
+            {cloudSyncStatus === 'syncing' ? (
+              <button
+                type="button"
+                onClick={openSyncModal}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-bold"
+                title="Menyimpan perubahan ke Database Supabase..."
+              >
+                <RefreshCw className="w-3 h-3 animate-spin text-emerald-300" />
+                <span className="hidden sm:inline">Menyimpan ke Cloud...</span>
+              </button>
+            ) : cloudSyncStatus === 'saved' ? (
+              <button
+                type="button"
+                onClick={openSyncModal}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-bold"
+                title="Data tersimpan di Supabase Cloud"
+              >
+                <Cloud className="w-3 h-3 text-emerald-300" />
+                <span className="hidden sm:inline">Tersimpan di Cloud</span>
+              </button>
+            ) : isCloudConfigured ? (
+              <button
+                type="button"
+                onClick={openSyncModal}
+                className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold hover:bg-emerald-900/60"
+                title="Database Supabase Terhubung & Aktif"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span>Cloud Aktif</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={openSyncModal}
+                className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-950/40 text-amber-200 border border-amber-500/40 text-[10px] font-semibold hover:bg-amber-900/60 transition-all"
+                title="Klik untuk menghubungkan Supabase agar data otomatis permanen untuk semua pengunjung"
+              >
+                <Cloud className="w-3 h-3 text-amber-300" />
+                <span>Hubungkan Cloud DB</span>
+              </button>
+            )}
+
+            <span className="hidden xl:inline text-cream/70 text-[11px]">
               {isPreviewMode
                 ? 'Mode Pratinjau Pengunjung (tombol edit disembunyikan sementara)'
                 : 'Klik tombol [Edit] atau [Hapus] di setiap kartu, atau [+ Tambah] untuk item baru.'}
