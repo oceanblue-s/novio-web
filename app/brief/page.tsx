@@ -10,13 +10,13 @@ export const metadata: Metadata = {
   description:
     'Rancang spesifikasi proyek kurasi botani Anda dalam 4 langkah mudah. Pilih tipe ruang, skala area, dan estetika untuk konsultasi langsung via WhatsApp bersama tim hortikultura NOVIO di Bandung & Bali.',
   alternates: {
-    canonical: 'https://novio.vercel.app/brief',
+    canonical: 'https://novio-web.vercel.app/brief',
   },
   openGraph: {
     title: 'Panduan Singkat Proyek Botani | NOVIO',
     description:
       'Rancang spesifikasi proyek kurasi botani Anda dalam 4 langkah mudah. Pilih tipe ruang, skala area, dan estetika untuk konsultasi langsung via WhatsApp.',
-    url: 'https://novio.vercel.app/brief',
+    url: 'https://novio-web.vercel.app/brief',
     images: [
       'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80',
     ],

@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   description:
     'Jelajahi kurasi bahan alami premium Novio: racikan tisane herbal, cuka fermentasi artisan, olahan awetan segar, saus cabai, microgreens, sayuran spesial, bunga konsumsi, dan herba kuliner.',
   alternates: {
-    canonical: 'https://novio.vercel.app/product',
+    canonical: 'https://novio-web.vercel.app/product',
   },
   openGraph: {
     title: 'Katalog Komponen Kuliner Alami & Produk Tani Artisan | NOVIO',
     description:
       'Jelajahi kurasi bahan alami premium Novio: racikan tisane herbal, cuka fermentasi artisan, olahan awetan segar, saus cabai, microgreens, sayuran spesial, bunga konsumsi, dan herba kuliner.',
-    url: 'https://novio.vercel.app/product',
+    url: 'https://novio-web.vercel.app/product',
     images: ['/novio-tisane-blend.webp'],
   },
 };

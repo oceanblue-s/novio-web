@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   description:
     'Hubungi tim NOVIO di Bandung Barat dan Bali. Konsultasikan pasokan bahan kuliner alami, produk tani artisan, kemitraan chef, atau kunjungan ke kebun Parongpong.',
   alternates: {
-    canonical: 'https://novio.vercel.app/contact',
+    canonical: 'https://novio-web.vercel.app/contact',
   },
   openGraph: {
     title: 'Kontak & Kemitraan Chef Kebun Parongpong & Bali | NOVIO',
     description:
       'Hubungi tim NOVIO di Bandung Barat dan Bali. Konsultasikan pasokan bahan kuliner alami, produk tani artisan, kemitraan chef, atau kunjungan ke kebun Parongpong.',
-    url: 'https://novio.vercel.app/contact',
+    url: 'https://novio-web.vercel.app/contact',
     images: ['/about-greenhouse-bg.jpg'],
   },
 };

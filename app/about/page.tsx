@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   description:
     'Kisah perjalanan Nunik, Retno, dan Danang dari Demak hingga mendirikan Novio di Bali dan Bandung untuk memberdayakan petani lokal dan menjadi mitra terbaik bagi para Chef.',
   alternates: {
-    canonical: 'https://novio.vercel.app/about',
+    canonical: 'https://novio-web.vercel.app/about',
   },
   openGraph: {
     title: 'Tentang Kisah Perjalanan & Misi Kami | NOVIO',
     description:
       'Kisah perjalanan Nunik, Retno, dan Danang dari Demak hingga mendirikan Novio di Bali dan Bandung untuk memberdayakan petani lokal dan menjadi mitra terbaik bagi para Chef.',
-    url: 'https://novio.vercel.app/about',
+    url: 'https://novio-web.vercel.app/about',
     images: ['/about-greenhouse-bg.jpg'],
   },
 };

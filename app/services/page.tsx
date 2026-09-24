@@ -14,13 +14,13 @@ export const metadata: Metadata = {
   description:
     'Jelajahi layanan botani profesional Novio: penataan tanaman residensial khusus, sewa tanaman kantor dengan perawatan mingguan, arsitektur lanskap tropis, dan pengadaan spesimen langka bersertifikat.',
   alternates: {
-    canonical: 'https://novio.vercel.app/services',
+    canonical: 'https://novio-web.vercel.app/services',
   },
   openGraph: {
     title: 'Praktik & Layanan Botani | NOVIO',
     description:
       'Jelajahi layanan botani profesional Novio: penataan tanaman residensial khusus, sewa tanaman kantor dengan perawatan mingguan, arsitektur lanskap tropis, dan pengadaan spesimen langka bersertifikat.',
-    url: 'https://novio.vercel.app/services',
+    url: 'https://novio-web.vercel.app/services',
     images: [
       'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80',
     ],

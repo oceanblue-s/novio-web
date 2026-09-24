@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   description:
     'Jelajahi studi kasus arsitektural dan integrasi biofilik Novio di berbagai vila mewah di Bali, studio pegunungan di Bandung, dan ruang kerja eksekutif di Jakarta.',
   alternates: {
-    canonical: 'https://novio.vercel.app/portfolio',
+    canonical: 'https://novio-web.vercel.app/portfolio',
   },
   openGraph: {
     title: 'Portofolio Ruang Hijau & Studi Kasus | NOVIO',
     description:
       'Jelajahi studi kasus arsitektural dan integrasi biofilik Novio di berbagai vila mewah di Bali, studio pegunungan di Bandung, dan ruang kerja eksekutif di Jakarta.',
-    url: 'https://novio.vercel.app/portfolio',
+    url: 'https://novio-web.vercel.app/portfolio',
     images: ['https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1600&q=80'],
   },
 };

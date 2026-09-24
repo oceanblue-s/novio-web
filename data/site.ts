@@ -9,7 +9,7 @@ export const siteConfig = {
   generalPhone: '081312414863',
   whatsappTarget: '6281312414863', // Normalized for wa.me/6281312414863
   mainAddress: 'Ciwarega, Karyawangi, Kec. Parongpong, Kabupaten Bandung Barat, Jawa Barat 40559',
-  url: 'https://novio.vercel.app',
+  url: 'https://novio-web.vercel.app',
 };
 
 export const navItems: NavItem[] = [

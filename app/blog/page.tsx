@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   description:
     'Catatan editorial, inovasi fermentasi artisan, panduan bahan kuliner, serta kisah pemberdayaan petani lokal bersama NOVIO.',
   alternates: {
-    canonical: 'https://novio.vercel.app/blog',
+    canonical: 'https://novio-web.vercel.app/blog',
   },
   openGraph: {
     title: 'Jurnal & Inspirasi Kuliner Alami | NOVIO',
     description:
       'Catatan editorial, inovasi fermentasi artisan, panduan bahan kuliner, serta kisah pemberdayaan petani lokal bersama NOVIO.',
-    url: 'https://novio.vercel.app/blog',
+    url: 'https://novio-web.vercel.app/blog',
     images: ['/novio-tisane-blend.webp'],
   },
 };
