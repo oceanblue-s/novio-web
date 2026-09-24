@@ -6,6 +6,7 @@ import Image from 'next/image';
 import {
   defaultCustomizerSettings,
   CustomizerSettings,
+  safeMergeSettings,
 } from '@/context/LiveCustomizerContext';
 import {
   Monitor,
@@ -67,13 +68,21 @@ export default function CustomizerClient() {
 
   // Load saved settings & check auth on mount
   useEffect(() => {
-    if (sessionStorage.getItem('novio_admin_authenticated') === 'true') {
-      setIsAuthenticated(true);
-    }
     try {
-      const stored = localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
-      if (stored) {
-        setSettings(JSON.parse(stored));
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        if (window.sessionStorage.getItem('novio_admin_authenticated') === 'true') {
+          setIsAuthenticated(true);
+        }
+      }
+    } catch {}
+
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const stored = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setSettings((prev) => safeMergeSettings(prev, parsed));
+        }
       }
     } catch {}
   }, []);
@@ -82,7 +91,11 @@ export default function CustomizerClient() {
     e.preventDefault();
     if (pinInput.trim() === ADMIN_PIN) {
       setIsAuthenticated(true);
-      sessionStorage.setItem('novio_admin_authenticated', 'true');
+      try {
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+          window.sessionStorage.setItem('novio_admin_authenticated', 'true');
+        }
+      } catch {}
       setPinError('');
     } else {
       setPinError('PIN salah. Silakan coba lagi.');
@@ -91,30 +104,35 @@ export default function CustomizerClient() {
 
   // Broadcast settings to iframe whenever settings change
   const broadcastUpdate = (newSettings: CustomizerSettings) => {
-    setSettings(newSettings);
+    const safe = safeMergeSettings(defaultCustomizerSettings, newSettings);
+    setSettings(safe);
     setIsDirty(true);
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(
-        {
-          type: 'NOVIO_CUSTOMIZER_UPDATE',
-          payload: newSettings,
-        },
-        '*'
-      );
-    }
+    try {
+      if (iframeRef.current && iframeRef.current.contentWindow) {
+        iframeRef.current.contentWindow.postMessage(
+          {
+            type: 'NOVIO_CUSTOMIZER_UPDATE',
+            payload: safe,
+          },
+          '*'
+        );
+      }
+    } catch {}
   };
 
   // When iframe finishes loading, send current settings to it
   const handleIframeLoad = () => {
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(
-        {
-          type: 'NOVIO_CUSTOMIZER_UPDATE',
-          payload: settings,
-        },
-        '*'
-      );
-    }
+    try {
+      if (iframeRef.current && iframeRef.current.contentWindow) {
+        iframeRef.current.contentWindow.postMessage(
+          {
+            type: 'NOVIO_CUSTOMIZER_UPDATE',
+            payload: settings,
+          },
+          '*'
+        );
+      }
+    } catch {}
   };
 
   // Image Upload Helper (Base64)
@@ -136,7 +154,9 @@ export default function CustomizerClient() {
   // Publish / Save
   const handlePublish = () => {
     try {
-      localStorage.setItem(STORAGE_CUSTOMIZER_KEY, JSON.stringify(settings));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(STORAGE_CUSTOMIZER_KEY, JSON.stringify(settings));
+      }
       setIsDirty(false);
       setPublishedToast(true);
       setTimeout(() => setPublishedToast(false), 3500);
@@ -149,7 +169,11 @@ export default function CustomizerClient() {
   const handleReset = () => {
     if (window.confirm('Kembalikan semua teks dan konten ke pengaturan awal NOVIO?')) {
       broadcastUpdate(defaultCustomizerSettings);
-      localStorage.removeItem(STORAGE_CUSTOMIZER_KEY);
+      try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          window.localStorage.removeItem(STORAGE_CUSTOMIZER_KEY);
+        }
+      } catch {}
       setIsDirty(false);
     }
   };

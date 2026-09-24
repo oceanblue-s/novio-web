@@ -14,9 +14,9 @@ export default function AboutClient() {
     <div className="flex flex-col w-full">
       {/* 1. Hero */}
       <Hero
-        title={settings.about.heroTitle || 'Kisah Perjalanan & Misi Kami'}
+        title={settings?.about?.heroTitle || 'Kisah Perjalanan & Misi Kami'}
         subtitle={
-          settings.about.heroSubtitle ||
+          settings?.about?.heroSubtitle ||
           'Menjadi berkat bagi sesama dengan menjadi mitra terbaik bagi para Chef di seluruh Indonesia.'
         }
         badge="Tentang Novio"
@@ -31,15 +31,15 @@ export default function AboutClient() {
             Akar Perjalanan Kami
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium text-charcoal tracking-tight leading-tight mb-8">
-            {settings.about.originTitle ||
+            {settings?.about?.originTitle ||
               'Lahir dari cinta pada tanah pertanian, tumbuh untuk menghubungkan petani dengan para chef terbaik.'}
           </h2>
           <p className="text-charcoal/80 text-lg sm:text-xl leading-relaxed font-light mb-6">
-            {settings.about.originParagraph1 ||
+            {settings?.about?.originParagraph1 ||
               'Nunik, Retno, dan Danang lahir di sebuah desa kecil di Demak. Kami tumbuh besar menyaksikan langsung bagaimana kedua orang tua kami berjuang tanpa lelah sebagai petani. Pertanian bukanlah jalan yang mudah, tetapi di dalam hati kami yang paling dalam, kami menyadari bahwa bertani adalah bagian tak terpisahkan dari jati diri kami.'}
           </p>
           <p className="text-charcoal/70 text-base sm:text-lg leading-relaxed font-light">
-            {settings.about.originParagraph2 ||
+            {settings?.about?.originParagraph2 ||
               'Hari ini, Novio Bali dan Novio Bandung bukan sekadar kegiatan bisnis biasa. Keduanya adalah tentang keluarga kami, jejak perjalanan hidup kami, dan harapan tulus kami untuk masa depan yang lebih cerah bagi para petani lokal Indonesia.'}
           </p>
         </div>
@@ -55,15 +55,15 @@ export default function AboutClient() {
                 Tantangan & Peluang Nyata
               </span>
               <h3 className="font-serif text-3xl sm:text-4xl font-medium text-charcoal leading-tight">
-                {settings.about.opportunityTitle ||
+                {settings?.about?.opportunityTitle ||
                   'Menjembatani bahan artisan berkualitas tinggi langsung dari petani ke dapur para chef.'}
               </h3>
               <p className="text-charcoal/80 text-base sm:text-lg leading-relaxed">
-                {settings.about.opportunityParagraph1 ||
+                {settings?.about?.opportunityParagraph1 ||
                   'Kakak tertua kami, Nunik, tidak langsung menjadi petani. Beliau mengawali kariernya di industri perhotelan dan kuliner (hospitality), berpindah ke berbagai daerah. Di sana, beliau menemukan fakta yang mengejutkan: para chef profesional kerap kesulitan menemukan bahan artisan segar dan bermutu tinggi yang konsisten dari petani lokal.'}
               </p>
               <p className="text-charcoal/70 text-base leading-relaxed">
-                {settings.about.opportunityParagraph2 ||
+                {settings?.about?.opportunityParagraph2 ||
                   'Dari pengalaman tersebut, Nunik melihat sebuah peluang mulia yang sangat besar. Beliau menyadari bahwa bertani bukan sekadar tentang bertahan hidup—bertani bisa menjadi sebuah seni berharga, jalan terhormat untuk menciptakan produk berkualitas istimewa bagi para chef terkemuka di tanah air.'}
               </p>
               <div className="pt-2">

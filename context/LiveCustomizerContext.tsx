@@ -107,6 +107,29 @@ export const defaultCustomizerSettings: CustomizerSettings = {
   },
 };
 
+export function safeMergeSettings(
+  defaults: CustomizerSettings,
+  incoming?: Partial<CustomizerSettings> | null
+): CustomizerSettings {
+  if (!incoming || typeof incoming !== 'object') {
+    return defaults;
+  }
+  return {
+    site: {
+      ...defaults.site,
+      ...(incoming.site && typeof incoming.site === 'object' ? incoming.site : {}),
+    },
+    home: {
+      ...defaults.home,
+      ...(incoming.home && typeof incoming.home === 'object' ? incoming.home : {}),
+    },
+    about: {
+      ...defaults.about,
+      ...(incoming.about && typeof incoming.about === 'object' ? incoming.about : {}),
+    },
+  };
+}
+
 const STORAGE_CUSTOMIZER_KEY = 'novio_live_customizer_settings_v1';
 
 interface LiveCustomizerContextType {
@@ -122,40 +145,67 @@ export function LiveCustomizerProvider({ children }: { children: React.ReactNode
   const [settings, setSettings] = useState<CustomizerSettings>(defaultCustomizerSettings);
   const [isCustomizerActive, setIsCustomizerActive] = useState(false);
 
-  // Load from localStorage or check if preview parameter exists
   useEffect(() => {
+    // 1. Safely load from localStorage with full fallback
     try {
-      const stored = localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
-      if (stored) {
-        setSettings(JSON.parse(stored));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const stored = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setSettings((prev) => safeMergeSettings(prev, parsed));
+        }
       }
-    } catch {}
-
-    // Check if inside customizer iframe or parent
-    if (typeof window !== 'undefined') {
-      const isIframe = window.self !== window.top;
-      const urlParams = new URLSearchParams(window.location.search);
-      if (isIframe || urlParams.get('customizer') === 'true') {
-        setIsCustomizerActive(true);
-      }
+    } catch {
+      // Storage access blocked or restricted
     }
 
-    // Listen for postMessage from parent customizer window
+    // 2. Safely check if inside customizer iframe or parent
+    try {
+      if (typeof window !== 'undefined') {
+        let isIframe = false;
+        try {
+          isIframe = window.self !== window.top;
+        } catch {
+          isIframe = true;
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        if (isIframe || urlParams.get('customizer') === 'true') {
+          setIsCustomizerActive(true);
+        }
+      }
+    } catch {
+      // Ignore cross-origin frame check error
+    }
+
+    // 3. Listen for postMessage from parent customizer window
     const handleMessage = (event: MessageEvent) => {
-      if (event.data && event.data.type === 'NOVIO_CUSTOMIZER_UPDATE') {
-        setSettings(event.data.payload);
+      try {
+        if (
+          event.data &&
+          typeof event.data === 'object' &&
+          event.data.type === 'NOVIO_CUSTOMIZER_UPDATE' &&
+          event.data.payload
+        ) {
+          setSettings((prev) => safeMergeSettings(prev, event.data.payload));
+        }
+      } catch {
+        // Ignore message error
       }
     };
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('message', handleMessage);
+      return () => window.removeEventListener('message', handleMessage);
+    }
   }, []);
 
   const updateSettings = (newSettings: Partial<CustomizerSettings>) => {
     setSettings((prev) => {
-      const merged = { ...prev, ...newSettings };
+      const merged = safeMergeSettings(prev, newSettings);
       try {
-        localStorage.setItem(STORAGE_CUSTOMIZER_KEY, JSON.stringify(merged));
+        if (typeof window !== 'undefined' && window.localStorage) {
+          window.localStorage.setItem(STORAGE_CUSTOMIZER_KEY, JSON.stringify(merged));
+        }
       } catch {}
       return merged;
     });
@@ -164,7 +214,9 @@ export function LiveCustomizerProvider({ children }: { children: React.ReactNode
   const resetSettings = () => {
     setSettings(defaultCustomizerSettings);
     try {
-      localStorage.removeItem(STORAGE_CUSTOMIZER_KEY);
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.removeItem(STORAGE_CUSTOMIZER_KEY);
+      }
     } catch {}
   };
 
@@ -182,9 +234,9 @@ export function LiveCustomizerProvider({ children }: { children: React.ReactNode
   );
 }
 
-export function useLiveCustomizer() {
+export function useLiveCustomizer(): LiveCustomizerContextType {
   const context = useContext(LiveCustomizerContext);
-  if (!context) {
+  if (!context || !context.settings) {
     return {
       settings: defaultCustomizerSettings,
       updateSettings: () => {},
@@ -192,5 +244,12 @@ export function useLiveCustomizer() {
       isCustomizerActive: false,
     };
   }
-  return context;
+
+  // Double-guarantee all sub-objects exist even if partially manipulated
+  const safeSettings = safeMergeSettings(defaultCustomizerSettings, context.settings);
+
+  return {
+    ...context,
+    settings: safeSettings,
+  };
 }

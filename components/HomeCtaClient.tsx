@@ -8,7 +8,7 @@ import { Sparkles, MessageSquare, ArrowRight } from 'lucide-react';
 
 export default function HomeCtaClient() {
   const { settings } = useLiveCustomizer();
-  const waTarget = settings.site.whatsappTarget || siteConfig.whatsappTarget;
+  const waTarget = settings?.site?.whatsappTarget || siteConfig.whatsappTarget;
 
   return (
     <section className="py-20 px-6 sm:px-8 bg-forest text-softwhite relative overflow-hidden">
@@ -20,12 +20,12 @@ export default function HomeCtaClient() {
         </div>
 
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight mb-6 text-balance text-softwhite">
-          {settings.home.ctaHeadline ||
+          {settings?.home?.ctaHeadline ||
             'Memiliki rencana proyek, ruang hijau impian, atau membutuhkan kurasi khusus?'}
         </h2>
 
         <p className="text-cream/80 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-10 text-balance">
-          {settings.home.ctaSubtitle ||
+          {settings?.home?.ctaSubtitle ||
             'Diskusikan langsung bersama direktur botani dan kurator kami di Bandung Barat atau Bali. Kami siap mendampingi pemilihan spesimen, instalasi ruang hijau, hingga panduan perawatan jangka panjang.'}
         </p>
 

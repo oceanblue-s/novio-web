@@ -24,9 +24,17 @@ declare global {
 
 export default function GoogleTranslateScript() {
   useEffect(() => {
-    // Function to restore brand name if Google Translate erroneously translates Spanish "novio" -> Indonesian "pacar"
+    // Only run if Google Translate has actually translated the page
     const restoreNovioBrand = () => {
       try {
+        const isTranslated =
+          document.documentElement.classList.contains('translated-ltr') ||
+          document.documentElement.classList.contains('translated-rtl') ||
+          document.body.classList.contains('translated-ltr') ||
+          document.body.classList.contains('translated-rtl');
+
+        if (!isTranslated) return;
+
         const walker = document.createTreeWalker(
           document.body,
           NodeFilter.SHOW_TEXT,
@@ -46,32 +54,30 @@ export default function GoogleTranslateScript() {
               val = val.replace(/\bPacar\b/g, 'Novio');
               changed = true;
             }
-            if (/\bPENGENAL\b/.test(val)) {
-              val = val.replace(/\bPENGENAL\b/g, 'ID');
-              changed = true;
-            }
             if (changed) {
               node.nodeValue = val;
             }
           }
         }
-      } catch (err) {
+      } catch {
         // silent fail
       }
     };
 
     // Define the global callback function required by Google Translate script
     window.googleTranslateElementInit = () => {
-      if (window.google?.translate) {
-        new window.google.translate.TranslateElement(
-          {
-            pageLanguage: 'id',
-            includedLanguages: 'id,en,ja,zh-CN,ar,fr,de',
-            autoDisplay: false,
-          },
-          'google_translate_element'
-        );
-      }
+      try {
+        if (window.google?.translate) {
+          new window.google.translate.TranslateElement(
+            {
+              pageLanguage: 'id',
+              includedLanguages: 'id,en,ja,zh-CN,ar,fr,de',
+              autoDisplay: false,
+            },
+            'google_translate_element'
+          );
+        }
+      } catch {}
     };
 
     // If script was already loaded in a previous navigation, run init immediately
@@ -79,21 +85,9 @@ export default function GoogleTranslateScript() {
       window.googleTranslateElementInit();
     }
 
-    // Observe any DOM mutations caused by Google Translate to prevent brand translation
-    const observer = new MutationObserver(() => {
-      restoreNovioBrand();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    });
-
-    const interval = setInterval(restoreNovioBrand, 500);
+    const interval = setInterval(restoreNovioBrand, 2000);
 
     return () => {
-      observer.disconnect();
       clearInterval(interval);
     };
   }, []);

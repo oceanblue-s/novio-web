@@ -90,9 +90,13 @@ export default function AdminClient() {
 
   // Check auth & load stored data
   useEffect(() => {
-    if (sessionStorage.getItem('novio_admin_authenticated') === 'true') {
-      setIsAuthenticated(true);
-    }
+    try {
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        if (window.sessionStorage.getItem('novio_admin_authenticated') === 'true') {
+          setIsAuthenticated(true);
+        }
+      }
+    } catch {}
     try {
       const p = localStorage.getItem(`${STORAGE_PREFIX}products`);
       if (p) setProductsList(JSON.parse(p));
