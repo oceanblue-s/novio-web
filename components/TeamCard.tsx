@@ -44,6 +44,7 @@ export default function TeamCard({ member }: TeamCardProps) {
             title="Hapus Anggota Tim"
           >
             <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus</span>
           </button>
         </div>
       )}

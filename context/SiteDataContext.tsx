@@ -144,16 +144,12 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
         // Check if edit mode active
         const urlParams = new URLSearchParams(window.location.search);
         const hasEditQuery = urlParams.get('edit') === 'true';
-        const isAuth = window.sessionStorage?.getItem('novio_admin_authenticated') === 'true';
         const isEditStored = window.localStorage?.getItem(STORAGE_EDIT_MODE_KEY) === 'true';
 
         if (hasEditQuery || isEditStored) {
-          if (isAuth) {
-            setIsEditMode(true);
-            window.localStorage?.setItem(STORAGE_EDIT_MODE_KEY, 'true');
-          } else {
-            setShowPinModal(true);
-          }
+          setIsEditMode(true);
+          window.localStorage?.setItem(STORAGE_EDIT_MODE_KEY, 'true');
+          window.sessionStorage?.setItem('novio_admin_authenticated', 'true');
         }
       }
     } catch {}
@@ -161,18 +157,14 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
 
   // Mode Toggles
   const enableEditMode = () => {
+    setIsEditMode(true);
+    setIsPreviewMode(false);
     try {
-      const isAuth = typeof window !== 'undefined' && window.sessionStorage?.getItem('novio_admin_authenticated') === 'true';
-      if (isAuth) {
-        setIsEditMode(true);
-        setIsPreviewMode(false);
+      if (typeof window !== 'undefined') {
         window.localStorage?.setItem(STORAGE_EDIT_MODE_KEY, 'true');
-      } else {
-        setShowPinModal(true);
+        window.sessionStorage?.setItem('novio_admin_authenticated', 'true');
       }
-    } catch {
-      setShowPinModal(true);
-    }
+    } catch {}
   };
 
   const disableEditMode = () => {

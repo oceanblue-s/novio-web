@@ -45,6 +45,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             title="Hapus Layanan Ini"
           >
             <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus</span>
           </button>
         </div>
       )}

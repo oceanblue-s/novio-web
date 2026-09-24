@@ -118,6 +118,7 @@ export default function HomePageClient() {
                       title="Hapus Layanan"
                     >
                       <Trash2 className="w-3 h-3" />
+                      <span>Hapus</span>
                     </button>
                   </div>
                 )}

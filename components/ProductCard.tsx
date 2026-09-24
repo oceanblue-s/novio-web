@@ -64,6 +64,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             title="Hapus Produk Ini"
           >
             <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus</span>
           </button>
         </div>
       )}
