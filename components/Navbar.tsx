@@ -43,8 +43,8 @@ export default function Navbar() {
     <header
       className={`fixed ${showEditBar ? 'top-[42px]' : 'top-0'} left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-forest/95 backdrop-blur-md shadow-lg border-b border-sage/20 py-3 text-softwhite'
-          : 'bg-forest/60 backdrop-blur-sm py-4 sm:py-5 text-softwhite border-b border-white/5'
+          ? 'bg-forest/98 backdrop-blur-md shadow-lg border-b border-sage/20 py-3 text-softwhite'
+          : 'bg-forest/95 backdrop-blur-md py-3.5 sm:py-4 text-softwhite border-b border-white/10 shadow-sm'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between">

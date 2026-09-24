@@ -28,13 +28,14 @@ export default function VisualEditBar() {
     openSyncModal,
     isCloudConfigured,
     cloudSyncStatus,
+    isAnyModalOpen,
   } = useSiteData();
   const pathname = usePathname();
 
   // Floating trigger when edit mode is OFF
   if (!isEditMode) {
-    // Don't show inside /admin
-    if (pathname.startsWith('/admin')) return null;
+    // Don't show inside /admin or when modal is open
+    if (pathname.startsWith('/admin') || isAnyModalOpen) return null;
 
     return (
       <div className="fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 flex items-center gap-2">
@@ -63,16 +64,6 @@ export default function VisualEditBar() {
       </div>
     );
   }
-
-  const NAV_LINKS = [
-    { label: 'Beranda', href: '/' },
-    { label: 'Produk', href: '/product' },
-    { label: 'Layanan', href: '/services' },
-    { label: 'Portofolio', href: '/portfolio' },
-    { label: 'Artikel', href: '/blog' },
-    { label: 'Tentang Kami', href: '/about' },
-    { label: 'Kontak', href: '/contact' },
-  ];
 
   return (
     <>
@@ -139,25 +130,10 @@ export default function VisualEditBar() {
             </span>
           </div>
 
-          {/* Center: Page Switcher Links (Desktop only) */}
-          <div className="hidden lg:flex items-center gap-1 bg-forest-light/30 p-1 rounded-lg border border-sage/30">
-            <span className="text-[10px] uppercase font-bold text-sage px-2">Halaman:</span>
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
-                    isActive
-                      ? 'bg-garden text-softwhite shadow-xs'
-                      : 'text-cream/80 hover:text-softwhite hover:bg-forest-light/60'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
+          {/* Center: Live Editor Guide Badge (Desktop only) */}
+          <div className="hidden lg:flex items-center gap-2 text-[11px] text-cream/70 bg-forest-light/20 px-3 py-1 rounded-full border border-sage/20">
+            <Sparkles className="w-3.5 h-3.5 text-sage" />
+            <span>Klik tombol <strong>Edit</strong> langsung pada komponen di bawah untuk mengubah konten</span>
           </div>
 
           {/* Right: Actions */}
@@ -208,28 +184,30 @@ export default function VisualEditBar() {
         </div>
       </div>
 
-      {/* Floating Status Pill at Bottom-Left (Desktop Only, avoids obstructing mobile screen) */}
-      <div className="hidden sm:flex fixed bottom-6 left-6 z-40 items-center gap-2">
-        <button
-          type="button"
-          onClick={disableEditMode}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-600 text-softwhite hover:bg-emerald-700 shadow-2xl border-2 border-cream text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
-          title="Mode Edit Sedang Aktif. Klik untuk keluar/selesai."
-        >
-          <span className="w-2.5 h-2.5 rounded-full bg-softwhite animate-pulse" />
-          <span>Mode Edit: AKTIF (Selesai)</span>
-        </button>
+      {/* Floating Status Pill at Bottom-Left (Desktop Only, avoids obstructing mobile screen, hidden when modal is open) */}
+      {!isAnyModalOpen && (
+        <div className="hidden sm:flex fixed bottom-6 left-6 z-40 items-center gap-2">
+          <button
+            type="button"
+            onClick={disableEditMode}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-600 text-softwhite hover:bg-emerald-700 shadow-2xl border-2 border-cream text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
+            title="Mode Edit Sedang Aktif. Klik untuk keluar/selesai."
+          >
+            <span className="w-2.5 h-2.5 rounded-full bg-softwhite animate-pulse" />
+            <span>Mode Edit: AKTIF (Selesai)</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={openSyncModal}
-          className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-full bg-forest text-softwhite hover:bg-forest-light shadow-2xl border-2 border-sage/60 text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
-          title="Sinkronkan ke HP / Cadangan Data"
-        >
-          <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="hidden sm:inline">Sinkron HP</span>
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={openSyncModal}
+            className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-full bg-forest text-softwhite hover:bg-forest-light shadow-2xl border-2 border-sage/60 text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
+            title="Sinkronkan ke HP / Cadangan Data"
+          >
+            <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="hidden sm:inline">Sinkron HP</span>
+          </button>
+        </div>
+      )}
     </>
   );
 }

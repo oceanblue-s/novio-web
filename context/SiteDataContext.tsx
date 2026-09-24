@@ -132,6 +132,7 @@ interface SiteDataContextType {
   isSyncModalOpen: boolean;
   openSyncModal: () => void;
   closeSyncModal: () => void;
+  isAnyModalOpen: boolean;
 
   // Supabase Cloud Sync
   isCloudConfigured: boolean;
@@ -735,6 +736,35 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const isAnyModalOpen = Boolean(
+    showPinModal ||
+    editingProduct ||
+    editingBlog ||
+    editingService ||
+    editingPortfolio ||
+    editingTeam ||
+    isEditingHero ||
+    isEditingCommitment ||
+    isEditingContact ||
+    isEditingProductSection ||
+    isEditingServicesSection ||
+    isEditingPortfolioSection ||
+    isEditingTeamSection ||
+    isEditingBlogSection ||
+    isSyncModalOpen
+  );
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (isAnyModalOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isAnyModalOpen]);
+
   return (
     <SiteDataContext.Provider
       value={{
@@ -868,6 +898,7 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
         isSyncModalOpen,
         openSyncModal: () => setIsSyncModalOpen(true),
         closeSyncModal: () => setIsSyncModalOpen(false),
+        isAnyModalOpen,
 
         // Supabase Cloud Sync
         isCloudConfigured,
@@ -883,8 +914,11 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 1. PIN UNLOCK MODAL */}
       {/* ------------------------------------------------------------- */}
       {showPinModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-md w-full bg-cream rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#F4F0E6' }}
+            className="max-w-md w-full bg-cream text-charcoal rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5"
+          >
             <div className="flex items-center justify-between border-b border-sage/30 pb-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-full bg-forest text-softwhite flex items-center justify-center font-bold text-xs">
@@ -965,10 +999,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 2. PRODUCT EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingProduct && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -1137,7 +1177,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               {/* Sticky Footer */}
-              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
+              <div
+                style={{ backgroundColor: '#F4F0E6' }}
+                className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-between sm:justify-end gap-3 shrink-0"
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -1165,10 +1208,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 3. BLOG POST EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingBlog && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -1357,7 +1406,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               {/* Sticky Footer */}
-              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
+              <div
+                style={{ backgroundColor: '#F4F0E6' }}
+                className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-between sm:justify-end gap-3 shrink-0"
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -1385,10 +1437,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 4. SERVICE PACKAGE EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingService && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -1587,7 +1645,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               {/* Sticky Footer */}
-              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
+              <div
+                style={{ backgroundColor: '#F4F0E6' }}
+                className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-between sm:justify-end gap-3 shrink-0"
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -1615,10 +1676,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 5. PORTFOLIO PROJECT EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingPortfolio && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -1846,7 +1913,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               {/* Sticky Footer */}
-              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
+              <div
+                style={{ backgroundColor: '#F4F0E6' }}
+                className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-between sm:justify-end gap-3 shrink-0"
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -1874,10 +1944,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 6. TEAM MEMBER EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingTeam && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-md w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-md w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <User className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -1981,7 +2057,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               </div>
 
               {/* Sticky Footer */}
-              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
+              <div
+                style={{ backgroundColor: '#F4F0E6' }}
+                className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-between sm:justify-end gap-3 shrink-0"
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -2009,10 +2088,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 3. HERO SECTION EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingHero && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2082,7 +2167,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingHero(false)}
@@ -2099,10 +2187,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 4. COMMITMENT & 6 PILLARS EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingCommitment && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2246,7 +2340,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingCommitment(false)}
@@ -2263,10 +2360,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 7. CONTACT & STUDIO LOCATIONS EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingContact && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2369,7 +2472,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingContact(false)}
@@ -2387,10 +2493,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 8. PRODUCT SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingProductSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2455,7 +2567,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingProductSection(false)}
@@ -2473,10 +2588,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 9. SERVICES SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingServicesSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2538,7 +2659,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingServicesSection(false)}
@@ -2556,10 +2680,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 10. PORTFOLIO SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingPortfolioSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2621,7 +2751,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingPortfolioSection(false)}
@@ -2639,10 +2772,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 11. TEAM SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingTeamSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2704,7 +2843,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingTeamSection(false)}
@@ -2722,10 +2864,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 12. BLOG SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingBlogSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#FBFAF6' }}
+            className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden"
+          >
             {/* Sticky Header */}
-            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+            <div
+              style={{ backgroundColor: '#FBFAF6' }}
+              className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0"
+            >
               <div className="flex items-center gap-2 min-w-0">
                 <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
                 <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
@@ -2787,7 +2935,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end gap-3 shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsEditingBlogSection(false)}
@@ -2805,10 +2956,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* MULTI-DEVICE SYNC & BACKUP MODAL */}
       {/* ------------------------------------------------------------- */}
       {isSyncModalOpen && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-md animate-fade-in">
-          <div className="max-w-2xl w-full bg-cream rounded-2xl sm:rounded-3xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden my-auto">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div
+            style={{ backgroundColor: '#F4F0E6' }}
+            className="max-w-2xl w-full bg-cream text-charcoal rounded-2xl sm:rounded-3xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden my-auto"
+          >
             {/* Modal Sticky Header */}
-            <div className="p-4 sm:p-6 border-b border-sage/30 flex items-start justify-between bg-cream/95 backdrop-blur-md shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="p-4 sm:p-6 border-b border-sage/30 flex items-start justify-between bg-cream shrink-0"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-forest text-softwhite flex items-center justify-center shadow-md shrink-0">
                   <Smartphone className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
@@ -3196,7 +3353,10 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Sticky Footer */}
-            <div className="p-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/95 backdrop-blur-md flex items-center justify-end shrink-0">
+            <div
+              style={{ backgroundColor: '#F4F0E6' }}
+              className="p-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream text-charcoal flex items-center justify-end shrink-0"
+            >
               <button
                 type="button"
                 onClick={() => setIsSyncModalOpen(false)}
