@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <article className="group bg-softwhite rounded-2xl overflow-hidden border border-sage/35 shadow-sm card-hover-lift flex flex-col h-full relative">
       {/* Visual In-Context Edit Action Buttons (Admin Only) */}
       {isEditMode && !isPreviewMode && (
-        <div className="absolute top-2.5 right-2.5 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
+        <div className="absolute top-2 right-2 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-xl border border-sage/50 shadow-2xl">
           <button
             type="button"
             onClick={(e) => {
@@ -45,7 +45,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               e.stopPropagation();
               openEditProduct(product);
             }}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-cream hover:bg-softwhite text-forest text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cream hover:bg-softwhite text-forest text-xs font-bold transition-all shadow-xs active:scale-95 min-h-[32px]"
             title="Edit Produk Ini"
           >
             <Pencil className="w-3.5 h-3.5 text-garden" />
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 deleteProduct(product.id);
               }
             }}
-            className="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold transition-all shadow-xs active:scale-95 min-h-[32px]"
             title="Hapus Produk Ini"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -94,7 +94,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </span>
 
         {/* Origin / Characteristic Pill (Top Right) */}
-        {product.origin && (
+        {product.origin && !(isEditMode && !isPreviewMode) && (
           <span className="absolute top-3 right-3 px-2 py-0.5 text-[10px] font-medium tracking-wide bg-cream/90 backdrop-blur-sm text-charcoal rounded shadow-xs pointer-events-none hidden sm:inline-block">
             {product.origin}
           </span>

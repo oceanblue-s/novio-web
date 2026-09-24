@@ -965,12 +965,13 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 2. PRODUCT EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingProduct && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   {isCreatingProduct ? 'Tambah Produk Baru' : `Edit Produk: ${editingProduct.name}`}
                 </h3>
               </div>
@@ -980,7 +981,8 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   setEditingProduct(null);
                   setIsCreatingProduct(false);
                 }}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -991,8 +993,9 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 e.preventDefault();
                 saveProduct(editingProduct);
               }}
-              className="space-y-4 text-xs"
+              className="flex-1 flex flex-col overflow-hidden text-xs"
             >
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="font-semibold text-charcoal">Nama Produk *</label>
@@ -1131,20 +1134,23 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 </label>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+              </div>
+
+              {/* Sticky Footer */}
+              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => {
                     setEditingProduct(null);
                     setIsCreatingProduct(false);
                   }}
-                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-lg bg-softwhite hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider border border-sage/40 min-h-[42px] text-xs transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
                 >
                   <Save className="w-4 h-4" />
                   <span>Simpan Produk</span>
@@ -1159,12 +1165,13 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 3. BLOG POST EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingBlog && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   {isCreatingBlog ? 'Tulis Artikel Jurnal Baru' : `Edit Artikel: ${editingBlog.title}`}
                 </h3>
               </div>
@@ -1174,7 +1181,8 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   setEditingBlog(null);
                   setIsCreatingBlog(false);
                 }}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1185,8 +1193,9 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 e.preventDefault();
                 saveBlogPost(editingBlog);
               }}
-              className="space-y-4 text-xs"
+              className="flex-1 flex flex-col overflow-hidden text-xs"
             >
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="font-semibold text-charcoal">Judul Artikel *</label>
@@ -1345,20 +1354,23 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+              </div>
+
+              {/* Sticky Footer */}
+              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => {
                     setEditingBlog(null);
                     setIsCreatingBlog(false);
                   }}
-                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-lg bg-softwhite hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider border border-sage/40 min-h-[42px] text-xs transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
                 >
                   <Save className="w-4 h-4" />
                   <span>Simpan Artikel</span>
@@ -1373,12 +1385,13 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 4. SERVICE PACKAGE EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingService && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   {isCreatingService ? 'Tambah Layanan Baru' : `Edit Layanan: ${editingService.title}`}
                 </h3>
               </div>
@@ -1388,7 +1401,8 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   setEditingService(null);
                   setIsCreatingService(false);
                 }}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1399,8 +1413,9 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 e.preventDefault();
                 saveServicePackage(editingService);
               }}
-              className="space-y-4 text-xs"
+              className="flex-1 flex flex-col overflow-hidden text-xs"
             >
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="font-semibold text-charcoal">Nama Layanan *</label>
@@ -1569,20 +1584,23 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 </label>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+              </div>
+
+              {/* Sticky Footer */}
+              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => {
                     setEditingService(null);
                     setIsCreatingService(false);
                   }}
-                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-lg bg-softwhite hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider border border-sage/40 min-h-[42px] text-xs transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
                 >
                   <Save className="w-4 h-4" />
                   <span>Simpan Layanan</span>
@@ -1597,12 +1615,13 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 5. PORTFOLIO PROJECT EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingPortfolio && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Layers className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   {isCreatingPortfolio ? 'Tambah Portofolio Proyek Baru' : `Edit Portofolio: ${editingPortfolio.title}`}
                 </h3>
               </div>
@@ -1612,7 +1631,8 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   setEditingPortfolio(null);
                   setIsCreatingPortfolio(false);
                 }}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1623,8 +1643,9 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 e.preventDefault();
                 savePortfolioProject(editingPortfolio);
               }}
-              className="space-y-4 text-xs"
+              className="flex-1 flex flex-col overflow-hidden text-xs"
             >
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="font-semibold text-charcoal">Judul Proyek *</label>
@@ -1822,20 +1843,23 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 </label>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+              </div>
+
+              {/* Sticky Footer */}
+              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => {
                     setEditingPortfolio(null);
                     setIsCreatingPortfolio(false);
                   }}
-                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-lg bg-softwhite hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider border border-sage/40 min-h-[42px] text-xs transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
                 >
                   <Save className="w-4 h-4" />
                   <span>Simpan Portofolio</span>
@@ -1850,12 +1874,13 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 6. TEAM MEMBER EDIT / ADD MODAL */}
       {/* ------------------------------------------------------------- */}
       {editingTeam && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-md w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-md w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <User className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   {isCreatingTeam ? 'Tambah Anggota Tim' : `Edit Anggota Tim: ${editingTeam.name}`}
                 </h3>
               </div>
@@ -1865,7 +1890,8 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   setEditingTeam(null);
                   setIsCreatingTeam(false);
                 }}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1876,8 +1902,9 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 e.preventDefault();
                 saveTeamMember(editingTeam);
               }}
-              className="space-y-4 text-xs"
+              className="flex-1 flex flex-col overflow-hidden text-xs"
             >
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Nama Lengkap *</label>
                 <input
@@ -1951,20 +1978,23 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+              </div>
+
+              {/* Sticky Footer */}
+              <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-between sm:justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => {
                     setEditingTeam(null);
                     setIsCreatingTeam(false);
                   }}
-                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-lg bg-softwhite hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider border border-sage/40 min-h-[42px] text-xs transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                  className="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
                 >
                   <Save className="w-4 h-4" />
                   <span>Simpan Anggota</span>
@@ -1979,25 +2009,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 3. HERO SECTION EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingHero && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   Edit Banner Hero (Bagian Atas Beranda)
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingHero(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Badge Atas</label>
                 <input
@@ -2047,16 +2079,17 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
                 />
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingHero(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md"
-                >
-                  Selesai & Simpan
-                </button>
-              </div>
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingHero(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                Selesai &amp; Simpan
+              </button>
             </div>
           </div>
         </div>
@@ -2066,25 +2099,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 4. COMMITMENT & 6 PILLARS EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingCommitment && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
-                  Edit Filosofi & 6 Pilar Nilai
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
+                  Edit Filosofi &amp; 6 Pilar Nilai
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingCommitment(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Judul Komitmen</label>
                 <input
@@ -2208,15 +2243,17 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingCommitment(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md"
-                >
-                  Selesai & Simpan
-                </button>
-              </div>
+            </div>
+
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingCommitment(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                Selesai &amp; Simpan
+              </button>
             </div>
           </div>
         </div>
@@ -2226,25 +2263,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 7. CONTACT & STUDIO LOCATIONS EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingContact && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   Edit Kontak &amp; Lokasi Studio Kebun
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingContact(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Nomor WhatsApp Pusat (Bandung Barat)</label>
                 <div className="relative">
@@ -2327,16 +2366,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingContact(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Selesai &amp; Simpan Kontak</span>
-                </button>
-              </div>
+            </div>
+
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingContact(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                <Save className="w-4 h-4" />
+                <span>Selesai &amp; Simpan Kontak</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2346,25 +2387,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 8. PRODUCT SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingProductSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   Edit Judul &amp; Narasi Bagian Produk (Beranda)
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingProductSection(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Badge / Kategori Atas</label>
                 <input
@@ -2409,17 +2452,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   placeholder="Bahan alami premium yang diolah dengan ketulusan..."
                 />
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingProductSection(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Selesai &amp; Simpan</span>
-                </button>
-              </div>
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingProductSection(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                <Save className="w-4 h-4" />
+                <span>Selesai &amp; Simpan</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2429,25 +2473,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 9. SERVICES SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingServicesSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   Edit Judul &amp; Narasi Bagian Layanan (Beranda)
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingServicesSection(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Badge Atas</label>
                 <input
@@ -2489,17 +2535,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
                 />
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingServicesSection(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Selesai &amp; Simpan</span>
-                </button>
-              </div>
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingServicesSection(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                <Save className="w-4 h-4" />
+                <span>Selesai &amp; Simpan</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2509,25 +2556,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 10. PORTFOLIO SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingPortfolioSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   Edit Judul &amp; Narasi Bagian Portofolio (Beranda)
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingPortfolioSection(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Badge Atas</label>
                 <input
@@ -2569,17 +2618,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
                 />
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingPortfolioSection(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Selesai &amp; Simpan</span>
-                </button>
-              </div>
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingPortfolioSection(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                <Save className="w-4 h-4" />
+                <span>Selesai &amp; Simpan</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2589,25 +2639,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 11. TEAM SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingTeamSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   Edit Judul &amp; Narasi Bagian Tim (Beranda)
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingTeamSection(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Badge Atas</label>
                 <input
@@ -2649,17 +2701,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
                 />
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingTeamSection(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Selesai &amp; Simpan</span>
-                </button>
-              </div>
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingTeamSection(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                <Save className="w-4 h-4" />
+                <span>Selesai &amp; Simpan</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2669,25 +2722,27 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* 12. BLOG SECTION HEADING EDIT MODAL */}
       {/* ------------------------------------------------------------- */}
       {isEditingBlogSection && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
-          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-garden" />
-                <h3 className="font-serif text-lg font-bold text-charcoal">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden">
+            {/* Sticky Header */}
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4 border-b border-sage/30 flex items-center justify-between bg-softwhite shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-garden shrink-0" />
+                <h3 className="font-serif text-base sm:text-lg font-bold text-charcoal truncate">
                   Edit Judul &amp; Narasi Bagian Jurnal/Blog (Beranda)
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingBlogSection(false)}
-                className="p-1 text-charcoal/60 hover:text-charcoal"
+                className="p-1.5 rounded-full hover:bg-cream text-charcoal/60 hover:text-charcoal transition-colors shrink-0"
+                title="Tutup Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold text-charcoal">Badge Atas</label>
                 <input
@@ -2729,17 +2784,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
                 />
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingBlogSection(false)}
-                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Selesai &amp; Simpan</span>
-                </button>
-              </div>
+            {/* Sticky Footer */}
+            <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/70 backdrop-blur-md flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsEditingBlogSection(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 min-h-[42px] text-xs transition-all active:scale-95"
+              >
+                <Save className="w-4 h-4" />
+                <span>Selesai &amp; Simpan</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2749,16 +2805,16 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       {/* MULTI-DEVICE SYNC & BACKUP MODAL */}
       {/* ------------------------------------------------------------- */}
       {isSyncModalOpen && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-md animate-fade-in overflow-y-auto">
-          <div className="max-w-2xl w-full bg-cream rounded-3xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-6 my-auto max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
-            <div className="flex items-start justify-between border-b border-sage/30 pb-4">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-4 bg-charcoal/80 backdrop-blur-md animate-fade-in">
+          <div className="max-w-2xl w-full bg-cream rounded-2xl sm:rounded-3xl border border-sage/40 shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden my-auto">
+            {/* Modal Sticky Header */}
+            <div className="p-4 sm:p-6 border-b border-sage/30 flex items-start justify-between bg-cream/95 backdrop-blur-md shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-forest text-softwhite flex items-center justify-center shadow-md">
-                  <Smartphone className="w-5 h-5 text-emerald-400" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-forest text-softwhite flex items-center justify-center shadow-md shrink-0">
+                  <Smartphone className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-charcoal">
+                  <h3 className="font-serif text-lg sm:text-2xl font-bold text-charcoal">
                     Sinkronisasi HP &amp; Cadangan Data
                   </h3>
                   <p className="text-xs text-charcoal/70">
@@ -2769,12 +2825,15 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 onClick={() => setIsSyncModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-charcoal/5 hover:bg-charcoal/10 flex items-center justify-center text-charcoal/70 hover:text-charcoal transition-colors"
+                className="w-8 h-8 rounded-full bg-charcoal/5 hover:bg-charcoal/10 flex items-center justify-center text-charcoal/70 hover:text-charcoal transition-colors shrink-0"
                 title="Tutup Modal"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Scrollable Modal Content */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
 
             {/* Explanation card */}
             <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 text-xs text-emerald-950 space-y-1.5">
@@ -3133,6 +3192,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
               <p className="leading-relaxed text-amber-900/80">
                 Penyimpanan saat ini berada di browser Anda. Jika Anda ingin produk baru atau perubahan teks langsung tampil otomatis bagi siapa saja yang membuka web (tanpa perlu sinkronisasi perangkat), cukup unduh file <strong>.json</strong> di atas lalu bagikan kepada kami (tim pengembang) untuk kami pasang langsung ke server Novio.
               </p>
+            </div>
+          </div>
+
+          {/* Sticky Footer */}
+            <div className="p-3 sm:px-6 sm:py-3.5 border-t border-sage/30 bg-cream/95 backdrop-blur-md flex items-center justify-end shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsSyncModalOpen(false)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-forest hover:bg-forest-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md min-h-[42px] transition-all active:scale-95"
+              >
+                Tutup Jendela
+              </button>
             </div>
           </div>
         </div>

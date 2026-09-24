@@ -41,7 +41,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed ${showEditBar ? 'top-[41px]' : 'top-0'} left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed ${showEditBar ? 'top-[42px]' : 'top-0'} left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
           ? 'bg-forest/95 backdrop-blur-md shadow-lg border-b border-sage/20 py-3 text-softwhite'
           : 'bg-forest/60 backdrop-blur-sm py-4 sm:py-5 text-softwhite border-b border-white/5'
@@ -166,7 +166,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-forest/98 border-t border-forest-light px-6 py-6 transition-all duration-300 animate-in fade-in slide-in-from-top-4">
+        <div className="md:hidden bg-forest/98 backdrop-blur-xl border-t border-forest-light px-6 py-6 transition-all duration-300 animate-in fade-in slide-in-from-top-4 max-h-[calc(100vh-80px)] overflow-y-auto shadow-2xl">
           <nav className="flex flex-col space-y-4" aria-label="Mobile Navigation">
             {/* Mobile Search Button */}
             <button
