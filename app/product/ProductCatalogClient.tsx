@@ -67,7 +67,7 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
     }
 
     return result;
-  }, [initialProducts, selectedCategory, selectedEnvironment, searchQuery, sortBy]);
+  }, [activeProducts, selectedCategory, selectedEnvironment, searchQuery, sortBy]);
 
   const hasActiveFilters =
     selectedCategory !== 'Semua' || selectedEnvironment !== 'All' || searchQuery !== '';
@@ -232,7 +232,7 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
       {/* Results Header Status */}
       <div className="flex items-center justify-between mb-8">
         <span className="text-xs text-charcoal-muted uppercase tracking-wider font-medium">
-          Menampilkan {filteredProducts.length} dari {initialProducts.length} spesimen pilihan
+          Menampilkan {filteredProducts.length} dari {activeProducts.length} spesimen pilihan
         </span>
         {selectedEnvironment !== 'All' && (
           <span className="text-xs font-semibold text-garden bg-cream px-3 py-1 rounded-full border border-sage/30">

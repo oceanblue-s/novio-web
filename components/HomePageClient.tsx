@@ -30,6 +30,7 @@ export default function HomePageClient() {
     portfolioProjects,
     servicePackages,
     teamMembers,
+    customizerSettings,
     isEditMode,
     isPreviewMode,
     openCreateProduct,
@@ -39,6 +40,11 @@ export default function HomePageClient() {
     openCreateTeam,
     openEditService,
     deleteServicePackage,
+    openEditProductSection,
+    openEditServicesSection,
+    openEditPortfolioSection,
+    openEditTeamSection,
+    openEditBlogSection,
   } = useSiteData();
 
   // Curated products for home preview
@@ -63,21 +69,32 @@ export default function HomePageClient() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
             <SectionTitle
-              label="Praktik & Layanan Hidup Kami"
-              title="Penataan Botani & Perawatan Lanskap"
-              subtitle="Dari hunian residensial privat hingga ruang kerja korporat dan lanskap resor bernilai tinggi."
+              label={customizerSettings.home.servicesSectionBadge || 'Praktik & Layanan Hidup Kami'}
+              title={customizerSettings.home.servicesSectionTitle || 'Penataan Botani & Perawatan Lanskap'}
+              subtitle={customizerSettings.home.servicesSectionSubtitle || 'Dari hunian residensial privat hingga ruang kerja korporat dan lanskap resor bernilai tinggi.'}
               align="left"
             />
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
               {isEditMode && !isPreviewMode && (
-                <button
-                  type="button"
-                  onClick={openCreateService}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>+ Tambah Layanan</span>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={openEditServicesSection}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-forest/90 hover:bg-forest text-softwhite font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
+                    title="Edit Judul & Narasi Bagian Layanan"
+                  >
+                    <Pencil className="w-3.5 h-3.5 text-sage" />
+                    <span>Edit Bagian</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={openCreateService}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>+ Tambah Layanan</span>
+                  </button>
+                </>
               )}
               <Link
                 href="/services"
@@ -165,21 +182,32 @@ export default function HomePageClient() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <SectionTitle
-              label="Komponen Kuliner Alami Indonesia"
-              title="Kurasi Bahan Alami & Fermentasi Artisan"
-              subtitle="Bahan alami premium yang diolah dengan ketulusan — dari bunga yang dapat dimakan dan hasil bumi segar hingga kreasi produk fermentasi artisan."
+              label={customizerSettings.home.productSectionBadge || 'Komponen Kuliner Alami Indonesia'}
+              title={customizerSettings.home.productSectionTitle || 'Kurasi Bahan Alami & Fermentasi Artisan'}
+              subtitle={customizerSettings.home.productSectionSubtitle || 'Bahan alami premium yang diolah dengan ketulusan — dari bunga yang dapat dimakan dan hasil bumi segar hingga kreasi produk fermentasi artisan.'}
               align="left"
             />
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
               {isEditMode && !isPreviewMode && (
-                <button
-                  type="button"
-                  onClick={openCreateProduct}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>+ Tambah Produk</span>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={openEditProductSection}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-forest/90 hover:bg-forest text-softwhite font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
+                    title="Edit Judul & Narasi Bagian Produk"
+                  >
+                    <Pencil className="w-3.5 h-3.5 text-sage" />
+                    <span>Edit Bagian</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={openCreateProduct}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>+ Tambah Produk</span>
+                  </button>
+                </>
               )}
               <Link
                 href="/product"
@@ -205,21 +233,32 @@ export default function HomePageClient() {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
               <SectionTitle
-                label="Portofolio Ruang Hijau"
-                title="Ketika Arsitektur Bernapas Alami"
-                subtitle="Jelajahi transformasi ruang botani kami di berbagai vila mewah, studio arsitektur, dan ruang korporat biofilik."
+                label={customizerSettings.home.portfolioSectionBadge || 'Portofolio Ruang Hijau'}
+                title={customizerSettings.home.portfolioSectionTitle || 'Ketika Arsitektur Bernapas Alami'}
+                subtitle={customizerSettings.home.portfolioSectionSubtitle || 'Jelajahi transformasi ruang botani kami di berbagai vila mewah, studio arsitektur, dan ruang korporat biofilik.'}
                 align="left"
               />
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
                 {isEditMode && !isPreviewMode && (
-                  <button
-                    type="button"
-                    onClick={openCreatePortfolio}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>+ Tambah Portofolio</span>
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={openEditPortfolioSection}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-forest/90 hover:bg-forest text-softwhite font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
+                      title="Edit Judul & Narasi Bagian Portofolio"
+                    >
+                      <Pencil className="w-3.5 h-3.5 text-sage" />
+                      <span>Edit Bagian</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={openCreatePortfolio}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>+ Tambah Portofolio</span>
+                    </button>
+                  </>
                 )}
                 <Link
                   href="/portfolio"
@@ -295,20 +334,31 @@ export default function HomePageClient() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center mb-12">
             <SectionTitle
-              label="Keluarga Pendiri & Tim NOVIO"
-              title="Bersaudara yang Berdedikasi Memberdayakan Petani"
-              subtitle="Kenali Nunik, Retno, Danang, dan tim ahli yang berjuang memutus rantai distribusi yang tidak adil serta menjadi mitra terbaik bagi para Chef di Indonesia."
+              label={customizerSettings.home.teamSectionBadge || 'Keluarga Pendiri & Tim NOVIO'}
+              title={customizerSettings.home.teamSectionTitle || 'Bersaudara yang Berdedikasi Memberdayakan Petani'}
+              subtitle={customizerSettings.home.teamSectionSubtitle || 'Kenali Nunik, Retno, Danang, dan tim ahli yang berjuang memutus rantai distribusi yang tidak adil serta menjadi mitra terbaik bagi para Chef di Indonesia.'}
               align="center"
             />
             {isEditMode && !isPreviewMode && (
-              <button
-                type="button"
-                onClick={openCreateTeam}
-                className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
-              >
-                <Plus className="w-4 h-4" />
-                <span>+ Tambah Anggota Tim</span>
-              </button>
+              <div className="mt-4 flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={openEditTeamSection}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-forest/90 hover:bg-forest text-softwhite font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
+                  title="Edit Judul & Narasi Bagian Tim"
+                >
+                  <Pencil className="w-3.5 h-3.5 text-sage" />
+                  <span>Edit Bagian</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={openCreateTeam}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>+ Tambah Anggota Tim</span>
+                </button>
+              </div>
             )}
           </div>
 
@@ -325,21 +375,32 @@ export default function HomePageClient() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <SectionTitle
-              label="Jurnal NOVIO"
-              title="Perspektif & Catatan Editorial"
-              subtitle="Refleksi mendalam tentang arsitektur biofilik, perawatan spesimen tanaman, dan gaya hidup selaras alam."
+              label={customizerSettings.home.blogSectionBadge || 'Jurnal NOVIO'}
+              title={customizerSettings.home.blogSectionTitle || 'Perspektif & Catatan Editorial'}
+              subtitle={customizerSettings.home.blogSectionSubtitle || 'Refleksi mendalam tentang arsitektur biofilik, perawatan spesimen tanaman, dan gaya hidup selaras alam.'}
               align="left"
             />
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
               {isEditMode && !isPreviewMode && (
-                <button
-                  type="button"
-                  onClick={openCreateBlog}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>+ Tulis Artikel Baru</span>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={openEditBlogSection}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-forest/90 hover:bg-forest text-softwhite font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
+                    title="Edit Judul & Narasi Bagian Jurnal"
+                  >
+                    <Pencil className="w-3.5 h-3.5 text-sage" />
+                    <span>Edit Bagian</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={openCreateBlog}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>+ Tulis Artikel Baru</span>
+                  </button>
+                </>
               )}
               <Link
                 href="/blog"

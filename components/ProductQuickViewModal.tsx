@@ -72,10 +72,11 @@ export default function ProductQuickViewModal() {
         {/* Left: Product Image */}
         <div className="relative md:w-5/12 bg-cream min-h-[240px] md:min-h-full">
           <Image
-            src={quickViewProduct.coverImage}
-            alt={quickViewProduct.name}
+            src={quickViewProduct.coverImage || '/about-greenhouse-bg.jpg'}
+            alt={quickViewProduct.name || 'Produk NOVIO'}
             fill
             sizes="(max-width: 768px) 100vw, 40vw"
+            unoptimized={typeof quickViewProduct.coverImage === 'string' && (quickViewProduct.coverImage.startsWith('data:') || quickViewProduct.coverImage.startsWith('http'))}
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent md:hidden" />

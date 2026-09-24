@@ -3,7 +3,8 @@
 import React from 'react';
 import { Product } from '@/types';
 import { useChefCuration } from '@/context/ChefCurationContext';
-import { ChefHat, Check, MessageSquare, Sparkles } from 'lucide-react';
+import { ChefHat, Check, MessageSquare, Sparkles, Pencil } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 interface ProductDetailActionsProps {
   product: Product;
@@ -15,6 +16,7 @@ export default function ProductDetailActions({
   whatsappInquiryUrl,
 }: ProductDetailActionsProps) {
   const { isItemCurated, addItem, removeItem, openDrawer } = useChefCuration();
+  const { isEditMode, isPreviewMode, openEditProduct } = useSiteData();
   const isCurated = isItemCurated(product.id);
 
   const handleToggle = () => {
@@ -29,10 +31,28 @@ export default function ProductDetailActions({
 
   return (
     <div className="p-6 rounded-xl bg-cream border border-sage/40 mb-8 space-y-4">
+      {/* Admin Quick Edit Button */}
+      {isEditMode && !isPreviewMode && (
+        <div className="p-2.5 rounded-lg bg-forest text-softwhite flex items-center justify-between gap-2 shadow-sm">
+          <span className="text-xs font-semibold flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Admin: Mode Edit Aktif
+          </span>
+          <button
+            type="button"
+            onClick={() => openEditProduct(product)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-garden hover:bg-garden-light text-softwhite text-xs font-bold transition-all shadow-xs"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+            <span>Edit Produk Ini</span>
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-garden font-semibold text-xs uppercase tracking-wider">
           <Sparkles className="w-4 h-4" />
-          <span>Pemesanan & Konsultasi Pasokan Dapur</span>
+          <span>Pemesanan &amp; Konsultasi Pasokan Dapur</span>
         </div>
         {isCurated && (
           <span className="text-[10px] font-semibold uppercase tracking-wider text-garden bg-softwhite px-2 py-0.5 rounded-full border border-sage/40">

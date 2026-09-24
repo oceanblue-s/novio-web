@@ -36,6 +36,21 @@ export interface CustomizerSettings {
     pillar5Desc: string;
     pillar6Title: string;
     pillar6Desc: string;
+    productSectionBadge: string;
+    productSectionTitle: string;
+    productSectionSubtitle: string;
+    servicesSectionBadge: string;
+    servicesSectionTitle: string;
+    servicesSectionSubtitle: string;
+    portfolioSectionBadge: string;
+    portfolioSectionTitle: string;
+    portfolioSectionSubtitle: string;
+    teamSectionBadge: string;
+    teamSectionTitle: string;
+    teamSectionSubtitle: string;
+    blogSectionBadge: string;
+    blogSectionTitle: string;
+    blogSectionSubtitle: string;
     ctaHeadline: string;
     ctaSubtitle: string;
   };
@@ -87,6 +102,26 @@ export const defaultCustomizerSettings: CustomizerSettings = {
     pillar5Desc: 'Portofolio beragam dari sayuran spesial unik hingga saus fermentasi artisan yang memicu kreativitas kuliner.',
     pillar6Title: 'Dampak Komunitas',
     pillar6Desc: 'Misi nyata mengangkat komunitas melalui dukungan pertanian lokal dan pertumbuhan ekonomi petani yang berkeadilan.',
+    productSectionBadge: 'Komponen Kuliner Alami Indonesia',
+    productSectionTitle: 'Kurasi Bahan Alami & Fermentasi Artisan',
+    productSectionSubtitle:
+      'Bahan alami premium yang diolah dengan ketulusan — dari bunga yang dapat dimakan dan hasil bumi segar hingga kreasi produk fermentasi artisan.',
+    servicesSectionBadge: 'Praktik & Layanan Hidup Kami',
+    servicesSectionTitle: 'Penataan Botani & Perawatan Lanskap',
+    servicesSectionSubtitle:
+      'Dari hunian residensial privat hingga ruang kerja korporat dan lanskap resor bernilai tinggi.',
+    portfolioSectionBadge: 'Portofolio Ruang Hijau',
+    portfolioSectionTitle: 'Ketika Arsitektur Bernapas Alami',
+    portfolioSectionSubtitle:
+      'Jelajahi transformasi ruang botani kami di berbagai vila mewah, studio arsitektur, dan ruang korporat biofilik.',
+    teamSectionBadge: 'Keluarga Pendiri & Tim NOVIO',
+    teamSectionTitle: 'Bersaudara yang Berdedikasi Memberdayakan Petani',
+    teamSectionSubtitle:
+      'Kenali Nunik, Retno, Danang, dan tim ahli yang berjuang memutus rantai distribusi yang tidak adil serta menjadi mitra terbaik bagi para Chef di Indonesia.',
+    blogSectionBadge: 'Jurnal NOVIO',
+    blogSectionTitle: 'Perspektif & Catatan Editorial',
+    blogSectionSubtitle:
+      'Refleksi mendalam tentang arsitektur biofilik, perawatan spesimen tanaman, dan gaya hidup selaras alam.',
     ctaHeadline: 'Memiliki rencana proyek, ruang hijau impian, atau membutuhkan kurasi khusus?',
     ctaSubtitle:
       'Diskusikan langsung bersama direktur botani dan kurator kami di Bandung Barat atau Bali. Kami siap mendampingi pemilihan spesimen, instalasi ruang hijau, hingga panduan perawatan jangka panjang.',

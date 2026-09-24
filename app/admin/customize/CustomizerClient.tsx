@@ -8,6 +8,7 @@ import {
   CustomizerSettings,
   safeMergeSettings,
 } from '@/context/LiveCustomizerContext';
+import { compressImageFile, safeSetLocalStorage } from '@/lib/imageUtils';
 import {
   Monitor,
   Tablet,
@@ -135,34 +136,32 @@ export default function CustomizerClient() {
     } catch {}
   };
 
-  // Image Upload Helper (Base64)
+  // Image Upload Helper with auto-compression
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     onDone: (dataUrl: string) => void
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        if (result) onDone(result);
-      };
-      reader.readAsDataURL(file);
+      compressImageFile(file)
+        .then((dataUrl) => onDone(dataUrl))
+        .catch(() => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const result = event.target?.result as string;
+            if (result) onDone(result);
+          };
+          reader.readAsDataURL(file);
+        });
     }
   };
 
   // Publish / Save
   const handlePublish = () => {
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        window.localStorage.setItem(STORAGE_CUSTOMIZER_KEY, JSON.stringify(settings));
-      }
-      setIsDirty(false);
-      setPublishedToast(true);
-      setTimeout(() => setPublishedToast(false), 3500);
-    } catch {
-      alert('Gagal menyimpan ke penyimpanan lokal.');
-    }
+    safeSetLocalStorage(STORAGE_CUSTOMIZER_KEY, JSON.stringify(settings));
+    setIsDirty(false);
+    setPublishedToast(true);
+    setTimeout(() => setPublishedToast(false), 3500);
   };
 
   // Reset to default

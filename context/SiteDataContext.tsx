@@ -14,6 +14,7 @@ import {
   defaultCustomizerSettings,
   safeMergeSettings,
 } from '@/context/LiveCustomizerContext';
+import { compressImageFile, safeSetLocalStorage } from '@/lib/imageUtils';
 import {
   X,
   Upload,
@@ -95,6 +96,11 @@ interface SiteDataContextType {
   openEditHero: () => void;
   openEditCommitment: () => void;
   openEditContact: () => void;
+  openEditProductSection: () => void;
+  openEditServicesSection: () => void;
+  openEditPortfolioSection: () => void;
+  openEditTeamSection: () => void;
+  openEditBlogSection: () => void;
 }
 
 const SiteDataContext = createContext<SiteDataContextType | undefined>(undefined);
@@ -135,6 +141,11 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const [isEditingHero, setIsEditingHero] = useState(false);
   const [isEditingCommitment, setIsEditingCommitment] = useState(false);
   const [isEditingContact, setIsEditingContact] = useState(false);
+  const [isEditingProductSection, setIsEditingProductSection] = useState(false);
+  const [isEditingServicesSection, setIsEditingServicesSection] = useState(false);
+  const [isEditingPortfolioSection, setIsEditingPortfolioSection] = useState(false);
+  const [isEditingTeamSection, setIsEditingTeamSection] = useState(false);
+  const [isEditingBlogSection, setIsEditingBlogSection] = useState(false);
 
   // Load datasets and edit mode on mount
   useEffect(() => {
@@ -221,16 +232,23 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   // -------------------------------------------------------------
   const persistProducts = (updated: Product[]) => {
     setProducts(updated);
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        window.localStorage.setItem(`${STORAGE_PREFIX}products`, JSON.stringify(updated));
-      }
-    } catch {}
+    safeSetLocalStorage(`${STORAGE_PREFIX}products`, JSON.stringify(updated));
   };
 
   const saveProduct = (product: Product) => {
-    const exists = products.some((p) => p.id === product.id);
-    const updated = exists ? products.map((p) => (p.id === product.id ? product : p)) : [product, ...products];
+    const cleanProduct: Product = {
+      ...product,
+      name: product.name.trim() || 'Produk Baru Novio',
+      slug: product.slug.trim() || slugify(product.name || 'produk-baru') || `produk-${Date.now()}`,
+      category: product.category.trim() || 'Tisane & Botanical Blends',
+      shortDescription: product.shortDescription.trim() || 'Deskripsi singkat produk segar novio.',
+      description: product.description?.trim() || product.shortDescription.trim() || 'Deskripsi lengkap produk.',
+      coverImage: product.coverImage?.trim() || '/about-greenhouse-bg.jpg',
+      features: Array.isArray(product.features) && product.features.length > 0 ? product.features : ['Alami', 'Segar'],
+      published: product.published ?? true,
+    };
+    const exists = products.some((p) => p.id === cleanProduct.id);
+    const updated = exists ? products.map((p) => (p.id === cleanProduct.id ? cleanProduct : p)) : [cleanProduct, ...products];
     persistProducts(updated);
     setEditingProduct(null);
     setIsCreatingProduct(false);
@@ -243,16 +261,19 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
 
   const persistBlog = (updated: BlogPost[]) => {
     setBlogPosts(updated);
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        window.localStorage.setItem(`${STORAGE_PREFIX}blog`, JSON.stringify(updated));
-      }
-    } catch {}
+    safeSetLocalStorage(`${STORAGE_PREFIX}blog`, JSON.stringify(updated));
   };
 
   const saveBlogPost = (post: BlogPost) => {
-    const exists = blogPosts.some((b) => b.id === post.id);
-    const updated = exists ? blogPosts.map((b) => (b.id === post.id ? post : b)) : [post, ...blogPosts];
+    const cleanPost: BlogPost = {
+      ...post,
+      title: post.title.trim() || 'Artikel Baru Novio',
+      slug: post.slug.trim() || slugify(post.title || 'artikel-baru') || `artikel-${Date.now()}`,
+      excerpt: post.excerpt.trim() || 'Ringkasan artikel jurnal novio.',
+      coverImage: post.coverImage?.trim() || '/about-greenhouse-bg.jpg',
+    };
+    const exists = blogPosts.some((b) => b.id === cleanPost.id);
+    const updated = exists ? blogPosts.map((b) => (b.id === cleanPost.id ? cleanPost : b)) : [cleanPost, ...blogPosts];
     persistBlog(updated);
     setEditingBlog(null);
     setIsCreatingBlog(false);
@@ -265,16 +286,20 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
 
   const persistPortfolio = (updated: PortfolioProject[]) => {
     setPortfolioProjects(updated);
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        window.localStorage.setItem(`${STORAGE_PREFIX}portfolio`, JSON.stringify(updated));
-      }
-    } catch {}
+    safeSetLocalStorage(`${STORAGE_PREFIX}portfolio`, JSON.stringify(updated));
   };
 
   const savePortfolioProject = (project: PortfolioProject) => {
-    const exists = portfolioProjects.some((p) => p.id === project.id);
-    const updated = exists ? portfolioProjects.map((p) => (p.id === project.id ? project : p)) : [project, ...portfolioProjects];
+    const cleanProject: PortfolioProject = {
+      ...project,
+      title: project.title.trim() || 'Proyek Baru Novio',
+      slug: project.slug.trim() || slugify(project.title || 'proyek-baru') || `proyek-${Date.now()}`,
+      coverImage: project.coverImage?.trim() || '/commitment-flora.jpg',
+      beforeImage: project.beforeImage?.trim() || '/commitment-flora.jpg',
+      afterImage: project.afterImage?.trim() || '/about-greenhouse-bg.jpg',
+    };
+    const exists = portfolioProjects.some((p) => p.id === cleanProject.id);
+    const updated = exists ? portfolioProjects.map((p) => (p.id === cleanProject.id ? cleanProject : p)) : [cleanProject, ...portfolioProjects];
     persistPortfolio(updated);
     setEditingPortfolio(null);
     setIsCreatingPortfolio(false);
@@ -287,16 +312,18 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
 
   const persistServices = (updated: ServicePackage[]) => {
     setServicePackages(updated);
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        window.localStorage.setItem(`${STORAGE_PREFIX}services`, JSON.stringify(updated));
-      }
-    } catch {}
+    safeSetLocalStorage(`${STORAGE_PREFIX}services`, JSON.stringify(updated));
   };
 
   const saveServicePackage = (service: ServicePackage) => {
-    const exists = servicePackages.some((s) => s.id === service.id);
-    const updated = exists ? servicePackages.map((s) => (s.id === service.id ? service : s)) : [service, ...servicePackages];
+    const cleanService: ServicePackage = {
+      ...service,
+      title: service.title.trim() || 'Layanan Baru Novio',
+      slug: service.slug.trim() || slugify(service.title || 'layanan-baru') || `layanan-${Date.now()}`,
+      coverImage: service.coverImage?.trim() || '/about-greenhouse-bg.jpg',
+    };
+    const exists = servicePackages.some((s) => s.id === cleanService.id);
+    const updated = exists ? servicePackages.map((s) => (s.id === cleanService.id ? cleanService : s)) : [cleanService, ...servicePackages];
     persistServices(updated);
     setEditingService(null);
     setIsCreatingService(false);
@@ -309,16 +336,17 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
 
   const persistTeam = (updated: TeamMember[]) => {
     setTeamMembers(updated);
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        window.localStorage.setItem(`${STORAGE_PREFIX}team`, JSON.stringify(updated));
-      }
-    } catch {}
+    safeSetLocalStorage(`${STORAGE_PREFIX}team`, JSON.stringify(updated));
   };
 
   const saveTeamMember = (member: TeamMember) => {
-    const exists = teamMembers.some((t) => t.id === member.id);
-    const updated = exists ? teamMembers.map((t) => (t.id === member.id ? member : t)) : [...teamMembers, member];
+    const cleanMember: TeamMember = {
+      ...member,
+      name: member.name.trim() || 'Anggota Tim Novio',
+      photo: member.photo?.trim() || '/novio-logo.png',
+    };
+    const exists = teamMembers.some((t) => t.id === cleanMember.id);
+    const updated = exists ? teamMembers.map((t) => (t.id === cleanMember.id ? cleanMember : t)) : [...teamMembers, cleanMember];
     persistTeam(updated);
     setEditingTeam(null);
     setIsCreatingTeam(false);
@@ -332,28 +360,30 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const updateCustomizerSettings = (newSettings: Partial<CustomizerSettings>) => {
     setCustomizerSettings((prev) => {
       const merged = safeMergeSettings(prev, newSettings);
-      try {
-        if (typeof window !== 'undefined' && window.localStorage) {
-          window.localStorage.setItem(STORAGE_CUSTOMIZER_KEY, JSON.stringify(merged));
-        }
-      } catch {}
+      safeSetLocalStorage(STORAGE_CUSTOMIZER_KEY, JSON.stringify(merged));
       return merged;
     });
   };
 
-  // Helper for image upload to base64
+  // Helper for image upload with auto-compression to avoid localStorage QuotaExceededError
   const handleImageFile = (
     e: React.ChangeEvent<HTMLInputElement>,
     onDone: (dataUrl: string) => void
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        if (result) onDone(result);
-      };
-      reader.readAsDataURL(file);
+      compressImageFile(file)
+        .then((compressed) => {
+          onDone(compressed);
+        })
+        .catch(() => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const result = event.target?.result as string;
+            if (result) onDone(result);
+          };
+          reader.readAsDataURL(file);
+        });
     }
   };
 
@@ -477,6 +507,11 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
         openEditHero: () => setIsEditingHero(true),
         openEditCommitment: () => setIsEditingCommitment(true),
         openEditContact: () => setIsEditingContact(true),
+        openEditProductSection: () => setIsEditingProductSection(true),
+        openEditServicesSection: () => setIsEditingServicesSection(true),
+        openEditPortfolioSection: () => setIsEditingPortfolioSection(true),
+        openEditTeamSection: () => setIsEditingTeamSection(true),
+        openEditBlogSection: () => setIsEditingBlogSection(true),
       }}
     >
       {children}
@@ -1937,6 +1972,409 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 >
                   <Save className="w-4 h-4" />
                   <span>Selesai &amp; Simpan Kontak</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 8. PRODUCT SECTION HEADING EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isEditingProductSection && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Pencil className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  Edit Judul &amp; Narasi Bagian Produk (Beranda)
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditingProductSection(false)}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Badge / Kategori Atas</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.productSectionBadge}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, productSectionBadge: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                  placeholder="Komponen Kuliner Alami Indonesia"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Judul Utama Bagian Produk</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.productSectionTitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, productSectionTitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                  placeholder="Kurasi Bahan Alami & Fermentasi Artisan"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Subjudul / Paragraf Pengantar</label>
+                <textarea
+                  rows={3}
+                  value={customizerSettings.home.productSectionSubtitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, productSectionSubtitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                  placeholder="Bahan alami premium yang diolah dengan ketulusan..."
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingProductSection(false)}
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Selesai &amp; Simpan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 9. SERVICES SECTION HEADING EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isEditingServicesSection && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Pencil className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  Edit Judul &amp; Narasi Bagian Layanan (Beranda)
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditingServicesSection(false)}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Badge Atas</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.servicesSectionBadge}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, servicesSectionBadge: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Judul Utama Layanan</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.servicesSectionTitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, servicesSectionTitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Subjudul / Paragraf Pengantar</label>
+                <textarea
+                  rows={3}
+                  value={customizerSettings.home.servicesSectionSubtitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, servicesSectionSubtitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingServicesSection(false)}
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Selesai &amp; Simpan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 10. PORTFOLIO SECTION HEADING EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isEditingPortfolioSection && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Pencil className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  Edit Judul &amp; Narasi Bagian Portofolio (Beranda)
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditingPortfolioSection(false)}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Badge Atas</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.portfolioSectionBadge}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, portfolioSectionBadge: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Judul Utama Portofolio</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.portfolioSectionTitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, portfolioSectionTitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Subjudul / Paragraf Pengantar</label>
+                <textarea
+                  rows={3}
+                  value={customizerSettings.home.portfolioSectionSubtitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, portfolioSectionSubtitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingPortfolioSection(false)}
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Selesai &amp; Simpan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 11. TEAM SECTION HEADING EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isEditingTeamSection && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Pencil className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  Edit Judul &amp; Narasi Bagian Tim (Beranda)
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditingTeamSection(false)}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Badge Atas</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.teamSectionBadge}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, teamSectionBadge: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Judul Utama Bagian Tim</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.teamSectionTitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, teamSectionTitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Subjudul / Paragraf Pengantar</label>
+                <textarea
+                  rows={3}
+                  value={customizerSettings.home.teamSectionSubtitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, teamSectionSubtitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingTeamSection(false)}
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Selesai &amp; Simpan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 12. BLOG SECTION HEADING EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isEditingBlogSection && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Pencil className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  Edit Judul &amp; Narasi Bagian Jurnal/Blog (Beranda)
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditingBlogSection(false)}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Badge Atas</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.blogSectionBadge}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, blogSectionBadge: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Judul Utama Jurnal</label>
+                <input
+                  type="text"
+                  value={customizerSettings.home.blogSectionTitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, blogSectionTitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Subjudul / Paragraf Pengantar</label>
+                <textarea
+                  rows={3}
+                  value={customizerSettings.home.blogSectionSubtitle}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      home: { ...customizerSettings.home, blogSectionSubtitle: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingBlogSection(false)}
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Selesai &amp; Simpan</span>
                 </button>
               </div>
             </div>

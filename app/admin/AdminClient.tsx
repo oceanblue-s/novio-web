@@ -10,6 +10,7 @@ import { servicePackages as defaultServices } from '@/data/services';
 import { teamMembers as defaultTeam } from '@/data/team';
 import { siteConfig as defaultSiteConfig, offices as defaultOffices } from '@/data/site';
 import { Product, BlogPost, PortfolioProject, ServicePackage, TeamMember, Office } from '@/types';
+import { compressImageFile, safeSetLocalStorage } from '@/lib/imageUtils';
 import {
   Lock,
   Unlock,
@@ -117,24 +118,26 @@ export default function AdminClient() {
 
   // Save Helpers
   const persist = (key: string, data: unknown) => {
-    try {
-      localStorage.setItem(`${STORAGE_PREFIX}${key}`, JSON.stringify(data));
-    } catch {}
+    safeSetLocalStorage(`${STORAGE_PREFIX}${key}`, JSON.stringify(data));
   };
 
-  // Image Upload to Base64 preview helper
+  // Image Upload to Base64 preview helper with automatic compression
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     onDone: (dataUrl: string) => void
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (uploadEvent) => {
-        const result = uploadEvent.target?.result as string;
-        if (result) onDone(result);
-      };
-      reader.readAsDataURL(file);
+      compressImageFile(file)
+        .then((dataUrl) => onDone(dataUrl))
+        .catch(() => {
+          const reader = new FileReader();
+          reader.onload = (uploadEvent) => {
+            const result = uploadEvent.target?.result as string;
+            if (result) onDone(result);
+          };
+          reader.readAsDataURL(file);
+        });
     }
   };
 

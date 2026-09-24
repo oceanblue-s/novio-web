@@ -199,10 +199,11 @@ Mohon informasi ketersediaan musim panen, katalog harga B2B/Horeca, dan estimasi
                     >
                       <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-softwhite shrink-0 border border-sage/30">
                         <Image
-                          src={item.product.coverImage}
-                          alt={item.product.name}
+                          src={item.product.coverImage || '/about-greenhouse-bg.jpg'}
+                          alt={item.product.name || 'Produk NOVIO'}
                           fill
                           sizes="64px"
+                          unoptimized={typeof item.product.coverImage === 'string' && (item.product.coverImage.startsWith('data:') || item.product.coverImage.startsWith('http'))}
                           className="object-cover"
                         />
                       </div>

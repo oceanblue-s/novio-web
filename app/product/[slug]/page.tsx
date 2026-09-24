@@ -8,6 +8,7 @@ import { siteConfig } from '@/data/site';
 import { ArrowLeft, MapPin, Check, Shield } from 'lucide-react';
 import ProductGallery from './ProductGallery';
 import ProductDetailActions from './ProductDetailActions';
+import DynamicProductDetailClient from './DynamicProductDetailClient';
 
 interface ProductDetailPageProps {
   params: {
@@ -28,7 +29,7 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: 'Product Not Found | NOVIO',
+      title: 'Detail Produk | NOVIO',
     };
   }
 
@@ -64,7 +65,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   const product = products.find((p) => p.slug === params.slug);
 
   if (!product) {
-    notFound();
+    return <DynamicProductDetailClient slug={params.slug} />;
   }
 
   const relatedProducts = products
