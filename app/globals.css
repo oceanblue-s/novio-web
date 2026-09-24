@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* NOVIO Design System */
+
+@layer base {
+  :root {
+    --color-forest: #183C2B;
+    --color-garden: #356B45;
+    --color-olive: #70855A;
+    --color-sage: #A8B69A;
+    --color-earth: #795C3A;
+    --color-cream: #F4F0E6;
+    --color-softwhite: #FBFAF6;
+    --color-charcoal: #20251F;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color: #20251F;
+    background-color: #FBFAF6;
+  }
+
+  body {
+    font-family: var(--font-manrope), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #FBFAF6;
+    color: #20251F;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    font-family: var(--font-playfair), Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F4F0E6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #A8B69A;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #70855A;
+  }
+}
+
+@layer utilities {
+  .bg-dark-overlay {
+    background: linear-gradient(180deg, rgba(24, 60, 43, 0.4) 0%, rgba(24, 60, 43, 0.75) 100%);
+  }
+  .bg-dark-overlay-subtle {
+    background: linear-gradient(180deg, rgba(24, 60, 43, 0.25) 0%, rgba(24, 60, 43, 0.6) 100%);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ==========================================================================
+   Google Translate Styling & Suppression of Default UI
+   ========================================================================== */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+.skiptranslate iframe {
+  display: none !important;
+}
+
