@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { siteConfig, offices } from '@/data/site';
 import {
   MessageSquare,
@@ -14,9 +15,14 @@ import {
 } from 'lucide-react';
 
 export default function WhatsAppBubble() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState('Pricelist B2B & Katalog');
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  if (pathname === '/admin/customize') {
+    return null;
+  }
 
   const TOPICS = [
     {

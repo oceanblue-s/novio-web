@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { siteConfig } from '@/data/site';
+import { useLiveCustomizer } from '@/context/LiveCustomizerContext';
 import { ArrowRight, MessageSquare, MapPin, Mountain, Waves, Sparkles } from 'lucide-react';
 
 interface SanctuaryData {
@@ -47,8 +48,13 @@ const SANCTUARIES: Record<'parongpong' | 'bali', SanctuaryData> = {
 };
 
 export default function HomeHeroClient() {
+  const { settings } = useLiveCustomizer();
   const [activeSanctuaryKey, setActiveSanctuaryKey] = useState<'parongpong' | 'bali'>('parongpong');
   const sanctuary = SANCTUARIES[activeSanctuaryKey];
+  const activeWaNumber =
+    activeSanctuaryKey === 'bali' && settings.site.whatsappBali
+      ? settings.site.whatsappBali
+      : settings.site.whatsappTarget || siteConfig.whatsappTarget;
 
   return (
     <section className="relative w-full overflow-hidden flex items-center justify-center text-center min-h-[90vh] sm:min-h-[94vh] pt-28 pb-20">
@@ -101,7 +107,7 @@ export default function HomeHeroClient() {
         {/* Location & Elevation Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-forest/60 border border-sage/40 text-sage text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-sm">
           <MapPin className="w-3.5 h-3.5 text-garden" />
-          <span>{sanctuary.badge}</span>
+          <span>{settings.home.heroBadge || sanctuary.badge}</span>
         </div>
 
         {/* Hero Title */}
@@ -109,15 +115,16 @@ export default function HomeHeroClient() {
           translate="no"
           className="notranslate font-serif text-4xl sm:text-6xl md:text-7xl font-bold tracking-wider text-softwhite mb-6 text-balance leading-tight"
         >
-          NOVIO
+          {settings.site.name || 'NOVIO'}
         </h1>
 
         {/* Subtitle & Sanctuary Narrative */}
         <p className="font-serif italic text-xl sm:text-2xl md:text-3xl text-cream/95 max-w-2xl mb-3 font-normal">
-          Temukan Cita Rasa Alami Indonesia
+          {settings.home.heroHeadline || 'Temukan Cita Rasa Alami Indonesia'}
         </p>
         <p className="text-sm sm:text-base md:text-lg text-cream/85 max-w-2xl mb-8 leading-relaxed font-light">
-          Bahan kuliner alami yang diolah dengan penuh ketulusan — mulai dari hasil bumi segar hingga kreasi fermentasi artisanal.
+          {settings.home.heroSubtitle ||
+            'Bahan kuliner alami yang diolah dengan penuh ketulusan — mulai dari hasil bumi segar hingga kreasi fermentasi artisanal.'}
         </p>
 
         {/* Microclimate Meta Bar */}
@@ -140,7 +147,7 @@ export default function HomeHeroClient() {
             <ArrowRight className="w-4 h-4" />
           </Link>
           <a
-            href={`https://wa.me/${siteConfig.whatsappTarget}?text=${encodeURIComponent(
+            href={`https://wa.me/${activeWaNumber}?text=${encodeURIComponent(
               `Halo NOVIO, saya tertarik untuk berkonsultasi mengenai pasokan bahan kuliner alami dan produk dari ${sanctuary.name}.`
             )}`}
             target="_blank"
@@ -148,7 +155,7 @@ export default function HomeHeroClient() {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded bg-cream/90 hover:bg-softwhite text-charcoal font-medium text-xs tracking-widest uppercase transition-all shadow-md border border-sage/50"
           >
             <MessageSquare className="w-4 h-4 text-garden" />
-            <span>Konsultasi via WhatsApp</span>
+            <span>{settings.home.ctaWhatsAppText || 'Konsultasi via WhatsApp'}</span>
           </a>
         </div>
       </div>

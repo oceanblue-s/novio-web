@@ -1,11 +1,19 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { siteConfig, navItems, offices } from '@/data/site';
 import { Mail, Phone, MapPin, MessageSquare, ArrowUpRight, Lock } from 'lucide-react';
 
 export default function Footer() {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  if (pathname === '/admin/customize') {
+    return null;
+  }
 
   return (
     <footer className="bg-forest text-cream/90 pt-16 pb-12 border-t border-forest-light">

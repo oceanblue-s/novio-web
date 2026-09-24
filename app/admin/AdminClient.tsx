@@ -40,6 +40,8 @@ import {
   Image as ImageIcon,
   Sliders,
   CheckCircle2,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react';
 
 const ADMIN_PIN = 'novio2026';
@@ -276,6 +278,35 @@ export default function AdminClient() {
               <span>Keluar</span>
             </button>
           </div>
+        </div>
+
+        {/* Mode Sesuaikan Visual (WordPress Style Customizer) Banner */}
+        <div className="bg-gradient-to-r from-garden/15 via-forest/10 to-forest-light/10 border-2 border-garden/30 rounded-2xl p-5 sm:p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-sm">
+          <div className="flex items-start sm:items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-garden text-softwhite flex items-center justify-center shrink-0 shadow-md">
+              <Sparkles className="w-6 h-6 text-cream" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="font-serif text-lg sm:text-xl font-bold text-charcoal">
+                  Studio Sesuaikan Website (Visual Editor)
+                </h2>
+                <span className="text-[10px] uppercase font-extrabold tracking-wider bg-garden text-softwhite px-2.5 py-0.5 rounded-full shadow-sm">
+                  WordPress Style
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-charcoal/75 leading-relaxed">
+                Tampilan split-screen langsung: edit teks, filosofi, foto hero, komitmen 6 pilar & kontak di bilah kiri, sambil melihat perubahan website secara real-time di bilah kanan (Desktop, Tablet, & HP).
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/admin/customize"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-forest hover:bg-forest-light text-softwhite text-xs font-bold uppercase tracking-wider transition-all shadow-md shrink-0 hover:scale-[1.02]"
+          >
+            <span>Buka Studio Sesuaikan</span>
+            <ArrowRight className="w-4 h-4 text-sage" />
+          </Link>
         </div>
 
         {/* Tab Navigation Menu (All 7 Sections) */}

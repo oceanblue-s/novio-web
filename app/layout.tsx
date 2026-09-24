@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import AmbientAudioToggle from '@/components/AmbientAudioToggle';
 import WhatsAppBubble from '@/components/WhatsAppBubble';
 import GoogleTranslateScript from '@/components/GoogleTranslateScript';
+import { LiveCustomizerProvider } from '@/context/LiveCustomizerContext';
 import { ChefCurationProvider } from '@/context/ChefCurationContext';
 import ChefCurationDrawer from '@/components/ChefCurationDrawer';
 import CommandPalette from '@/components/CommandPalette';
@@ -185,17 +186,19 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans bg-softwhite text-charcoal selection:bg-sage/40 selection:text-forest">
-        <ChefCurationProvider>
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-          <WhatsAppBubble />
-          <ChefCurationDrawer />
-          <CommandPalette />
-          <ProductQuickViewModal />
-          <AmbientAudioToggle />
-          <GoogleTranslateScript />
-        </ChefCurationProvider>
+        <LiveCustomizerProvider>
+          <ChefCurationProvider>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+            <WhatsAppBubble />
+            <ChefCurationDrawer />
+            <CommandPalette />
+            <ProductQuickViewModal />
+            <AmbientAudioToggle />
+            <GoogleTranslateScript />
+          </ChefCurationProvider>
+        </LiveCustomizerProvider>
       </body>
     </html>
   );

@@ -1,10 +1,16 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Volume2, VolumeX, Sparkles, Wind } from 'lucide-react';
 
 export default function AmbientAudioToggle() {
+  const pathname = usePathname();
   const [isPlaying, setIsPlaying] = useState(false);
+
+  if (pathname === '/admin/customize') {
+    return null;
+  }
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
   const noiseNodeRef = useRef<AudioBufferSourceNode | null>(null);

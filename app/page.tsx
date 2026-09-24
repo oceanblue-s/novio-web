@@ -3,6 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Hero from '@/components/Hero';
 import HomeHeroClient from '@/components/HomeHeroClient';
+import HomeCommitmentClient from '@/components/HomeCommitmentClient';
+import HomeCtaClient from '@/components/HomeCtaClient';
 import SectionTitle from '@/components/SectionTitle';
 import ProductCard from '@/components/ProductCard';
 import BlogCard from '@/components/BlogCard';
@@ -29,125 +31,8 @@ export default function HomePage() {
       {/* 1. Dual-Sanctuary Interactive Hero Section */}
       <HomeHeroClient />
 
-      {/* 2. Commitment Section (Editorial) */}
-      <section className="py-24 px-6 sm:px-8 bg-cream border-y border-sage/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Editorial Copy */}
-            <div className="lg:col-span-7">
-              <span className="text-xs font-semibold tracking-widest uppercase text-garden bg-softwhite px-3 py-1 rounded-full border border-sage/40 inline-block mb-4">
-                Komitmen Nyata Kami
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium text-charcoal tracking-tight leading-tight mb-6">
-                Dibudidayakan dengan rasa hormat pada alam, dipandu oleh integritas ekologis.
-              </h2>
-              <p className="text-charcoal/80 text-base sm:text-lg leading-relaxed mb-6">
-                <span className="notranslate font-medium" translate="no">Novio</span>, kami tidak sekadar menghadirkan tanaman. Kami mengkurasi organisme hidup yang siap beradaptasi dan tumbuh subur di ruang hunian modern. Setiap spesimen yang dirawat di kebun dataran tinggi Parongpong kami diaklimatisasi menggunakan substrat vulkanik organik, aerasi alami, dan perhatian penuh ketulusan.
-              </p>
-              <p className="text-charcoal/70 text-base leading-relaxed mb-8">
-                Filosofi kami merangkul keanekaragaman hayati, sentuhan keahlian artisan lokal pada setiap wadah tembikar, serta komitmen teguh terhadap budidaya berkelanjutan tanpa pemaksaan bahan kimia sintetis.
-              </p>
-
-              {/* Detail Komitmen Kualitas & Keberlanjutan (6 Pilar dari PDF) */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-sage/40">
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center text-forest">
-                    <Award className="w-4 h-4" />
-                  </div>
-                  <h3 className="font-serif font-medium text-charcoal text-base">
-                    Kualitas Utama
-                  </h3>
-                  <p className="text-xs text-charcoal/70 leading-relaxed">
-                    Mengutamakan bahan segar bermutu tinggi langsung dari petani lokal demi keunggulan kuliner para chef.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center text-forest">
-                    <Leaf className="w-4 h-4" />
-                  </div>
-                  <h3 className="font-serif font-medium text-charcoal text-base">
-                    Praktik Berkelanjutan
-                  </h3>
-                  <p className="text-xs text-charcoal/70 leading-relaxed">
-                    Metode produksi ramah lingkungan alami yang memberi manfaat jangka panjang bagi petani dan chef.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center text-forest">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <h3 className="font-serif font-medium text-charcoal text-base">
-                    Jaminan Kualitas
-                  </h3>
-                  <p className="text-xs text-charcoal/70 leading-relaxed">
-                    Perhatian cermat pada setiap detail menjamin standar kebersihan dan mutu tertinggi dari kebun ke meja saji.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center text-forest">
-                    <Sun className="w-4 h-4" />
-                  </div>
-                  <h3 className="font-serif font-medium text-charcoal text-base">
-                    Jangkauan 11 Provinsi
-                  </h3>
-                  <p className="text-xs text-charcoal/70 leading-relaxed">
-                    Menjangkau para chef di berbagai kota di 11 provinsi Indonesia dengan rantai pasok yang andal dan terjaga.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center text-forest">
-                    <Sprout className="w-4 h-4" />
-                  </div>
-                  <h3 className="font-serif font-medium text-charcoal text-base">
-                    Produk Inovatif
-                  </h3>
-                  <p className="text-xs text-charcoal/70 leading-relaxed">
-                    Portofolio beragam dari sayuran spesial unik hingga saus fermentasi artisan yang memicu kreativitas kuliner.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center text-forest">
-                    <HeartHandshake className="w-4 h-4" />
-                  </div>
-                  <h3 className="font-serif font-medium text-charcoal text-base">
-                    Dampak Komunitas
-                  </h3>
-                  <p className="text-xs text-charcoal/70 leading-relaxed">
-                    Misi nyata mengangkat komunitas melalui dukungan pertanian lokal dan pertumbuhan ekonomi petani yang berkeadilan.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Editorial Image */}
-            <div className="lg:col-span-5">
-              <div className="relative aspect-[4/5] rounded-xl overflow-hidden shadow-lg border border-sage/40">
-                <Image
-                  src="/commitment-flora.jpg"
-                  alt="Novio Botanical Parongpong Highland Blooms"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest/80 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-softwhite">
-                  <p className="text-xs uppercase tracking-widest text-sage mb-1">
-                    Fasilitas Budidaya Parongpong
-                  </p>
-                  <p className="font-serif text-lg text-cream">
-                    Kabut vulkanik dan siklus pencahayaan alami di ketinggian 1.250 mdpl.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 2. Commitment Section (Connected to Live Customizer) */}
+      <HomeCommitmentClient />
 
       {/* 3. Botanical Practices & Services */}
       <section className="py-24 px-6 sm:px-8 bg-softwhite">
@@ -370,46 +255,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. Restrained WhatsApp CTA Banner before Footer */}
-      <section className="py-20 px-6 sm:px-8 bg-forest text-softwhite relative overflow-hidden">
-        <div className="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-forest-light/40 blur-3xl pointer-events-none" />
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-light/60 border border-sage/30 text-sage text-xs font-semibold uppercase tracking-wider mb-6">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Konsultasi Botani Privat</span>
-          </div>
-
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight mb-6 text-balance text-softwhite">
-            Memiliki rencana proyek, ruang hijau impian, atau membutuhkan kurasi khusus?
-          </h2>
-
-          <p className="text-cream/80 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-10 text-balance">
-            Diskusikan langsung bersama direktur botani dan kurator kami di Bandung Barat atau Bali. Kami siap mendampingi pemilihan spesimen, instalasi ruang hijau, hingga panduan perawatan jangka panjang.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href={`https://wa.me/${siteConfig.whatsappTarget}?text=${encodeURIComponent(
-                'Halo NOVIO, saya ingin berkonsultasi mengenai kurasi botani untuk ruang saya.'
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded bg-garden hover:bg-garden-light text-softwhite font-medium text-sm tracking-wider uppercase transition-all shadow-md"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span>Hubungi via WhatsApp (0813 1241 4863)</span>
-            </a>
-
-            <Link
-              href="/contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded bg-cream/10 hover:bg-cream/20 text-softwhite font-medium text-sm tracking-wider uppercase border border-sage/40 transition-colors"
-            >
-              <span>Kunjungi Kontak & Kantor</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* 6. WhatsApp CTA Banner before Footer (Connected to Live Customizer) */}
+      <HomeCtaClient />
     </div>
   );
 }
