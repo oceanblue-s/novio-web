@@ -30,11 +30,12 @@ export default function ProductGallery({ images, name, hotspots }: ProductGaller
       {/* Main Large Image Container */}
       <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-cream border border-sage/40 shadow-sm group">
         <Image
-          src={activeImage}
+          src={activeImage || '/about-greenhouse-bg.jpg'}
           alt={`${name} - Main View`}
           fill
           priority
           sizes="(max-width: 1024px) 100vw, 60vw"
+          unoptimized={typeof activeImage === 'string' && (activeImage.startsWith('data:') || activeImage.startsWith('http'))}
           className="object-cover object-center transition-all duration-500"
         />
 
@@ -78,10 +79,11 @@ export default function ProductGallery({ images, name, hotspots }: ProductGaller
                 aria-label={`View photo ${idx + 1} of ${name}`}
               >
                 <Image
-                  src={img}
+                  src={img || '/about-greenhouse-bg.jpg'}
                   alt={`${name} thumbnail ${idx + 1}`}
                   fill
                   sizes="80px"
+                  unoptimized={typeof img === 'string' && (img.startsWith('data:') || img.startsWith('http'))}
                   className="object-cover"
                 />
               </button>

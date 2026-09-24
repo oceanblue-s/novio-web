@@ -13,10 +13,18 @@ import {
   Pencil,
   ChevronRight,
   ExternalLink,
+  Smartphone,
 } from 'lucide-react';
 
 export default function VisualEditBar() {
-  const { isEditMode, isPreviewMode, enableEditMode, disableEditMode, togglePreviewMode } = useSiteData();
+  const {
+    isEditMode,
+    isPreviewMode,
+    enableEditMode,
+    disableEditMode,
+    togglePreviewMode,
+    openSyncModal,
+  } = useSiteData();
   const pathname = usePathname();
 
   // Floating trigger when edit mode is OFF
@@ -25,16 +33,28 @@ export default function VisualEditBar() {
     if (pathname.startsWith('/admin')) return null;
 
     return (
-      <button
-        type="button"
-        onClick={enableEditMode}
-        className="fixed bottom-6 left-6 z-50 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-forest text-softwhite hover:bg-forest-light shadow-2xl border-2 border-sage/60 text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 group"
-        title="Aktifkan Mode Edit Langsung di Halaman"
-      >
-        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 group-hover:animate-ping" />
-        <Pencil className="w-3.5 h-3.5 text-sage" />
-        <span>Mode Edit Web</span>
-      </button>
+      <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={enableEditMode}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-forest text-softwhite hover:bg-forest-light shadow-2xl border-2 border-sage/60 text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 group"
+          title="Aktifkan Mode Edit Langsung di Halaman"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 group-hover:animate-ping" />
+          <Pencil className="w-3.5 h-3.5 text-sage" />
+          <span>Mode Edit Web</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={openSyncModal}
+          className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-full bg-cream text-charcoal hover:bg-softwhite shadow-2xl border-2 border-sage/60 text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
+          title="Sinkronisasi ke HP / Impor Cadangan Data"
+        >
+          <Smartphone className="w-3.5 h-3.5 text-forest" />
+          <span className="hidden sm:inline">Sinkron HP</span>
+        </button>
+      </div>
     );
   }
 
@@ -105,6 +125,16 @@ export default function VisualEditBar() {
               <span>{isPreviewMode ? 'Keluar Pratinjau' : 'Pratinjau Pengunjung'}</span>
             </button>
 
+            <button
+              type="button"
+              onClick={openSyncModal}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-softwhite border border-emerald-400/60 text-[11px] font-bold uppercase tracking-wider shadow-sm transition-all active:scale-95"
+              title="Kirim link sinkronisasi ke WhatsApp atau unduh cadangan agar langsung tampil di HP"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-emerald-200" />
+              <span>Sinkron ke HP</span>
+            </button>
+
             <Link
               href="/admin"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-forest-light/60 hover:bg-forest-light text-cream border border-sage/40 text-[11px] font-bold uppercase tracking-wider"
@@ -128,15 +158,27 @@ export default function VisualEditBar() {
       </div>
 
       {/* Floating Status Pill at Bottom-Left */}
-      <button
-        type="button"
-        onClick={disableEditMode}
-        className="fixed bottom-6 left-6 z-50 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-600 text-softwhite hover:bg-emerald-700 shadow-2xl border-2 border-cream text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
-        title="Mode Edit Sedang Aktif. Klik untuk keluar/selesai."
-      >
-        <span className="w-2.5 h-2.5 rounded-full bg-softwhite animate-pulse" />
-        <span>Mode Edit: AKTIF (Klik Selesai)</span>
-      </button>
+      <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={disableEditMode}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-600 text-softwhite hover:bg-emerald-700 shadow-2xl border-2 border-cream text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
+          title="Mode Edit Sedang Aktif. Klik untuk keluar/selesai."
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-softwhite animate-pulse" />
+          <span>Mode Edit: AKTIF (Selesai)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={openSyncModal}
+          className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-full bg-forest text-softwhite hover:bg-forest-light shadow-2xl border-2 border-sage/60 text-xs font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
+          title="Sinkronkan ke HP / Cadangan Data"
+        >
+          <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="hidden sm:inline">Sinkron HP</span>
+        </button>
+      </div>
     </>
   );
 }

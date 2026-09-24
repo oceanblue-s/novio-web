@@ -38,6 +38,11 @@ import {
   BookOpen,
   Briefcase,
   Users,
+  Smartphone,
+  ArrowRightLeft,
+  Download,
+  Copy,
+  Share2,
 } from 'lucide-react';
 
 const ADMIN_PIN = 'novio2026';
@@ -101,6 +106,14 @@ interface SiteDataContextType {
   openEditPortfolioSection: () => void;
   openEditTeamSection: () => void;
   openEditBlogSection: () => void;
+
+  // Cross-Device Sync & Backup Helpers
+  generateSyncUrl: (mode?: 'hash' | 'query') => string;
+  importSyncData: (jsonStr: string) => boolean;
+  getExportDataJson: () => string;
+  isSyncModalOpen: boolean;
+  openSyncModal: () => void;
+  closeSyncModal: () => void;
 }
 
 const SiteDataContext = createContext<SiteDataContextType | undefined>(undefined);
@@ -147,10 +160,109 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const [isEditingTeamSection, setIsEditingTeamSection] = useState(false);
   const [isEditingBlogSection, setIsEditingBlogSection] = useState(false);
 
+  // Sync Modal State
+  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+  const [syncCodeInput, setSyncCodeInput] = useState('');
+  const [syncCopied, setSyncCopied] = useState(false);
+
+  const importSyncData = (jsonStr: string): boolean => {
+    try {
+      let parsed = JSON.parse(jsonStr);
+      if (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
+      }
+
+      let changed = false;
+
+      if (Array.isArray(parsed)) {
+        setProducts(parsed);
+        safeSetLocalStorage(`${STORAGE_PREFIX}products`, JSON.stringify(parsed));
+        changed = true;
+      } else if (typeof parsed === 'object' && parsed !== null) {
+        if (parsed.products && Array.isArray(parsed.products)) {
+          setProducts(parsed.products);
+          safeSetLocalStorage(`${STORAGE_PREFIX}products`, JSON.stringify(parsed.products));
+          changed = true;
+        }
+        if (parsed.blog && Array.isArray(parsed.blog)) {
+          setBlogPosts(parsed.blog);
+          safeSetLocalStorage(`${STORAGE_PREFIX}blog`, JSON.stringify(parsed.blog));
+          changed = true;
+        }
+        if (parsed.portfolio && Array.isArray(parsed.portfolio)) {
+          setPortfolioProjects(parsed.portfolio);
+          safeSetLocalStorage(`${STORAGE_PREFIX}portfolio`, JSON.stringify(parsed.portfolio));
+          changed = true;
+        }
+        if (parsed.services && Array.isArray(parsed.services)) {
+          setServicePackages(parsed.services);
+          safeSetLocalStorage(`${STORAGE_PREFIX}services`, JSON.stringify(parsed.services));
+          changed = true;
+        }
+        if (parsed.team && Array.isArray(parsed.team)) {
+          setTeamMembers(parsed.team);
+          safeSetLocalStorage(`${STORAGE_PREFIX}team`, JSON.stringify(parsed.team));
+          changed = true;
+        }
+        if (parsed.customizer) {
+          setCustomizerSettings((prev) => safeMergeSettings(prev, parsed.customizer));
+          safeSetLocalStorage(STORAGE_CUSTOMIZER_KEY, JSON.stringify(parsed.customizer));
+          changed = true;
+        }
+      }
+      return changed;
+    } catch (err) {
+      console.error('importSyncData error:', err);
+      return false;
+    }
+  };
+
+  const getExportDataJson = (): string => {
+    try {
+      const payload = {
+        products,
+        blog: blogPosts,
+        portfolio: portfolioProjects,
+        services: servicePackages,
+        team: teamMembers,
+        customizer: customizerSettings,
+        exportedAt: new Date().toISOString(),
+        siteVersion: 'novio-v1',
+      };
+      return JSON.stringify(payload, null, 2);
+    } catch {
+      return '';
+    }
+  };
+
+  const generateSyncUrl = (mode: 'hash' | 'query' = 'hash'): string => {
+    try {
+      if (typeof window === 'undefined') return '';
+      const payload = {
+        products,
+        blog: blogPosts,
+        portfolio: portfolioProjects,
+        services: servicePackages,
+        team: teamMembers,
+        customizer: customizerSettings,
+      };
+      const jsonStr = JSON.stringify(payload);
+      const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+      if (mode === 'hash') {
+        return `${window.location.origin}/#sync=${b64}`;
+      }
+      return `${window.location.origin}/?syncData=${b64}`;
+    } catch {
+      return '';
+    }
+  };
+
   // Load datasets and edit mode on mount
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+
         // Load datasets from localStorage
         const p = window.localStorage.getItem(`${STORAGE_PREFIX}products`);
         if (p) setProducts(JSON.parse(p));
@@ -170,8 +282,35 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
         const cust = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
         if (cust) setCustomizerSettings((prev) => safeMergeSettings(prev, JSON.parse(cust)));
 
+        // Check for syncData in URL query or hash
+        let syncParam = urlParams.get('syncData') || urlParams.get('sync');
+        if (!syncParam && window.location.hash) {
+          const hashClean = window.location.hash.replace(/^#/, '');
+          if (hashClean.startsWith('sync=')) {
+            syncParam = hashClean.slice(5);
+          } else if (hashClean.startsWith('syncData=')) {
+            syncParam = hashClean.slice(9);
+          } else {
+            const hashParams = new URLSearchParams(hashClean);
+            syncParam = hashParams.get('syncData') || hashParams.get('sync');
+          }
+        }
+
+        if (syncParam) {
+          try {
+            const decodedJson = decodeURIComponent(escape(atob(syncParam)));
+            const success = importSyncData(decodedJson);
+            if (success) {
+              alert('✅ Berhasil Mensinkronkan Data!\nProduk dan editan dari laptop Anda kini telah tersimpan di HP ini.');
+              const cleanUrl = window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+            }
+          } catch (err) {
+            console.error('Failed to parse sync payload:', err);
+          }
+        }
+
         // Check if edit mode active
-        const urlParams = new URLSearchParams(window.location.search);
         const hasEditQuery = urlParams.get('edit') === 'true';
         const isEditStored = window.localStorage?.getItem(STORAGE_EDIT_MODE_KEY) === 'true';
 
@@ -512,6 +651,14 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
         openEditPortfolioSection: () => setIsEditingPortfolioSection(true),
         openEditTeamSection: () => setIsEditingTeamSection(true),
         openEditBlogSection: () => setIsEditingBlogSection(true),
+
+        // Cross-device sync & backup
+        generateSyncUrl,
+        importSyncData,
+        getExportDataJson,
+        isSyncModalOpen,
+        openSyncModal: () => setIsSyncModalOpen(true),
+        closeSyncModal: () => setIsSyncModalOpen(false),
       }}
     >
       {children}
@@ -2377,6 +2524,217 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   <span>Selesai &amp; Simpan</span>
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* MULTI-DEVICE SYNC & BACKUP MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isSyncModalOpen && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-md animate-fade-in overflow-y-auto">
+          <div className="max-w-2xl w-full bg-cream rounded-3xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-6 my-auto max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-sage/30 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-forest text-softwhite flex items-center justify-center shadow-md">
+                  <Smartphone className="w-5 h-5 text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-charcoal">
+                    Sinkronisasi HP &amp; Cadangan Data
+                  </h3>
+                  <p className="text-xs text-charcoal/70">
+                    Pindahkan produk dan editan dari Laptop ke HP, atau simpan file cadangan.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSyncModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-charcoal/5 hover:bg-charcoal/10 flex items-center justify-center text-charcoal/70 hover:text-charcoal transition-colors"
+                title="Tutup Modal"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Explanation card */}
+            <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 text-xs text-emerald-950 space-y-1.5">
+              <div className="font-bold flex items-center gap-1.5 text-forest">
+                <Sparkles className="w-4 h-4 text-garden" />
+                <span>Mengapa di HP tidak langsung berubah otomatis?</span>
+              </div>
+              <p className="text-[12px] leading-relaxed text-emerald-900/80">
+                Fitur edit langsung di website ini menyimpan data ke dalam memori browser (<em>localStorage</em>) perangkat Anda. Karena memori laptop dan HP terpisah, Anda dapat menggunakan tombol di bawah ini untuk mengirim data ke HP secara instan!
+              </p>
+            </div>
+
+            {/* Section 1: Kirim ke WhatsApp (Paling Cepat) */}
+            <div className="p-5 rounded-2xl bg-softwhite border border-sage/40 shadow-sm space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-garden text-softwhite flex items-center justify-center font-bold text-xs">
+                    1
+                  </span>
+                  <h4 className="font-bold text-sm text-charcoal">
+                    Kirim Link ke WhatsApp (Buka di HP)
+                  </h4>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                  Rekomendasi Cepat
+                </span>
+              </div>
+              <p className="text-xs text-charcoal/70 leading-relaxed">
+                Buat link otomatis yang memuat seluruh produk &amp; editan Anda. Kirim ke WhatsApp pribadi Anda, lalu ketuk link tersebut di HP.
+              </p>
+
+              <div className="flex flex-wrap gap-2.5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const url = generateSyncUrl('hash');
+                    const text = `Halo, ini tautan sinkronisasi katalog NOVIO untuk dibuka di HP:\n\n${url}\n\n(Ketuk tautan di atas untuk langsung menerapkan seluruh produk & editan di HP Anda)`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                  }}
+                  className="flex-1 min-w-[200px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all active:scale-95"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Kirim Link via WhatsApp</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const url = generateSyncUrl('hash');
+                    navigator.clipboard.writeText(url);
+                    setSyncCopied(true);
+                    setTimeout(() => setSyncCopied(false), 2500);
+                  }}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cream hover:bg-sage/20 text-charcoal border border-sage/60 font-bold text-xs tracking-wider transition-all active:scale-95"
+                >
+                  {syncCopied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-forest" />}
+                  <span>{syncCopied ? 'Tersalin!' : 'Salin Link'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Section 2: Unduh & Impor File JSON */}
+            <div className="p-5 rounded-2xl bg-softwhite border border-sage/40 shadow-sm space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-forest text-softwhite flex items-center justify-center font-bold text-xs">
+                    2
+                  </span>
+                  <h4 className="font-bold text-sm text-charcoal">
+                    Transfer File Cadangan (.json)
+                  </h4>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-charcoal/60 bg-sage/20 px-2 py-0.5 rounded-full">
+                  Tanpa Batas Foto
+                </span>
+              </div>
+              <p className="text-xs text-charcoal/70 leading-relaxed">
+                Jika Anda mengunggah banyak foto resolusi tinggi, unduh file cadangan dari laptop dan buka/unggah file tersebut saat membuka web di HP.
+              </p>
+
+              <div className="flex flex-wrap gap-2.5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const jsonStr = getExportDataJson();
+                    const blob = new Blob([jsonStr], { type: 'application/json' });
+                    const blobUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = `novio-katalog-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);
+                  }}
+                  className="flex-1 min-w-[180px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-forest hover:bg-forest-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all active:scale-95"
+                >
+                  <Download className="w-4 h-4 text-sage" />
+                  <span>Unduh File Cadangan</span>
+                </button>
+
+                <label className="flex-1 min-w-[180px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cream hover:bg-sage/20 text-charcoal border border-sage/60 font-bold text-xs uppercase tracking-wider cursor-pointer transition-all active:scale-95">
+                  <Upload className="w-4 h-4 text-forest" />
+                  <span>Unggah File di HP Ini</span>
+                  <input
+                    type="file"
+                    accept=".json,application/json"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (ev) => {
+                        const content = ev.target?.result as string;
+                        if (content) {
+                          const ok = importSyncData(content);
+                          if (ok) {
+                            alert('✅ Berhasil!\nSeluruh data dan produk baru telah berhasil diterapkan ke browser ini.');
+                            setIsSyncModalOpen(false);
+                          } else {
+                            alert('❌ Gagal membaca file JSON. Pastikan format file benar.');
+                          }
+                        }
+                      };
+                      reader.readAsText(file);
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* Section 3: Tempel Kode Manual */}
+            <details className="rounded-2xl border border-sage/30 bg-softwhite/50 p-3 text-xs group">
+              <summary className="font-bold text-charcoal/80 cursor-pointer select-none flex items-center justify-between">
+                <span>Metode 3: Tempel Kode JSON Secara Manual</span>
+                <span className="text-sage text-sm group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="pt-3 space-y-2">
+                <p className="text-[11px] text-charcoal/60">
+                  Tempelkan teks JSON atau kode cadangan Anda di sini untuk langsung memperbarui katalog browser:
+                </p>
+                <textarea
+                  rows={3}
+                  value={syncCodeInput}
+                  onChange={(e) => setSyncCodeInput(e.target.value)}
+                  placeholder="Tempel teks JSON di sini..."
+                  className="w-full p-2.5 rounded-xl bg-cream border border-sage/40 text-charcoal font-mono text-[11px]"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!syncCodeInput.trim()) return;
+                    const ok = importSyncData(syncCodeInput);
+                    if (ok) {
+                      alert('✅ Berhasil menerapkan data dari teks!');
+                      setSyncCodeInput('');
+                      setIsSyncModalOpen(false);
+                    } else {
+                      alert('❌ Format JSON tidak valid.');
+                    }
+                  }}
+                  className="px-4 py-2 rounded-lg bg-forest text-softwhite font-bold text-xs uppercase tracking-wider hover:bg-forest-light"
+                >
+                  Terapkan Kode
+                </button>
+              </div>
+            </details>
+
+            {/* Section 4: Catatan Pengembang / Permanen */}
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-[11px] text-amber-950 space-y-1">
+              <div className="font-bold text-amber-900 flex items-center gap-1.5">
+                <span>🌐 Ingin Produk Tampil Permanen untuk Seluruh Pengunjung Dunia?</span>
+              </div>
+              <p className="leading-relaxed text-amber-900/80">
+                Penyimpanan saat ini berada di browser Anda. Jika Anda ingin produk baru atau perubahan teks langsung tampil otomatis bagi siapa saja yang membuka web (tanpa perlu sinkronisasi perangkat), cukup unduh file <strong>.json</strong> di atas lalu bagikan kepada kami (tim pengembang) untuk kami pasang langsung ke server Novio.
+              </p>
             </div>
           </div>
         </div>
