@@ -1,10 +1,8 @@
-import React from 'react';
+import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import CustomizerClient from './CustomizerClient';
 
 export const metadata: Metadata = {
-  title: 'Studio Sesuaikan Website (Visual Editor) | NOVIO',
-  description: 'Sesuaikan tampilan, teks filosofi, kontak, dan konten website NOVIO secara visual real-time.',
+  title: 'Mode Edit Visual Website | NOVIO',
   robots: {
     index: false,
     follow: false,
@@ -12,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function CustomizePage() {
-  return <CustomizerClient />;
+  redirect('/?edit=true');
 }

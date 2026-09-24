@@ -6,7 +6,8 @@ import { PortfolioProject, ProjectCategory } from '@/types';
 import ProjectCard from '@/components/ProjectCard';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import { siteConfig } from '@/data/site';
-import { ArrowRight, MapPin, Sparkles, MessageSquare, Layers } from 'lucide-react';
+import { ArrowRight, MapPin, Sparkles, MessageSquare, Layers, Plus } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 interface PortfolioClientProps {
   initialProjects: PortfolioProject[];
@@ -21,18 +22,21 @@ const CATEGORIES: Array<{ id: 'All' | ProjectCategory; label: string }> = [
 ];
 
 export default function PortfolioClient({ initialProjects }: PortfolioClientProps) {
+  const { portfolioProjects: siteProjects, isEditMode, isPreviewMode, openCreatePortfolio } = useSiteData();
+  const activeProjects = siteProjects && siteProjects.length > 0 ? siteProjects : initialProjects;
+
   const [selectedCategory, setSelectedCategory] = useState<'All' | ProjectCategory>('All');
 
   // Featured project for the interactive before/after spotlight
   const spotlightProject = useMemo(() => {
-    return initialProjects.find((p) => p.featured) || initialProjects[0];
-  }, [initialProjects]);
+    return activeProjects.find((p) => p.featured) || activeProjects[0];
+  }, [activeProjects]);
 
   // Filtered project list
   const filteredProjects = useMemo(() => {
-    if (selectedCategory === 'All') return initialProjects;
-    return initialProjects.filter((p) => p.clientCategory === selectedCategory);
-  }, [initialProjects, selectedCategory]);
+    if (selectedCategory === 'All') return activeProjects;
+    return activeProjects.filter((p) => p.clientCategory === selectedCategory);
+  }, [activeProjects, selectedCategory]);
 
   return (
     <div className="space-y-20">
@@ -120,6 +124,26 @@ export default function PortfolioClient({ initialProjects }: PortfolioClientProp
 
       {/* 2. Filter Tabs & Portfolio Grid */}
       <section className="space-y-8">
+        {/* In-Context Admin Edit Action Banner */}
+        {isEditMode && !isPreviewMode && (
+          <div className="p-4 rounded-xl bg-forest/10 border-2 border-dashed border-garden/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-bold text-forest">
+                Mode Edit Aktif: Kelola &amp; Tambah Studi Kasus Portofolio Langsung
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={openCreatePortfolio}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Tambah Portofolio Baru</span>
+            </button>
+          </div>
+        )}
+
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-sage/30 pb-5">
           <div>
             <span className="text-xs font-semibold tracking-widest uppercase text-garden block mb-1">

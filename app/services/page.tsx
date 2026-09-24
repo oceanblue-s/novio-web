@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Hero from '@/components/Hero';
 import SectionTitle from '@/components/SectionTitle';
-import ServiceCard from '@/components/ServiceCard';
+import ServicesListClient from '@/components/ServicesListClient';
 import WorkflowTimeline from '@/components/WorkflowTimeline';
 import { servicePackages, workflowSteps, serviceFAQs } from '@/data/services';
 import { siteConfig } from '@/data/site';
@@ -61,22 +61,7 @@ export default function ServicesPage() {
       </Hero>
 
       {/* 2. Core Service Packages Grid */}
-      <section className="py-20 sm:py-28 px-6 sm:px-8 bg-softwhite">
-        <div className="max-w-7xl mx-auto space-y-12">
-          <SectionTitle
-            label="Kategori Layanan"
-            title="Solusi Botani Terkurasi"
-            subtitle="Disesuaikan dengan karakter arsitektural hunian privat, ruang kerja kantor, hingga lanskap kawasan resor terbuka."
-            align="left"
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {servicePackages.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <ServicesListClient initialServices={servicePackages} />
 
       {/* 3. Horticultural Methodology (Workflow Timeline) */}
       <section className="py-20 sm:py-28 px-6 sm:px-8 bg-cream border-y border-sage/30">

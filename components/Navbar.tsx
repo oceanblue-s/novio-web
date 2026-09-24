@@ -8,12 +8,15 @@ import { navItems, siteConfig } from '@/data/site';
 import { Menu, X, ArrowUpRight, Search, ChefHat } from 'lucide-react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useChefCuration } from '@/context/ChefCurationContext';
+import { useSiteData } from '@/context/SiteDataContext';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { openCommandPalette, openDrawer, curatedItems } = useChefCuration();
+  const { isEditMode, isPreviewMode } = useSiteData();
+  const showEditBar = isEditMode && !isPreviewMode;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +41,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed ${showEditBar ? 'top-[41px]' : 'top-0'} left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
           ? 'bg-forest/95 backdrop-blur-md shadow-md py-3 text-softwhite'
           : 'bg-forest/50 backdrop-blur-sm py-5 text-softwhite'

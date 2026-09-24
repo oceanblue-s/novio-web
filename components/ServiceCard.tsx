@@ -1,16 +1,53 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import { ServicePackage } from '@/types';
 import { siteConfig } from '@/data/site';
-import { Check, MessageSquare, ShieldCheck, Sparkles, ArrowUpRight } from 'lucide-react';
+import { Check, MessageSquare, ShieldCheck, Sparkles, ArrowUpRight, Pencil, Trash2 } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 interface ServiceCardProps {
   service: ServicePackage;
 }
 
 export default function ServiceCard({ service }: ServiceCardProps) {
+  const { isEditMode, isPreviewMode, openEditService, deleteServicePackage } = useSiteData();
+
   return (
     <article className="group bg-softwhite rounded-xl overflow-hidden border border-sage/40 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative">
+      {/* Visual In-Context Edit Action Buttons (Admin Only) */}
+      {isEditMode && !isPreviewMode && (
+        <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openEditService(service);
+            }}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-cream hover:bg-softwhite text-forest text-xs font-bold transition-all shadow-xs"
+            title="Edit Layanan Ini"
+          >
+            <Pencil className="w-3.5 h-3.5 text-garden" />
+            <span>Edit</span>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (window.confirm(`Yakin ingin menghapus layanan "${service.title}"?`)) {
+                deleteServicePackage(service.id);
+              }
+            }}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold transition-all shadow-xs"
+            title="Hapus Layanan Ini"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
       {/* Popular Badge */}
       {service.popular && (
         <div className="absolute top-4 right-4 z-20">

@@ -1,16 +1,54 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PortfolioProject } from '@/types';
-import { ArrowUpRight, MapPin, Sparkles } from 'lucide-react';
+import { ArrowUpRight, MapPin, Sparkles, Pencil, Trash2 } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 interface ProjectCardProps {
   project: PortfolioProject;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const { isEditMode, isPreviewMode, openEditPortfolio, deletePortfolioProject } = useSiteData();
+
   return (
-    <article className="group bg-softwhite rounded-lg overflow-hidden border border-sage/30 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
+    <article className="group bg-softwhite rounded-lg overflow-hidden border border-sage/30 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative">
+      {/* Visual In-Context Edit Action Buttons (Admin Only) */}
+      {isEditMode && !isPreviewMode && (
+        <div className="absolute top-2.5 right-2.5 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openEditPortfolio(project);
+            }}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-cream hover:bg-softwhite text-forest text-xs font-bold transition-all shadow-xs"
+            title="Edit Portofolio Ini"
+          >
+            <Pencil className="w-3.5 h-3.5 text-garden" />
+            <span>Edit</span>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (window.confirm(`Yakin ingin menghapus portofolio "${project.title}"?`)) {
+                deletePortfolioProject(project.id);
+              }
+            }}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold transition-all shadow-xs"
+            title="Hapus Portofolio Ini"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Image Container */}
       <Link
         href={`/portfolio/${project.slug}`}

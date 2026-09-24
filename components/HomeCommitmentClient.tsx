@@ -3,20 +3,35 @@
 import React from 'react';
 import Image from 'next/image';
 import { useLiveCustomizer } from '@/context/LiveCustomizerContext';
-import { Award, Leaf, ShieldCheck, Sun, Sprout, HeartHandshake } from 'lucide-react';
+import { Award, Leaf, ShieldCheck, Sun, Sprout, HeartHandshake, Pencil } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 export default function HomeCommitmentClient() {
   const { settings } = useLiveCustomizer();
+  const { isEditMode, isPreviewMode, openEditCommitment } = useSiteData();
 
   return (
-    <section className="py-24 px-6 sm:px-8 bg-cream border-y border-sage/30">
+    <section className="py-24 px-6 sm:px-8 bg-cream border-y border-sage/30 relative">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Editorial Copy */}
           <div className="lg:col-span-7">
-            <span className="text-xs font-semibold tracking-widest uppercase text-garden bg-softwhite px-3 py-1 rounded-full border border-sage/40 inline-block mb-4">
-              {settings?.home?.commitmentBadge || 'Komitmen Nyata Kami'}
-            </span>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-semibold tracking-widest uppercase text-garden bg-softwhite px-3 py-1 rounded-full border border-sage/40 inline-block">
+                {settings?.home?.commitmentBadge || 'Komitmen Nyata Kami'}
+              </span>
+              {isEditMode && !isPreviewMode && (
+                <button
+                  type="button"
+                  onClick={openEditCommitment}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest text-cream hover:text-softwhite text-xs font-bold uppercase tracking-wider border border-sage/40 shadow-sm transition-all hover:scale-105"
+                  title="Edit Filosofi & 6 Pilar"
+                >
+                  <Pencil className="w-3.5 h-3.5 text-garden" />
+                  <span>Edit Filosofi &amp; 6 Pilar</span>
+                </button>
+              )}
+            </div>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium text-charcoal tracking-tight leading-tight mb-6">
               {settings?.home?.commitmentTitle ||
                 'Dibudidayakan dengan rasa hormat pada alam, dipandu oleh integritas ekologis.'}

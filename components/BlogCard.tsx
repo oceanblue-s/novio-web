@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BlogPost } from '@/types';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Pencil, Trash2 } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -10,6 +13,7 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ post, featured = false }: BlogCardProps) {
+  const { isEditMode, isPreviewMode, openEditBlog, deleteBlogPost } = useSiteData();
   const formattedDate = new Date(post.publishedAt).toLocaleDateString('id-ID', {
     month: 'short',
     day: 'numeric',
@@ -18,7 +22,39 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
 
   if (featured) {
     return (
-      <article className="group bg-softwhite rounded-xl overflow-hidden border border-sage/40 shadow-sm hover:shadow-md transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 mb-12">
+      <article className="group bg-softwhite rounded-xl overflow-hidden border border-sage/40 shadow-sm hover:shadow-md transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 mb-12 relative">
+        {/* Visual In-Context Edit Action Buttons (Admin Only) */}
+        {isEditMode && !isPreviewMode && (
+          <div className="absolute top-3 right-3 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openEditBlog(post);
+              }}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-cream hover:bg-softwhite text-forest text-xs font-bold transition-all shadow-xs"
+              title="Edit Artikel Ini"
+            >
+              <Pencil className="w-3.5 h-3.5 text-garden" />
+              <span>Edit</span>
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.confirm(`Yakin ingin menghapus artikel "${post.title}"?`)) {
+                  deleteBlogPost(post.id);
+                }
+              }}
+              className="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold transition-all shadow-xs"
+              title="Hapus Artikel Ini"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
         {/* Large Featured Image */}
         <Link
           href={`/blog/${post.slug}`}
@@ -100,7 +136,40 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
   }
 
   return (
-    <article className="group bg-softwhite rounded-lg overflow-hidden border border-sage/30 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
+    <article className="group bg-softwhite rounded-lg overflow-hidden border border-sage/30 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative">
+      {/* Visual In-Context Edit Action Buttons (Admin Only) */}
+      {isEditMode && !isPreviewMode && (
+        <div className="absolute top-2.5 right-2.5 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openEditBlog(post);
+            }}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-cream hover:bg-softwhite text-forest text-xs font-bold transition-all shadow-xs"
+            title="Edit Artikel Ini"
+          >
+            <Pencil className="w-3.5 h-3.5 text-garden" />
+            <span>Edit</span>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (window.confirm(`Yakin ingin menghapus artikel "${post.title}"?`)) {
+                deleteBlogPost(post.id);
+              }
+            }}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold transition-all shadow-xs"
+            title="Hapus Artikel Ini"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Thumbnail */}
       <Link
         href={`/blog/${post.slug}`}

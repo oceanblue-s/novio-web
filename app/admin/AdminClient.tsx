@@ -265,6 +265,15 @@ export default function AdminClient() {
 
           <div className="flex items-center gap-3">
             <Link
+              href="/?edit=true"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all animate-pulse"
+              title="Edit langsung di halaman website seperti biasa"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cream" />
+              <span>Mode Edit Visual On-Page</span>
+            </Link>
+
+            <Link
               href="/"
               target="_blank"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 text-xs font-semibold uppercase tracking-wider transition-all"
@@ -284,8 +293,8 @@ export default function AdminClient() {
           </div>
         </div>
 
-        {/* Mode Sesuaikan Visual (WordPress Style Customizer) Banner */}
-        <div className="bg-gradient-to-r from-garden/15 via-forest/10 to-forest-light/10 border-2 border-garden/30 rounded-2xl p-5 sm:p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-sm">
+        {/* Mode Edit Visual On-Page Banner */}
+        <div className="bg-gradient-to-r from-garden/20 via-forest/15 to-emerald-900/10 border-2 border-garden/40 rounded-2xl p-5 sm:p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-sm">
           <div className="flex items-start sm:items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-garden text-softwhite flex items-center justify-center shrink-0 shadow-md">
               <Sparkles className="w-6 h-6 text-cream" />
@@ -293,22 +302,22 @@ export default function AdminClient() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <h2 className="font-serif text-lg sm:text-xl font-bold text-charcoal">
-                  Studio Sesuaikan Website (Visual Editor)
+                  Mode Edit Visual Langsung di Website
                 </h2>
-                <span className="text-[10px] uppercase font-extrabold tracking-wider bg-garden text-softwhite px-2.5 py-0.5 rounded-full shadow-sm">
-                  WordPress Style
+                <span className="text-[10px] uppercase font-extrabold tracking-wider bg-emerald-600 text-softwhite px-2.5 py-0.5 rounded-full shadow-sm">
+                  Rekomendasi Utama
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-charcoal/75 leading-relaxed">
-                Tampilan split-screen langsung: edit teks, filosofi, foto hero, komitmen 6 pilar & kontak di bilah kiri, sambil melihat perubahan website secara real-time di bilah kanan (Desktop, Tablet, & HP).
+                Tampilan website persis seperti biasa, dilengkapi tombol <strong>[✏️ Edit]</strong> dan <strong>[🗑️ Hapus]</strong> di setiap produk, artikel, layanan, dan portofolio, serta tombol <strong>[+ Tambah ...]</strong> di setiap bagian. Sangat mudah dimengerti bahkan untuk admin awam!
               </p>
             </div>
           </div>
           <Link
-            href="/admin/customize"
+            href="/?edit=true"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-forest hover:bg-forest-light text-softwhite text-xs font-bold uppercase tracking-wider transition-all shadow-md shrink-0 hover:scale-[1.02]"
           >
-            <span>Buka Studio Sesuaikan</span>
+            <span>Buka Website Mode Edit</span>
             <ArrowRight className="w-4 h-4 text-sage" />
           </Link>
         </div>

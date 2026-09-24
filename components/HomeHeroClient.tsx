@@ -5,7 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { siteConfig } from '@/data/site';
 import { useLiveCustomizer } from '@/context/LiveCustomizerContext';
-import { ArrowRight, MessageSquare, MapPin, Mountain, Waves, Sparkles } from 'lucide-react';
+import { ArrowRight, MessageSquare, MapPin, Mountain, Waves, Sparkles, Pencil } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 interface SanctuaryData {
   id: 'parongpong' | 'bali';
@@ -49,6 +50,7 @@ const SANCTUARIES: Record<'parongpong' | 'bali', SanctuaryData> = {
 
 export default function HomeHeroClient() {
   const { settings } = useLiveCustomizer();
+  const { isEditMode, isPreviewMode, openEditHero } = useSiteData();
   const [activeSanctuaryKey, setActiveSanctuaryKey] = useState<'parongpong' | 'bali'>('parongpong');
   const sanctuary = SANCTUARIES[activeSanctuaryKey];
   const activeWaNumber =
@@ -58,6 +60,21 @@ export default function HomeHeroClient() {
 
   return (
     <section className="relative w-full overflow-hidden flex items-center justify-center text-center min-h-[90vh] sm:min-h-[94vh] pt-28 pb-20">
+      {/* Visual In-Context Edit Action Trigger (Admin Only) */}
+      {isEditMode && !isPreviewMode && (
+        <div className="absolute top-24 right-6 sm:right-10 z-30">
+          <button
+            type="button"
+            onClick={openEditHero}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-forest/95 hover:bg-forest text-cream hover:text-softwhite text-xs font-bold uppercase tracking-wider border-2 border-sage/60 shadow-2xl transition-all hover:scale-105"
+            title="Edit Teks & Foto Hero Beranda"
+          >
+            <Pencil className="w-4 h-4 text-emerald-400" />
+            <span>Edit Hero Beranda</span>
+          </button>
+        </div>
+      )}
+
       {/* Background Images with smooth fade */}
       <div className="absolute inset-0 z-0">
         <Image

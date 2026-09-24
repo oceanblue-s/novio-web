@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard';
 import { useChefCuration } from '@/context/ChefCurationContext';
+import { useSiteData } from '@/context/SiteDataContext';
 import {
   Search,
   SlidersHorizontal,
@@ -15,6 +16,7 @@ import {
   ChefHat,
   ArrowUpDown,
   ArrowRight,
+  Plus,
 } from 'lucide-react';
 
 interface ProductCatalogClientProps {
@@ -30,18 +32,21 @@ const ENVIRONMENTS = [
 
 export default function ProductCatalogClient({ initialProducts }: ProductCatalogClientProps) {
   const { openDrawer, curatedItems } = useChefCuration();
+  const { products: siteProducts, isEditMode, isPreviewMode, openCreateProduct } = useSiteData();
+  const activeProducts = siteProducts && siteProducts.length > 0 ? siteProducts : initialProducts;
+
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [selectedEnvironment, setSelectedEnvironment] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'default' | 'name-asc' | 'name-desc'>('default');
 
   const categories = useMemo(() => {
-    const rawCats = Array.from(new Set(initialProducts.map((p) => p.category)));
+    const rawCats = Array.from(new Set(activeProducts.map((p) => p.category)));
     return ['Semua', ...rawCats];
-  }, [initialProducts]);
+  }, [activeProducts]);
 
   const filteredProducts = useMemo(() => {
-    let result = initialProducts.filter((product) => {
+    let result = activeProducts.filter((product) => {
       const matchesCategory =
         selectedCategory === 'Semua' || product.category === selectedCategory;
       const matchesEnvironment =
@@ -101,6 +106,26 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      {/* In-Context Admin Edit Action Banner */}
+      {isEditMode && !isPreviewMode && (
+        <div className="mb-8 p-4 rounded-xl bg-forest/10 border-2 border-dashed border-garden/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-bold text-forest">
+              Mode Edit Aktif: Kelola &amp; Tambah Produk Baru Langsung
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={openCreateProduct}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+          >
+            <Plus className="w-4 h-4" />
+            <span>+ Tambah Produk Baru</span>
+          </button>
+        </div>
+      )}
 
       {/* 1. Primary Filter & Search Bar */}
       <div className="space-y-5 mb-10 pb-8 border-b border-sage/30">
