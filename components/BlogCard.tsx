@@ -22,7 +22,7 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
 
   if (featured) {
     return (
-      <article className="group bg-softwhite rounded-xl overflow-hidden border border-sage/40 shadow-sm hover:shadow-md transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 mb-12 relative">
+      <article className="group card-hover-lift bg-softwhite rounded-2xl overflow-hidden border border-sage/40 shadow-sm hover:shadow-xl transition-all duration-500 grid grid-cols-1 lg:grid-cols-12 mb-12 relative">
         {/* Visual In-Context Edit Action Buttons (Admin Only) */}
         {isEditMode && !isPreviewMode && (
           <div className="absolute top-3 right-3 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
@@ -63,14 +63,15 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
           aria-label={`Baca artikel: ${post.title}`}
         >
           <Image
-            src={post.coverImage}
+            src={post.coverImage || '/about-greenhouse-bg.jpg'}
             alt={post.title}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 60vw"
+            unoptimized={typeof post.coverImage === 'string' && (post.coverImage.startsWith('data:') || post.coverImage.startsWith('http'))}
             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
-          <span className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-forest text-softwhite rounded shadow-sm">
+          <span className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-forest/90 backdrop-blur-sm text-softwhite rounded-lg shadow-sm border border-sage/30">
             Artikel Pilihan
           </span>
         </Link>
@@ -79,17 +80,17 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
         <div className="lg:col-span-5 p-8 lg:p-10 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-4 text-xs text-charcoal-muted uppercase tracking-wider mb-4 font-medium">
-              <span className="text-garden font-semibold">{post.category}</span>
+              <span className="text-garden font-bold">{post.category}</span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
+                <Calendar className="w-3.5 h-3.5 text-sage" />
                 {formattedDate}
               </span>
               {post.readTimeMinutes && (
                 <>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" />
+                    <Clock className="w-3.5 h-3.5 text-sage" />
                     {post.readTimeMinutes} mnt baca
                   </span>
                 </>
@@ -107,13 +108,14 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
             </p>
           </div>
 
-          <div className="pt-6 border-t border-cream-dark flex items-center justify-between">
+          <div className="pt-6 border-t border-sage/20 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative w-8 h-8 rounded-full overflow-hidden bg-sage/30">
+              <div className="relative w-9 h-9 rounded-full overflow-hidden bg-sage/30 border border-sage/40">
                 <Image
-                  src={post.author.avatar}
+                  src={post.author.avatar || '/novio-logo.png'}
                   alt={post.author.name}
                   fill
+                  unoptimized={typeof post.author.avatar === 'string' && (post.author.avatar.startsWith('data:') || post.author.avatar.startsWith('http'))}
                   className="object-cover"
                 />
               </div>
@@ -128,7 +130,7 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-garden hover:text-forest transition-colors"
             >
               <span>Baca Artikel</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1.5" />
             </Link>
           </div>
         </div>
@@ -137,7 +139,7 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
   }
 
   return (
-    <article className="group bg-softwhite rounded-lg overflow-hidden border border-sage/30 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative">
+    <article className="group card-hover-lift bg-softwhite rounded-xl overflow-hidden border border-sage/30 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full relative">
       {/* Visual In-Context Edit Action Buttons (Admin Only) */}
       {isEditMode && !isPreviewMode && (
         <div className="absolute top-2.5 right-2.5 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
@@ -179,13 +181,14 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
         aria-label={`Baca artikel: ${post.title}`}
       >
         <Image
-          src={post.coverImage}
+          src={post.coverImage || '/about-greenhouse-bg.jpg'}
           alt={post.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          unoptimized={typeof post.coverImage === 'string' && (post.coverImage.startsWith('data:') || post.coverImage.startsWith('http'))}
+          className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
         />
-        <span className="absolute top-3 left-3 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider bg-forest/80 backdrop-blur-sm text-softwhite rounded">
+        <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider bg-forest/85 backdrop-blur-sm text-softwhite rounded-md border border-sage/30 shadow-xs">
           {post.category}
         </span>
       </Link>
@@ -216,14 +219,14 @@ export default function BlogCard({ post, featured = false }: BlogCardProps) {
         </div>
 
         {/* Read More Action */}
-        <div className="pt-4 border-t border-cream-dark flex items-center justify-between">
-          <span className="text-xs text-charcoal-muted">{post.author.name}</span>
+        <div className="pt-4 border-t border-sage/20 flex items-center justify-between">
+          <span className="text-xs text-charcoal-muted font-medium">{post.author.name}</span>
           <Link
             href={`/blog/${post.slug}`}
             className="inline-flex items-center gap-1 text-sm font-semibold text-garden group-hover:text-forest transition-colors"
           >
             <span>Baca Selengkapnya</span>
-            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1.5" />
           </Link>
         </div>
       </div>

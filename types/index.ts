@@ -2,6 +2,7 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
+  latinName?: string;
   shortDescription: string;
   description: string;
   coverImage: string;
@@ -9,9 +10,12 @@ export interface Product {
   category: string;
   features: string[];
   published: boolean;
+  inStock?: boolean;
   specifications?: Record<string, string>;
   origin?: string;
   environment?: 'Bright Indirect' | 'Low-Light Quiet' | 'AC-Resilient' | 'Veranda & Balcony';
+  applications?: string[];
+  chefNotes?: string;
   hotspots?: {
     x: number; // percentage from left (0 - 100)
     y: number; // percentage from top (0 - 100)

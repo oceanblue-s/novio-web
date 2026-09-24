@@ -36,9 +36,16 @@
     letter-spacing: -0.01em;
   }
 
+  /* Custom text selection */
+  ::selection {
+    background-color: #23533c;
+    color: #fbf9f4;
+  }
+
   /* Custom subtle scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   ::-webkit-scrollbar-track {
     background: #F4F0E6;
@@ -54,7 +61,7 @@
 
 @layer utilities {
   .bg-dark-overlay {
-    background: linear-gradient(180deg, rgba(24, 60, 43, 0.4) 0%, rgba(24, 60, 43, 0.75) 100%);
+    background: linear-gradient(180deg, rgba(24, 60, 43, 0.4) 0%, rgba(24, 60, 43, 0.78) 100%);
   }
   .bg-dark-overlay-subtle {
     background: linear-gradient(180deg, rgba(24, 60, 43, 0.25) 0%, rgba(24, 60, 43, 0.6) 100%);
@@ -62,6 +69,87 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Luxury Glassmorphism */
+  .glass-luxury {
+    background: rgba(251, 250, 246, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 182, 154, 0.35);
+    box-shadow: 0 10px 30px -5px rgba(24, 60, 43, 0.05);
+  }
+
+  .glass-dark {
+    background: rgba(24, 60, 43, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(168, 182, 154, 0.3);
+    box-shadow: 0 20px 40px -10px rgba(15, 39, 28, 0.4);
+  }
+
+  /* Interactive Card Hover Lift */
+  .card-hover-lift {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  }
+  .card-hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 35px -10px rgba(24, 60, 43, 0.12);
+  }
+
+  /* Subtle Button Light Sweep on Hover */
+  .shine-hover {
+    position: relative;
+    overflow: hidden;
+  }
+  .shine-hover::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 20%;
+    height: 200%;
+    background: linear-gradient(
+      60deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    transition: none;
+  }
+  .shine-hover:hover::after {
+    left: 140%;
+    transition: left 0.85s ease-in-out;
+  }
+}
+
+/* Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
 }
 
 /* ==========================================================================

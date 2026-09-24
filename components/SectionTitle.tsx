@@ -1,4 +1,5 @@
 import React from 'react';
+import { Sprout } from 'lucide-react';
 
 interface SectionTitleProps {
   label?: string;
@@ -23,20 +24,23 @@ export default function SectionTitle({
   }[align];
 
   return (
-    <div className={`flex flex-col max-w-3xl mb-12 sm:mb-16 ${alignClasses}`}>
+    <div className={`flex flex-col max-w-3xl mb-10 sm:mb-14 ${alignClasses}`}>
       {label && (
-        <span
-          className={`text-xs font-semibold tracking-widest uppercase mb-3 px-3 py-1 rounded-full inline-block ${
-            isDark
-              ? 'text-sage bg-forest-light/60 border border-sage/20'
-              : 'text-garden bg-cream border border-sage/30'
-          }`}
-        >
-          {label}
-        </span>
+        <div className="flex items-center gap-1.5 mb-3.5">
+          <span
+            className={`inline-flex items-center gap-1.5 text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded-full shadow-xs ${
+              isDark
+                ? 'text-sage bg-forest-light/70 border border-sage/30'
+                : 'text-forest bg-cream/90 border border-sage/40'
+            }`}
+          >
+            <Sprout className="w-3.5 h-3.5 text-garden shrink-0" />
+            <span>{label}</span>
+          </span>
+        </div>
       )}
       <h2
-        className={`font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight mb-4 text-balance ${
+        className={`font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight mb-4 text-balance leading-tight ${
           isDark ? 'text-softwhite' : 'text-charcoal'
         }`}
       >
@@ -44,8 +48,8 @@ export default function SectionTitle({
       </h2>
       {subtitle && (
         <p
-          className={`text-base sm:text-lg leading-relaxed text-balance ${
-            isDark ? 'text-cream/80' : 'text-charcoal/80'
+          className={`text-sm sm:text-base md:text-lg leading-relaxed text-balance font-light ${
+            isDark ? 'text-cream/85' : 'text-charcoal/75'
           }`}
         >
           {subtitle}

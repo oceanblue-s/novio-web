@@ -93,14 +93,20 @@ export default function HomeHeroClient() {
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 text-softwhite flex flex-col items-center">
+        {/* Floating Live Harvest Status Pill */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-forest/80 backdrop-blur-md border border-emerald-400/40 text-[11px] font-semibold text-emerald-300 uppercase tracking-widest mb-6 shadow-lg animate-float-slow">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-glow" />
+          <span>Panen Harian Segar Tersedia • Cold Chain B2B</span>
+        </div>
+
         {/* Dual Sanctuary Switcher Pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-full bg-forest/80 backdrop-blur-md border border-sage/40 shadow-lg mb-8">
+        <div className="flex items-center gap-1.5 p-1 rounded-full bg-forest/80 backdrop-blur-md border border-sage/40 shadow-lg mb-6">
           <button
             type="button"
             onClick={() => setActiveSanctuaryKey('parongpong')}
-            className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all ${
+            className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
               activeSanctuaryKey === 'parongpong'
-                ? 'bg-cream text-charcoal shadow-sm'
+                ? 'bg-cream text-charcoal shadow-md scale-105'
                 : 'text-softwhite/80 hover:text-softwhite'
             }`}
           >
@@ -110,9 +116,9 @@ export default function HomeHeroClient() {
           <button
             type="button"
             onClick={() => setActiveSanctuaryKey('bali')}
-            className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all ${
+            className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
               activeSanctuaryKey === 'bali'
-                ? 'bg-cream text-charcoal shadow-sm'
+                ? 'bg-cream text-charcoal shadow-md scale-105'
                 : 'text-softwhite/80 hover:text-softwhite'
             }`}
           >
@@ -122,7 +128,7 @@ export default function HomeHeroClient() {
         </div>
 
         {/* Location & Elevation Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-forest/60 border border-sage/40 text-sage text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-forest/60 border border-sage/40 text-sage text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-sm shadow-sm">
           <MapPin className="w-3.5 h-3.5 text-garden" />
           <span>{settings?.home?.heroBadge || sanctuary.badge}</span>
         </div>
@@ -130,22 +136,22 @@ export default function HomeHeroClient() {
         {/* Hero Title */}
         <h1
           translate="no"
-          className="notranslate font-serif text-4xl sm:text-6xl md:text-7xl font-bold tracking-wider text-softwhite mb-6 text-balance leading-tight"
+          className="notranslate font-serif text-4xl sm:text-6xl md:text-7xl font-bold tracking-wider text-softwhite mb-6 text-balance leading-tight drop-shadow-sm"
         >
           {settings?.site?.name || 'NOVIO'}
         </h1>
 
         {/* Subtitle & Sanctuary Narrative */}
-        <p className="font-serif italic text-xl sm:text-2xl md:text-3xl text-cream/95 max-w-2xl mb-3 font-normal">
+        <p className="font-serif italic text-xl sm:text-2xl md:text-3xl text-cream max-w-2xl mb-3 font-normal drop-shadow-xs">
           {settings?.home?.heroHeadline || 'Temukan Cita Rasa Alami Indonesia'}
         </p>
-        <p className="text-sm sm:text-base md:text-lg text-cream/85 max-w-2xl mb-8 leading-relaxed font-light">
+        <p className="text-sm sm:text-base md:text-lg text-cream/90 max-w-2xl mb-8 leading-relaxed font-light">
           {settings?.home?.heroSubtitle ||
             'Bahan kuliner alami yang diolah dengan penuh ketulusan — mulai dari hasil bumi segar hingga kreasi fermentasi artisanal.'}
         </p>
 
         {/* Microclimate Meta Bar */}
-        <div className="mb-10 px-5 py-2.5 rounded-xl bg-forest/60 backdrop-blur-md border border-sage/30 text-xs text-softwhite/90 flex flex-wrap items-center justify-center gap-4">
+        <div className="mb-10 px-5 py-2.5 rounded-xl bg-forest/70 backdrop-blur-md border border-sage/35 text-xs text-softwhite flex flex-wrap items-center justify-center gap-4 shadow-md">
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-sage" />
             <strong className="font-semibold text-softwhite">Ketinggian:</strong> {sanctuary.elevation}
@@ -158,7 +164,7 @@ export default function HomeHeroClient() {
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <Link
             href="/product"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded bg-forest hover:bg-forest-light text-softwhite font-medium text-xs tracking-widest uppercase transition-all shadow-md hover:shadow-lg border border-sage/40"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-garden hover:bg-garden-light text-softwhite font-semibold text-xs tracking-widest uppercase transition-all duration-300 shadow-lg hover:shadow-xl border border-sage/30 hover:scale-105 shine-hover"
           >
             <span>Jelajahi Koleksi</span>
             <ArrowRight className="w-4 h-4" />
@@ -169,7 +175,7 @@ export default function HomeHeroClient() {
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded bg-cream/90 hover:bg-softwhite text-charcoal font-medium text-xs tracking-widest uppercase transition-all shadow-md border border-sage/50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-cream hover:bg-softwhite text-charcoal font-semibold text-xs tracking-widest uppercase transition-all duration-300 shadow-lg hover:shadow-xl border border-sage/50 hover:scale-105"
           >
             <MessageSquare className="w-4 h-4 text-garden" />
             <span>{settings?.home?.ctaWhatsAppText || 'Konsultasi via WhatsApp'}</span>

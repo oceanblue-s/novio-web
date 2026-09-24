@@ -43,8 +43,8 @@ export default function Navbar() {
     <header
       className={`fixed ${showEditBar ? 'top-[41px]' : 'top-0'} left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-forest/95 backdrop-blur-md shadow-md py-3 text-softwhite'
-          : 'bg-forest/50 backdrop-blur-sm py-5 text-softwhite'
+          ? 'bg-forest/95 backdrop-blur-md shadow-lg border-b border-sage/20 py-3 text-softwhite'
+          : 'bg-forest/60 backdrop-blur-sm py-4 sm:py-5 text-softwhite border-b border-white/5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between">
@@ -55,7 +55,7 @@ export default function Navbar() {
           aria-label="NOVIO Home"
           translate="no"
         >
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden shadow-sm border border-sage/40 shrink-0 group-hover:scale-105 transition-transform">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden shadow-sm border border-sage/40 shrink-0 group-hover:scale-105 group-hover:border-sage transition-all">
             <Image
               src="/novio-logo.png"
               alt="Logo NOVIO"
@@ -68,7 +68,7 @@ export default function Navbar() {
           <span className="notranslate font-serif text-2xl font-bold tracking-widest text-softwhite group-hover:text-sage transition-colors" translate="no">
             NOVIO
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-sage inline-block"></span>
+          <span className="w-1.5 h-1.5 rounded-full bg-sage group-hover:bg-emerald-300 inline-block transition-colors animate-pulse"></span>
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -81,7 +81,7 @@ export default function Navbar() {
                 href={item.href}
                 className={`text-sm font-medium tracking-wide uppercase transition-colors relative py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-sage ${
                   isActive
-                    ? 'text-sage font-semibold'
+                    ? 'text-sage font-bold'
                     : 'text-cream/90 hover:text-softwhite'
                 }`}
               >
@@ -100,7 +100,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={openCommandPalette}
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 transition-all text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-sage"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 hover:border-sage transition-all text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-sage hover:scale-105"
             aria-label="Buka pencarian global (Ctrl+K)"
             title="Cari produk, layanan, atau artikel (Ctrl+K)"
           >
@@ -115,13 +115,17 @@ export default function Navbar() {
           <button
             type="button"
             onClick={openDrawer}
-            className="relative p-2 rounded-full bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sage"
+            className={`relative p-2 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sage hover:scale-105 ${
+              curatedItems.length > 0
+                ? 'bg-garden/40 text-softwhite border border-garden/60 shadow-md ring-2 ring-garden/30'
+                : 'bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40'
+            }`}
             aria-label={`Baki Kurasi Chef (${curatedItems.length} item)`}
             title="Baki Kurasi Chef"
           >
             <ChefHat className="w-4 h-4 text-sage" />
             {curatedItems.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-garden text-softwhite text-[10px] font-bold flex items-center justify-center animate-pulse">
+              <span className="absolute -top-1.5 -right-1.5 px-1.5 min-w-[18px] h-[18px] rounded-full bg-garden text-softwhite text-[10px] font-extrabold flex items-center justify-center shadow-md animate-pulse">
                 {curatedItems.length}
               </span>
             )}
@@ -132,7 +136,7 @@ export default function Navbar() {
 
           <Link
             href="/brief"
-            className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-semibold uppercase tracking-wider bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 transition-all"
+            className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-semibold uppercase tracking-wider bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 hover:border-sage transition-all hover:scale-105"
           >
             <span>Buat Brief</span>
           </Link>
@@ -141,7 +145,7 @@ export default function Navbar() {
             href={`https://wa.me/${siteConfig.whatsappTarget}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-semibold uppercase tracking-wider bg-garden hover:bg-garden-light text-softwhite transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-garden"
+            className="shine-hover hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-bold uppercase tracking-wider bg-garden hover:bg-garden-light text-softwhite transition-all shadow-md hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-garden"
           >
             <span>WhatsApp</span>
             <ArrowUpRight className="w-3.5 h-3.5" />

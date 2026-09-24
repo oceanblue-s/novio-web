@@ -78,10 +78,11 @@ export default function BeforeAfterSlider({
       {/* 1. Underlying "Before" Image */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src={beforeImage}
+          src={beforeImage || '/commitment-flora.jpg'}
           alt={beforeLabel}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+          unoptimized={typeof beforeImage === 'string' && (beforeImage.startsWith('data:') || beforeImage.startsWith('http'))}
           className="object-cover object-center"
           priority={priority}
         />
@@ -101,10 +102,11 @@ export default function BeforeAfterSlider({
         }}
       >
         <Image
-          src={afterImage}
+          src={afterImage || '/about-greenhouse-bg.jpg'}
           alt={afterLabel}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+          unoptimized={typeof afterImage === 'string' && (afterImage.startsWith('data:') || afterImage.startsWith('http'))}
           className="object-cover object-center"
           priority={priority}
         />

@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <article className="group bg-softwhite rounded-xl overflow-hidden border border-sage/30 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative">
+    <article className="group bg-softwhite rounded-2xl overflow-hidden border border-sage/35 shadow-sm card-hover-lift flex flex-col h-full relative">
       {/* Visual In-Context Edit Action Buttons (Admin Only) */}
       {isEditMode && !isPreviewMode && (
         <div className="absolute top-2.5 right-2.5 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
@@ -82,16 +82,23 @@ export default function ProductCard({ product }: ProductCardProps) {
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             unoptimized={typeof product.coverImage === 'string' && (product.coverImage.startsWith('data:') || product.coverImage.startsWith('http'))}
-            className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+            className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
           />
           {/* Subtle hover overlay */}
-          <div className="absolute inset-0 bg-forest/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-forest/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </Link>
 
         {/* Category Pill */}
-        <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider bg-forest/85 backdrop-blur-sm text-softwhite rounded shadow-xs pointer-events-none">
+        <span className="absolute top-3 left-3 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider bg-forest/85 backdrop-blur-sm text-softwhite rounded-md shadow-xs pointer-events-none">
           {product.category}
         </span>
+
+        {/* Origin / Characteristic Pill (Top Right) */}
+        {product.origin && (
+          <span className="absolute top-3 right-3 px-2 py-0.5 text-[10px] font-medium tracking-wide bg-cream/90 backdrop-blur-sm text-charcoal rounded shadow-xs pointer-events-none hidden sm:inline-block">
+            {product.origin}
+          </span>
+        )}
 
         {/* Quick Action Floating Overlay on Card Image */}
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
@@ -110,7 +117,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={handleToggleCurate}
             className={`p-2 rounded-lg text-xs font-semibold shadow-md backdrop-blur-sm border transition-all active:scale-95 ${
               isCurated
-                ? 'bg-garden text-softwhite border-garden'
+                ? 'bg-garden text-softwhite border-garden shadow-garden/25'
                 : 'bg-forest/90 hover:bg-forest text-softwhite border-sage/40'
             }`}
             aria-label={isCurated ? 'Hapus dari baki kurasi' : 'Tambah ke baki kurasi chef'}
@@ -128,11 +135,11 @@ export default function ProductCard({ product }: ProductCardProps) {
             href={`/product/${product.slug}`}
             className="group-hover:text-garden transition-colors"
           >
-            <h3 className="font-serif text-xl font-medium text-charcoal mb-2 line-clamp-1">
+            <h3 className="font-serif text-xl font-medium text-charcoal mb-2 line-clamp-1 group-hover:text-garden transition-colors">
               {product.name}
             </h3>
           </Link>
-          <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-4">
+          <p className="text-xs sm:text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-4">
             {product.shortDescription}
           </p>
         </div>
@@ -142,22 +149,22 @@ export default function ProductCard({ product }: ProductCardProps) {
           <button
             type="button"
             onClick={handleToggleCurate}
-            className={`inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-colors ${
+            className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
               isCurated
-                ? 'text-garden hover:text-garden-light'
+                ? 'text-garden hover:text-garden-light font-bold'
                 : 'text-charcoal-muted hover:text-charcoal'
             }`}
           >
-            <ChefHat className="w-3.5 h-3.5" />
+            <ChefHat className={`w-3.5 h-3.5 ${isCurated ? 'text-garden' : 'text-sage'}`} />
             <span>{isCurated ? 'Di Baki Kurasi' : '+ Kurasi Chef'}</span>
           </button>
 
           <Link
             href={`/product/${product.slug}`}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-garden group-hover:text-forest transition-colors"
+            className="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-garden group-hover:text-forest transition-colors"
           >
-            <span>Lihat Detail</span>
-            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <span>Detail</span>
+            <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
       </div>

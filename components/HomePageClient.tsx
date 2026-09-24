@@ -12,6 +12,7 @@ import BlogCard from '@/components/BlogCard';
 import TeamCard from '@/components/TeamCard';
 import ServiceCard from '@/components/ServiceCard';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
+import TrustStatsBanner from '@/components/TrustStatsBanner';
 import { useSiteData } from '@/context/SiteDataContext';
 import {
   ArrowRight,
@@ -60,6 +61,9 @@ export default function HomePageClient() {
     <div className="flex flex-col w-full">
       {/* 1. Dual-Sanctuary Interactive Hero Section */}
       <HomeHeroClient />
+
+      {/* 1b. Trust & Artisan Culinary Metrics */}
+      <TrustStatsBanner />
 
       {/* 2. Commitment Section (Connected to Live Customizer & In-Context Edit) */}
       <HomeCommitmentClient />

@@ -15,7 +15,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
   const { isEditMode, isPreviewMode, openEditService, deleteServicePackage } = useSiteData();
 
   return (
-    <article className="group bg-softwhite rounded-xl overflow-hidden border border-sage/40 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative">
+    <article className="group bg-softwhite rounded-2xl overflow-hidden border border-sage/40 shadow-sm card-hover-lift flex flex-col h-full relative">
       {/* Visual In-Context Edit Action Buttons (Admin Only) */}
       {isEditMode && !isPreviewMode && (
         <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-forest/95 backdrop-blur-md p-1.5 rounded-lg border border-sage/50 shadow-xl">
@@ -62,11 +62,12 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       {/* Header Image */}
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-cream">
         <Image
-          src={service.coverImage}
-          alt={service.title}
+          src={service.coverImage || '/about-greenhouse-bg.jpg'}
+          alt={service.title || 'Layanan NOVIO'}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+          unoptimized={typeof service.coverImage === 'string' && (service.coverImage.startsWith('data:') || service.coverImage.startsWith('http'))}
+          className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent" />
 
