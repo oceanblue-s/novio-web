@@ -5,21 +5,78 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { siteConfig, navItems, offices } from '@/data/site';
-import { Mail, Phone, MapPin, MessageSquare, ArrowUpRight, Lock, Pencil } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, ArrowUpRight, Lock, Pencil, Sparkles, CheckCircle2, ShieldCheck, Leaf } from 'lucide-react';
 import { useSiteData } from '@/context/SiteDataContext';
 
 export default function Footer() {
   const pathname = usePathname();
   const currentYear = new Date().getFullYear();
   const { customizerSettings, isEditMode, isPreviewMode, openEditContact } = useSiteData();
+  const [newsletterEmail, setNewsletterEmail] = React.useState('');
+  const [subscribed, setSubscribed] = React.useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    setSubscribed(true);
+    setTimeout(() => {
+      setNewsletterEmail('');
+      setSubscribed(false);
+    }, 4000);
+  };
 
   if (pathname === '/admin/customize') {
     return null;
   }
 
   return (
-    <footer className="bg-forest text-cream/90 pt-16 pb-12 border-t border-forest-light">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+    <footer className="bg-forest text-cream/90 pt-16 pb-12 border-t border-forest-light relative overflow-hidden">
+      {/* Background Subtle Gradient */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-garden/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
+        {/* Newsletter / Warta Panen Bar */}
+        <div className="mb-14 p-6 sm:p-8 rounded-2xl bg-forest-light/40 border border-sage/30 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-1.5 max-w-xl">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-sage flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-garden" />
+              Warta Panen &amp; Spesimen Baru
+            </span>
+            <h4 className="font-serif text-xl sm:text-2xl font-medium text-softwhite">
+              Dapatkan Pembaruan Musim Panen &amp; Riset Kuliner
+            </h4>
+            <p className="text-xs text-cream/75 leading-relaxed">
+              Katalog panen harian, rilis cuka fermentasi terbatas, dan studi kasus penataan botani dikirim langsung ke surel Anda.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2.5 w-full lg:w-auto shrink-0">
+            <input
+              type="email"
+              required
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              placeholder="Alamat surel chef / tim Anda..."
+              className="px-4 py-2.5 rounded-xl bg-forest/80 border border-sage/40 text-softwhite placeholder-cream/40 text-xs focus:outline-none focus:ring-2 focus:ring-sage min-w-[260px]"
+            />
+            <button
+              type="submit"
+              className="px-5 py-2.5 rounded-xl bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md hover:scale-105 transition-all flex items-center justify-center gap-2 shrink-0"
+            >
+              {subscribed ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                  <span>Terdaftar!</span>
+                </>
+              ) : (
+                <>
+                  <span>Berlangganan</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-14">
           {/* Brand Column */}
           <div className="space-y-4">
@@ -154,6 +211,26 @@ export default function Footer() {
                 </a>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Quality & Ethics Badges */}
+        <div className="pt-8 pb-8 border-t border-forest-light/40 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-cream/80">
+          <div className="flex items-center gap-2">
+            <Leaf className="w-4 h-4 text-garden shrink-0" />
+            <span>100% Organik &amp; Bebas Sintetis</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-garden shrink-0" />
+            <span>Standar Mutu Pangan &amp; Horeca</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-garden shrink-0" />
+            <span>Fair Trade Petani Jawa &amp; Bali</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-garden shrink-0" />
+            <span>Garansi Rantai Dingin 24 Jam</span>
           </div>
         </div>
 

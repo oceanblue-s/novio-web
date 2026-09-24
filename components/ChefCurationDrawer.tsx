@@ -17,6 +17,8 @@ import {
   ShoppingBag,
   ArrowRight,
   CheckCircle2,
+  Copy,
+  Check,
 } from 'lucide-react';
 
 export default function ChefCurationDrawer() {
@@ -35,14 +37,11 @@ export default function ChefCurationDrawer() {
   const [cityLocation, setCityLocation] = useState('');
   const [kitchenNotes, setKitchenNotes] = useState('');
   const [targetHub, setTargetHub] = useState<'bandung' | 'bali'>('bandung');
+  const [copied, setCopied] = useState(false);
 
   const itemCount = curatedItems.length;
 
-  const handleSendWhatsApp = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (itemCount === 0) return;
-
+  const generateSummaryText = () => {
     const itemsSummary = curatedItems
       .map(
         (item, index) =>
@@ -50,12 +49,10 @@ export default function ChefCurationDrawer() {
       )
       .join('\n');
 
-    const targetNumber =
-      targetHub === 'bali' ? '628112906792' : siteConfig.whatsappTarget;
     const hubName =
       targetHub === 'bali' ? 'Cabang Bali (Nusa Dua)' : 'Pusat Bandung (Parongpong)';
 
-    const text = `*PERMINTAAN SAMPEL & DAFTAR KURASI CHEF — NOVIO*
+    return `*PERMINTAAN SAMPEL & DAFTAR KURASI CHEF — NOVIO*
 ---------------------------------------
 Kepada: Tim Novio ${hubName}
 
@@ -69,7 +66,25 @@ ${itemsSummary}
 
 ---------------------------------------
 Mohon informasi ketersediaan musim panen, katalog harga B2B/Horeca, dan estimasi waktu pengiriman sampel ke dapur kami. Terima kasih!`;
+  };
 
+  const handleCopySummary = async () => {
+    try {
+      const text = generateSummaryText();
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {}
+  };
+
+  const handleSendWhatsApp = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (itemCount === 0) return;
+
+    const targetNumber =
+      targetHub === 'bali' ? '628112906792' : siteConfig.whatsappTarget;
+    const text = generateSummaryText();
     const encoded = encodeURIComponent(text);
     const waUrl = `https://wa.me/${targetNumber}?text=${encoded}`;
     window.open(waUrl, '_blank', 'noopener,noreferrer');
@@ -229,9 +244,9 @@ Mohon informasi ketersediaan musim panen, katalog harga B2B/Horeca, dan estimasi
                         <div className="mt-2 flex items-center gap-2">
                           <label
                             htmlFor={`note-${item.product.id}`}
-                            className="text-[11px] text-charcoal/70 shrink-0"
+                            className="text-[11px] text-charcoal/70 shrink-0 font-medium"
                           >
-                            Porsi/Kebutuhan:
+                            Kebutuhan:
                           </label>
                           <input
                             id={`note-${item.product.id}`}
@@ -241,8 +256,21 @@ Mohon informasi ketersediaan musim panen, katalog harga B2B/Horeca, dan estimasi
                               updateItemNote(item.product.id, e.target.value)
                             }
                             placeholder="cth: 1 jar / 2 tray"
-                            className="w-full text-xs px-2 py-1 rounded bg-softwhite border border-sage/40 text-charcoal placeholder-charcoal/40 focus:outline-none focus:ring-1 focus:ring-garden"
+                            className="w-full text-xs px-2.5 py-1 rounded bg-softwhite border border-sage/40 text-charcoal placeholder-charcoal/40 focus:outline-none focus:ring-1 focus:ring-garden"
                           />
+                        </div>
+                        {/* Quick preset buttons */}
+                        <div className="mt-1.5 flex flex-wrap gap-1">
+                          {['1 Jar Sampel', '2 Tray Uji Dapur', 'Karton Pasokan B2B'].map((preset) => (
+                            <button
+                              key={preset}
+                              type="button"
+                              onClick={() => updateItemNote(item.product.id, preset)}
+                              className="text-[10px] px-2 py-0.5 rounded bg-softwhite hover:bg-cream border border-sage/30 text-charcoal/75 hover:text-forest transition-colors"
+                            >
+                              + {preset}
+                            </button>
+                          ))}
                         </div>
                       </div>
                     </li>
@@ -335,16 +363,35 @@ Mohon informasi ketersediaan musim panen, katalog harga B2B/Horeca, dan estimasi
                   />
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-2 space-y-2">
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
                   >
                     <Send className="w-4 h-4" />
                     <span>Kirim ke WhatsApp Novio ({itemCount} Item)</span>
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCopySummary}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-cream hover:bg-cream-dark text-forest text-xs font-bold uppercase tracking-wider border border-sage/40 transition-all"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-4 h-4 text-garden" />
+                        <span className="text-garden">Format Teks Berhasil Disalin!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4 text-forest" />
+                        <span>Salin Format Pesan (Email / PO)</span>
+                      </>
+                    )}
+                  </button>
+
                   <p className="text-[10px] text-charcoal/60 text-center mt-2">
-                    Format pesan WhatsApp akan otomatis terisi rapi dengan detail produk yang Anda pilih.
+                    Format pesan WhatsApp &amp; teks otomatis terisi rapi dengan spesimen yang Anda pilih.
                   </p>
                 </div>
               </form>

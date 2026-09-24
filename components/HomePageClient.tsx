@@ -13,6 +13,8 @@ import TeamCard from '@/components/TeamCard';
 import ServiceCard from '@/components/ServiceCard';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import TrustStatsBanner from '@/components/TrustStatsBanner';
+import ChefTestimonials from '@/components/ChefTestimonials';
+import HarvestCalendarBanner from '@/components/HarvestCalendarBanner';
 import { useSiteData } from '@/context/SiteDataContext';
 import {
   ArrowRight,
@@ -231,6 +233,9 @@ export default function HomePageClient() {
         </div>
       </section>
 
+      {/* 4b. Seasonal Harvest Calendar & Cold-Chain Logistics */}
+      <HarvestCalendarBanner />
+
       {/* 5. Living Spaces / Portfolio Showcase */}
       {featuredProject && (
         <section className="py-24 px-6 sm:px-8 bg-cream border-t border-sage/30">
@@ -332,6 +337,9 @@ export default function HomePageClient() {
           </div>
         </section>
       )}
+
+      {/* 5b. Chef & Kitchen Partner Testimonials */}
+      <ChefTestimonials />
 
       {/* 6. Team / Members Section */}
       <section className="py-24 px-6 sm:px-8 bg-softwhite border-t border-sage/30">
