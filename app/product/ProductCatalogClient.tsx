@@ -33,7 +33,7 @@ const ENVIRONMENTS = [
 export default function ProductCatalogClient({ initialProducts }: ProductCatalogClientProps) {
   const { openDrawer, curatedItems } = useChefCuration();
   const { products: siteProducts, isEditMode, isPreviewMode, openCreateProduct } = useSiteData();
-  const activeProducts = siteProducts && siteProducts.length > 0 ? siteProducts : initialProducts;
+  const activeProducts = siteProducts ?? initialProducts;
 
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [selectedEnvironment, setSelectedEnvironment] = useState<string>('All');

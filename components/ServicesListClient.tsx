@@ -13,7 +13,7 @@ interface ServicesListClientProps {
 
 export default function ServicesListClient({ initialServices }: ServicesListClientProps) {
   const { servicePackages: siteServices, isEditMode, isPreviewMode, openCreateService } = useSiteData();
-  const services = siteServices && siteServices.length > 0 ? siteServices : initialServices;
+  const services = siteServices ?? initialServices;
 
   return (
     <section className="py-20 sm:py-28 px-6 sm:px-8 bg-softwhite">
@@ -44,6 +44,24 @@ export default function ServicesListClient({ initialServices }: ServicesListClie
             <span className="text-xs font-bold text-forest">
               Mode Edit Aktif: Klik tombol Edit atau Hapus langsung pada setiap kartu layanan di bawah.
             </span>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {services.length === 0 && (
+          <div className="text-center py-20 bg-cream rounded-2xl border border-sage/40 p-8 space-y-4">
+            <p className="font-serif text-2xl text-charcoal">Belum Ada Paket Layanan</p>
+            <p className="text-sm text-charcoal/70 max-w-md mx-auto">
+              Saat ini belum ada paket layanan yang didaftarkan. Anda dapat menambahkan paket layanan baru langsung dari sini.
+            </p>
+            <button
+              type="button"
+              onClick={openCreateService}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Tambah Layanan Baru</span>
+            </button>
           </div>
         )}
 

@@ -12,7 +12,7 @@ interface BlogListClientProps {
 
 export default function BlogListClient({ initialPosts }: BlogListClientProps) {
   const { blogPosts: siteBlogs, isEditMode, isPreviewMode, openCreateBlog } = useSiteData();
-  const blogs = siteBlogs && siteBlogs.length > 0 ? siteBlogs : initialPosts;
+  const blogs = siteBlogs ?? initialPosts;
 
   const featuredPost = blogs[0];
   const remainingPosts = blogs.slice(1);
@@ -33,6 +33,24 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
               type="button"
               onClick={openCreateBlog}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md transition-all hover:scale-105"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Tulis Artikel Baru</span>
+            </button>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {blogs.length === 0 && (
+          <div className="text-center py-20 bg-cream rounded-2xl border border-sage/40 p-8 space-y-4">
+            <p className="font-serif text-2xl text-charcoal">Belum Ada Artikel Jurnal</p>
+            <p className="text-sm text-charcoal/70 max-w-md mx-auto">
+              Saat ini belum ada artikel yang dipublikasikan. Anda dapat menulis artikel baru langsung dari halaman ini.
+            </p>
+            <button
+              type="button"
+              onClick={openCreateBlog}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md"
             >
               <Plus className="w-4 h-4" />
               <span>+ Tulis Artikel Baru</span>

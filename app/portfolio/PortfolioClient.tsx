@@ -23,7 +23,7 @@ const CATEGORIES: Array<{ id: 'All' | ProjectCategory; label: string }> = [
 
 export default function PortfolioClient({ initialProjects }: PortfolioClientProps) {
   const { portfolioProjects: siteProjects, isEditMode, isPreviewMode, openCreatePortfolio } = useSiteData();
-  const activeProjects = siteProjects && siteProjects.length > 0 ? siteProjects : initialProjects;
+  const activeProjects = siteProjects ?? initialProjects;
 
   const [selectedCategory, setSelectedCategory] = useState<'All' | ProjectCategory>('All');
 

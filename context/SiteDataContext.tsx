@@ -27,12 +27,30 @@ import {
   Plus,
   Pencil,
   Sparkles,
+  Phone,
+  Mail,
+  MapPin,
+  FileText,
+  Layers,
+  User,
+  Star,
+  BookOpen,
+  Briefcase,
+  Users,
 } from 'lucide-react';
 
 const ADMIN_PIN = 'novio2026';
 const STORAGE_PREFIX = 'novio_admin_';
 const STORAGE_CUSTOMIZER_KEY = 'novio_live_customizer_settings_v1';
 const STORAGE_EDIT_MODE_KEY = 'novio_visual_edit_mode_active';
+
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
 interface SiteDataContextType {
   // State
@@ -584,20 +602,53 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                     type="text"
                     required
                     value={editingProduct.name}
-                    onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      setEditingProduct({
+                        ...editingProduct,
+                        name: newName,
+                        slug: isCreatingProduct && (!editingProduct.slug || editingProduct.slug.startsWith('produk-'))
+                          ? slugify(newName) || editingProduct.slug
+                          : editingProduct.slug,
+                      });
+                    }}
                     className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
                     placeholder="Contoh: Tisane Bunga Telang"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="font-semibold text-charcoal">Kategori *</label>
+                  <label className="font-semibold text-charcoal">Slug URL (Alamat Web) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProduct.slug}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, slug: slugify(e.target.value) })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="tisane-bunga-telang"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Kategori Produk *</label>
                   <input
                     type="text"
                     required
                     value={editingProduct.category}
                     onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
                     className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
-                    placeholder="Tisane, Fermentasi, Edible Flowers..."
+                    placeholder="Tisane & Botanical Blends, Fermentasi, Edible Flowers..."
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Asal Panen / Asal Daerah</label>
+                  <input
+                    type="text"
+                    value={editingProduct.origin || ''}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, origin: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Parongpong, Bandung Barat atau Nusa Dua, Bali"
                   />
                 </div>
               </div>
@@ -610,19 +661,46 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   value={editingProduct.shortDescription}
                   onChange={(e) => setEditingProduct({ ...editingProduct, shortDescription: e.target.value })}
                   className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
-                  placeholder="Ringkasan singkat produk..."
+                  placeholder="Ringkasan singkat produk untuk kartu katalog..."
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-semibold text-charcoal">Foto Produk (URL atau Upload) *</label>
+                <label className="font-semibold text-charcoal">Deskripsi Lengkap</label>
+                <textarea
+                  rows={4}
+                  value={editingProduct.description || ''}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Detail lengkap mengenai rasa, aroma, proses olah, dan keistimewaan bahan..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Keunggulan / Fitur (Pisahkan dengan koma)</label>
+                <input
+                  type="text"
+                  value={editingProduct.features ? editingProduct.features.join(', ') : ''}
+                  onChange={(e) =>
+                    setEditingProduct({
+                      ...editingProduct,
+                      features: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Contoh: 100% Organik, Panen Harian, Grade Chef"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Foto Produk (URL atau Upload Langsung) *</label>
                 <div className="flex items-center gap-3">
                   <input
                     type="text"
                     value={editingProduct.coverImage}
                     onChange={(e) => setEditingProduct({ ...editingProduct, coverImage: e.target.value })}
                     className="flex-1 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal text-xs"
-                    placeholder="https://... atau /nama-file.jpg"
+                    placeholder="https://... atau /about-greenhouse-bg.jpg"
                   />
                   <label className="px-3.5 py-2.5 rounded-lg bg-forest text-softwhite font-semibold cursor-pointer hover:bg-forest-light flex items-center gap-1.5 shrink-0">
                     <Upload className="w-3.5 h-3.5 text-sage" />
@@ -642,6 +720,19 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 )}
               </div>
 
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="prod-published"
+                  checked={editingProduct.published}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, published: e.target.checked })}
+                  className="rounded border-sage text-garden focus:ring-garden"
+                />
+                <label htmlFor="prod-published" className="font-medium text-charcoal">
+                  Tampilkan produk di katalog publik
+                </label>
+              </div>
+
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
                 <button
                   type="button"
@@ -659,6 +750,826 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                 >
                   <Save className="w-4 h-4" />
                   <span>Simpan Produk</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 3. BLOG POST EDIT / ADD MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {editingBlog && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  {isCreatingBlog ? 'Tulis Artikel Jurnal Baru' : `Edit Artikel: ${editingBlog.title}`}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingBlog(null);
+                  setIsCreatingBlog(false);
+                }}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                saveBlogPost(editingBlog);
+              }}
+              className="space-y-4 text-xs"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Judul Artikel *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingBlog.title}
+                    onChange={(e) => {
+                      const newTitle = e.target.value;
+                      setEditingBlog({
+                        ...editingBlog,
+                        title: newTitle,
+                        slug: isCreatingBlog && (!editingBlog.slug || editingBlog.slug.startsWith('artikel-'))
+                          ? slugify(newTitle) || editingBlog.slug
+                          : editingBlog.slug,
+                      });
+                    }}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Contoh: Filosofi Fermentasi Artisan di Dapur Chef"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Slug URL (Alamat Web) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingBlog.slug}
+                    onChange={(e) => setEditingBlog({ ...editingBlog, slug: slugify(e.target.value) })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="filosofi-fermentasi-artisan"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Kategori *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingBlog.category}
+                    onChange={(e) => setEditingBlog({ ...editingBlog, category: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Kuliner & Chef, Artisan, Botani..."
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Nama Penulis</label>
+                  <input
+                    type="text"
+                    value={editingBlog.author?.name || ''}
+                    onChange={(e) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        author: { ...editingBlog.author, name: e.target.value },
+                      })
+                    }
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Tim Redaksi Novio"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Peran Penulis</label>
+                  <input
+                    type="text"
+                    value={editingBlog.author?.role || ''}
+                    onChange={(e) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        author: { ...editingBlog.author, role: e.target.value },
+                      })
+                    }
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Kurator Botani / Chef"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Ringkasan / Excerpt *</label>
+                <textarea
+                  rows={2}
+                  required
+                  value={editingBlog.excerpt}
+                  onChange={(e) => setEditingBlog({ ...editingBlog, excerpt: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Ringkasan singkat artikel untuk pengantar..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Konten Lengkap Artikel *</label>
+                <textarea
+                  rows={8}
+                  required
+                  value={editingBlog.content}
+                  onChange={(e) => setEditingBlog({ ...editingBlog, content: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden font-mono text-[11px]"
+                  placeholder="Tulis narasi lengkap artikel di sini..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Foto Sampul Artikel (URL atau Upload) *</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={editingBlog.coverImage}
+                    onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
+                    className="flex-1 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal text-xs"
+                    placeholder="https://... atau /about-greenhouse-bg.jpg"
+                  />
+                  <label className="px-3.5 py-2.5 rounded-lg bg-forest text-softwhite font-semibold cursor-pointer hover:bg-forest-light flex items-center gap-1.5 shrink-0">
+                    <Upload className="w-3.5 h-3.5 text-sage" />
+                    <span>Upload Foto</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageFile(e, (dataUrl) => setEditingBlog({ ...editingBlog, coverImage: dataUrl }))}
+                    />
+                  </label>
+                </div>
+                {editingBlog.coverImage && (
+                  <div className="relative w-28 h-16 rounded-lg overflow-hidden border border-sage/40 mt-2">
+                    <Image src={editingBlog.coverImage} alt="Pratinjau" fill sizes="112px" className="object-cover" />
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Tag / Topik (Pisahkan dengan koma)</label>
+                  <input
+                    type="text"
+                    value={editingBlog.tags ? editingBlog.tags.join(', ') : ''}
+                    onChange={(e) =>
+                      setEditingBlog({
+                        ...editingBlog,
+                        tags: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                      })
+                    }
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Bahan Alami, Artisan, Kuliner"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Estimasi Waktu Baca (Menit)</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={editingBlog.readTimeMinutes || 3}
+                    onChange={(e) => setEditingBlog({ ...editingBlog, readTimeMinutes: Number(e.target.value) })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingBlog(null);
+                    setIsCreatingBlog(false);
+                  }}
+                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Simpan Artikel</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 4. SERVICE PACKAGE EDIT / ADD MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {editingService && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  {isCreatingService ? 'Tambah Layanan Baru' : `Edit Layanan: ${editingService.title}`}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingService(null);
+                  setIsCreatingService(false);
+                }}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                saveServicePackage(editingService);
+              }}
+              className="space-y-4 text-xs"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Nama Layanan *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingService.title}
+                    onChange={(e) => {
+                      const newTitle = e.target.value;
+                      setEditingService({
+                        ...editingService,
+                        title: newTitle,
+                        slug: isCreatingService && (!editingService.slug || editingService.slug.startsWith('layanan-'))
+                          ? slugify(newTitle) || editingService.slug
+                          : editingService.slug,
+                      });
+                    }}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Contoh: Pasokan Bahan Kuliner Restoran & Chef"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Slug URL (Alamat Web) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingService.slug}
+                    onChange={(e) => setEditingService({ ...editingService, slug: slugify(e.target.value) })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="pasokan-bahan-kuliner"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Tagline Ringkas *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingService.tagline}
+                    onChange={(e) => setEditingService({ ...editingService, tagline: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Kemitraan pasokan bahan tani segar teraklimatisasi..."
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Target Klien *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingService.targetAudience}
+                    onChange={(e) => setEditingService({ ...editingService, targetAudience: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Chef, Restoran Fine Dining, Resor..."
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Deskripsi Lengkap Layanan *</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={editingService.description}
+                  onChange={(e) => setEditingService({ ...editingService, description: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Penjelasan menyeluruh mengenai cakupan layanan ini..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Foto Sampul Layanan (URL atau Upload) *</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={editingService.coverImage}
+                    onChange={(e) => setEditingService({ ...editingService, coverImage: e.target.value })}
+                    className="flex-1 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal text-xs"
+                    placeholder="https://... atau /about-greenhouse-bg.jpg"
+                  />
+                  <label className="px-3.5 py-2.5 rounded-lg bg-forest text-softwhite font-semibold cursor-pointer hover:bg-forest-light flex items-center gap-1.5 shrink-0">
+                    <Upload className="w-3.5 h-3.5 text-sage" />
+                    <span>Upload Foto</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageFile(e, (dataUrl) => setEditingService({ ...editingService, coverImage: dataUrl }))}
+                    />
+                  </label>
+                </div>
+                {editingService.coverImage && (
+                  <div className="relative w-28 h-16 rounded-lg overflow-hidden border border-sage/40 mt-2">
+                    <Image src={editingService.coverImage} alt="Pratinjau" fill sizes="112px" className="object-cover" />
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Model Kerja Sama / Harga</label>
+                  <input
+                    type="text"
+                    value={editingService.pricingModel}
+                    onChange={(e) => setEditingService({ ...editingService, pricingModel: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Kontrak Pasokan B2B / Berdasarkan Volume"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Jaminan Mutu / Garansi</label>
+                  <input
+                    type="text"
+                    value={editingService.guarantee}
+                    onChange={(e) => setEditingService({ ...editingService, guarantee: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Garansi Kesegaran Panen Hari Sama"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Fitur Utama (Pisahkan dengan koma)</label>
+                  <input
+                    type="text"
+                    value={editingService.features ? editingService.features.join(', ') : ''}
+                    onChange={(e) =>
+                      setEditingService({
+                        ...editingService,
+                        features: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                      })
+                    }
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Konsultasi Menu, Jadwal Panen Rutin, Sampel Gratis"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Hasil Serah Terima (Deliverables)</label>
+                  <input
+                    type="text"
+                    value={editingService.deliverables ? editingService.deliverables.join(', ') : ''}
+                    onChange={(e) =>
+                      setEditingService({
+                        ...editingService,
+                        deliverables: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                      })
+                    }
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Katalog Mingguan, Pengiriman Terkontrol"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="srv-popular"
+                  checked={!!editingService.popular}
+                  onChange={(e) => setEditingService({ ...editingService, popular: e.target.checked })}
+                  className="rounded border-sage text-garden focus:ring-garden"
+                />
+                <label htmlFor="srv-popular" className="font-medium text-charcoal">
+                  Tandai sebagai layanan &quot;Paling Diminati&quot; (Popular Badge)
+                </label>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingService(null);
+                    setIsCreatingService(false);
+                  }}
+                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Simpan Layanan</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 5. PORTFOLIO PROJECT EDIT / ADD MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {editingPortfolio && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-2xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Layers className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  {isCreatingPortfolio ? 'Tambah Portofolio Proyek Baru' : `Edit Portofolio: ${editingPortfolio.title}`}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingPortfolio(null);
+                  setIsCreatingPortfolio(false);
+                }}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                savePortfolioProject(editingPortfolio);
+              }}
+              className="space-y-4 text-xs"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Judul Proyek *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingPortfolio.title}
+                    onChange={(e) => {
+                      const newTitle = e.target.value;
+                      setEditingPortfolio({
+                        ...editingPortfolio,
+                        title: newTitle,
+                        slug: isCreatingPortfolio && (!editingPortfolio.slug || editingPortfolio.slug.startsWith('proyek-'))
+                          ? slugify(newTitle) || editingPortfolio.slug
+                          : editingPortfolio.slug,
+                      });
+                    }}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Contoh: Cliffside Sanctuary Uluwatu"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Slug URL (Alamat Web) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingPortfolio.slug}
+                    onChange={(e) => setEditingPortfolio({ ...editingPortfolio, slug: slugify(e.target.value) })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="cliffside-sanctuary-uluwatu"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Kategori Klien</label>
+                  <select
+                    value={editingPortfolio.clientCategory}
+                    onChange={(e) => setEditingPortfolio({ ...editingPortfolio, clientCategory: e.target.value as any })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  >
+                    <option value="Luxury Hospitality">Luxury Hospitality</option>
+                    <option value="Bespoke Residential">Bespoke Residential</option>
+                    <option value="Corporate Biophilic">Corporate Biophilic</option>
+                    <option value="Commercial & Cafe">Commercial & Cafe</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Lokasi *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingPortfolio.location}
+                    onChange={(e) => setEditingPortfolio({ ...editingPortfolio, location: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Uluwatu, Bali / Parongpong"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Tahun</label>
+                  <input
+                    type="text"
+                    value={editingPortfolio.year}
+                    onChange={(e) => setEditingPortfolio({ ...editingPortfolio, year: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="2026"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Subjudul / Konsep Inti</label>
+                <input
+                  type="text"
+                  value={editingPortfolio.subtitle}
+                  onChange={(e) => setEditingPortfolio({ ...editingPortfolio, subtitle: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Integrasi flora pesisir tahan salinitas dengan arsitektur tropis..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Ringkasan Proyek (Excerpt) *</label>
+                <textarea
+                  rows={2}
+                  required
+                  value={editingPortfolio.excerpt}
+                  onChange={(e) => setEditingPortfolio({ ...editingPortfolio, excerpt: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Ringkasan studi kasus transformasi..."
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Tantangan Ruang (Challenge)</label>
+                  <textarea
+                    rows={2}
+                    value={editingPortfolio.challenge}
+                    onChange={(e) => setEditingPortfolio({ ...editingPortfolio, challenge: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Kondisi awal sebelum intervensi botani..."
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Solusi Kurasi (Solution)</label>
+                  <textarea
+                    rows={2}
+                    value={editingPortfolio.solution}
+                    onChange={(e) => setEditingPortfolio({ ...editingPortfolio, solution: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                    placeholder="Langkah spesifik pemilihan spesimen dan tata ruang..."
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Foto Utama / Cover (URL atau Upload) *</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={editingPortfolio.coverImage}
+                    onChange={(e) => setEditingPortfolio({ ...editingPortfolio, coverImage: e.target.value })}
+                    className="flex-1 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal text-xs"
+                    placeholder="https://... atau /commitment-flora.jpg"
+                  />
+                  <label className="px-3.5 py-2.5 rounded-lg bg-forest text-softwhite font-semibold cursor-pointer hover:bg-forest-light flex items-center gap-1.5 shrink-0">
+                    <Upload className="w-3.5 h-3.5 text-sage" />
+                    <span>Upload Foto</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageFile(e, (dataUrl) => setEditingPortfolio({ ...editingPortfolio, coverImage: dataUrl }))}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Before & After Images */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-sage/30">
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Foto SEBELUM (Before)</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={editingPortfolio.beforeImage}
+                      onChange={(e) => setEditingPortfolio({ ...editingPortfolio, beforeImage: e.target.value })}
+                      className="flex-1 p-2 rounded bg-cream border border-sage/40 text-[11px]"
+                    />
+                    <label className="p-2 rounded bg-forest text-softwhite cursor-pointer hover:bg-forest-light shrink-0">
+                      <Upload className="w-3.5 h-3.5" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleImageFile(e, (dataUrl) => setEditingPortfolio({ ...editingPortfolio, beforeImage: dataUrl }))}
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="font-semibold text-charcoal">Foto SESUDAH (After)</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={editingPortfolio.afterImage}
+                      onChange={(e) => setEditingPortfolio({ ...editingPortfolio, afterImage: e.target.value })}
+                      className="flex-1 p-2 rounded bg-cream border border-sage/40 text-[11px]"
+                    />
+                    <label className="p-2 rounded bg-forest text-softwhite cursor-pointer hover:bg-forest-light shrink-0">
+                      <Upload className="w-3.5 h-3.5" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleImageFile(e, (dataUrl) => setEditingPortfolio({ ...editingPortfolio, afterImage: dataUrl }))}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="port-featured"
+                  checked={!!editingPortfolio.featured}
+                  onChange={(e) => setEditingPortfolio({ ...editingPortfolio, featured: e.target.checked })}
+                  className="rounded border-sage text-garden focus:ring-garden"
+                />
+                <label htmlFor="port-featured" className="font-medium text-charcoal">
+                  Tampilkan di sorotan Before/After Beranda (Featured Showcase)
+                </label>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingPortfolio(null);
+                    setIsCreatingPortfolio(false);
+                  }}
+                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Simpan Portofolio</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 6. TEAM MEMBER EDIT / ADD MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {editingTeam && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-md w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <User className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  {isCreatingTeam ? 'Tambah Anggota Tim' : `Edit Anggota Tim: ${editingTeam.name}`}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingTeam(null);
+                  setIsCreatingTeam(false);
+                }}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                saveTeamMember(editingTeam);
+              }}
+              className="space-y-4 text-xs"
+            >
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Nama Lengkap *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingTeam.name}
+                  onChange={(e) => setEditingTeam({ ...editingTeam, name: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Contoh: Danang Santoso"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Jabatan / Posisi *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingTeam.role}
+                  onChange={(e) => setEditingTeam({ ...editingTeam, role: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Pendiri & Direktur Operasional"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Foto Profil (URL atau Upload) *</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={editingTeam.photo}
+                    onChange={(e) => setEditingTeam({ ...editingTeam, photo: e.target.value })}
+                    className="flex-1 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal text-xs"
+                    placeholder="https://... atau /novio-logo.png"
+                  />
+                  <label className="px-3.5 py-2.5 rounded-lg bg-forest text-softwhite font-semibold cursor-pointer hover:bg-forest-light flex items-center gap-1.5 shrink-0">
+                    <Upload className="w-3.5 h-3.5 text-sage" />
+                    <span>Upload Foto</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageFile(e, (dataUrl) => setEditingTeam({ ...editingTeam, photo: dataUrl }))}
+                    />
+                  </label>
+                </div>
+                {editingTeam.photo && (
+                  <div className="relative w-16 h-20 rounded-lg overflow-hidden border border-sage/40 mt-2">
+                    <Image src={editingTeam.photo} alt="Pratinjau" fill sizes="80px" className="object-cover" />
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Biografi Singkat</label>
+                <textarea
+                  rows={3}
+                  value={editingTeam.shortBio}
+                  onChange={(e) => setEditingTeam({ ...editingTeam, shortBio: e.target.value })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                  placeholder="Peran dan latar belakang dalam memberdayakan petani..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Urutan Tampilan</label>
+                <input
+                  type="number"
+                  value={editingTeam.order}
+                  onChange={(e) => setEditingTeam({ ...editingTeam, order: Number(e.target.value) })}
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal focus:ring-2 focus:ring-garden"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingTeam(null);
+                    setIsCreatingTeam(false);
+                  }}
+                  className="px-4 py-2.5 rounded-lg bg-cream hover:bg-cream-dark text-charcoal font-semibold uppercase tracking-wider"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Simpan Anggota</span>
                 </button>
               </div>
             </form>
@@ -906,6 +1817,126 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
                   className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md"
                 >
                   Selesai & Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 7. CONTACT & STUDIO LOCATIONS EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isEditingContact && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-xl w-full bg-softwhite rounded-2xl p-6 sm:p-8 border border-sage/40 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-garden" />
+                <h3 className="font-serif text-lg font-bold text-charcoal">
+                  Edit Kontak &amp; Lokasi Studio Kebun
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditingContact(false)}
+                className="p-1 text-charcoal/60 hover:text-charcoal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Nomor WhatsApp Pusat (Bandung Barat)</label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-charcoal-muted absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={customizerSettings.site.whatsappTarget}
+                    onChange={(e) =>
+                      updateCustomizerSettings({
+                        site: { ...customizerSettings.site, whatsappTarget: e.target.value },
+                      })
+                    }
+                    className="w-full pl-9 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                    placeholder="6281312414863"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Nomor WhatsApp Cabang (Bali)</label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-charcoal-muted absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={customizerSettings.site.whatsappBali}
+                    onChange={(e) =>
+                      updateCustomizerSettings({
+                        site: { ...customizerSettings.site, whatsappBali: e.target.value },
+                      })
+                    }
+                    className="w-full pl-9 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                    placeholder="628112906792"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Email Resmi Pelayanan</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-charcoal-muted absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    value={customizerSettings.site.generalEmail}
+                    onChange={(e) =>
+                      updateCustomizerSettings({
+                        site: { ...customizerSettings.site, generalEmail: e.target.value },
+                      })
+                    }
+                    className="w-full pl-9 p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                    placeholder="novio.customercare@gmail.com"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Alamat Kebun Greenhouse Parongpong, Bandung</label>
+                <textarea
+                  rows={2}
+                  value={customizerSettings.site.mainAddress}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      site: { ...customizerSettings.site, mainAddress: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-charcoal">Alamat Studio Nusa Dua, Bali</label>
+                <textarea
+                  rows={2}
+                  value={customizerSettings.site.baliAddress}
+                  onChange={(e) =>
+                    updateCustomizerSettings({
+                      site: { ...customizerSettings.site, baliAddress: e.target.value },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-lg bg-cream border border-sage/40 text-charcoal"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingContact(false)}
+                  className="px-6 py-2.5 rounded-lg bg-garden hover:bg-garden-light text-softwhite font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Selesai &amp; Simpan Kontak</span>
                 </button>
               </div>
             </div>

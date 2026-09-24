@@ -146,7 +146,7 @@ export default function AmbientAudioToggle() {
   return (
     <aside
       aria-label="Kontrol audio suasana dataran tinggi"
-      className="fixed bottom-5 right-5 z-40 flex items-center group select-none"
+      className="fixed bottom-20 right-5 sm:bottom-24 sm:right-6 z-40 flex items-center group select-none"
     >
       <button
         type="button"

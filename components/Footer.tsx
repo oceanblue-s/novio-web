@@ -5,11 +5,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { siteConfig, navItems, offices } from '@/data/site';
-import { Mail, Phone, MapPin, MessageSquare, ArrowUpRight, Lock } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, ArrowUpRight, Lock, Pencil } from 'lucide-react';
+import { useSiteData } from '@/context/SiteDataContext';
 
 export default function Footer() {
   const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+  const { customizerSettings, isEditMode, isPreviewMode, openEditContact } = useSiteData();
 
   if (pathname === '/admin/customize') {
     return null;
@@ -76,7 +78,20 @@ export default function Footer() {
           </div>
 
           {/* Bandung Head Office */}
-          <div>
+          <div className="relative">
+            {isEditMode && !isPreviewMode && (
+              <div className="mb-3">
+                <button
+                  type="button"
+                  onClick={openEditContact}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-cream hover:bg-softwhite text-forest text-xs font-bold transition-all shadow-md"
+                  title="Edit Kontak & Alamat"
+                >
+                  <Pencil className="w-3.5 h-3.5 text-garden" />
+                  <span>Edit Kontak &amp; Alamat</span>
+                </button>
+              </div>
+            )}
             <h3 className="font-serif text-lg font-semibold text-softwhite mb-4 tracking-wide">
               Kantor Pusat Bandung
             </h3>
@@ -84,25 +99,25 @@ export default function Footer() {
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-sage shrink-0 mt-1" />
                 <p className="leading-relaxed">
-                  Ciwarega, Karyawangi, Kec. Parongpong, Kabupaten Bandung Barat, Jawa Barat 40559
+                  {customizerSettings.site.mainAddress}
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-sage shrink-0" />
                 <a
-                  href="tel:081312414863"
+                  href={`tel:${customizerSettings.site.whatsappTarget}`}
                   className="hover:text-softwhite transition-colors"
                 >
-                  0813 1241 4863
+                  {customizerSettings.site.whatsappTarget}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-sage shrink-0" />
                 <a
-                  href="mailto:novio.customercare@gmail.com"
+                  href={`mailto:${customizerSettings.site.generalEmail}`}
                   className="hover:text-softwhite transition-colors break-all"
                 >
-                  novio.customercare@gmail.com
+                  {customizerSettings.site.generalEmail}
                 </a>
               </div>
             </div>
@@ -117,25 +132,25 @@ export default function Footer() {
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-sage shrink-0 mt-1" />
                 <p className="leading-relaxed">
-                  Jl Kedaung G 5 menesa nusa dua, Badung, Bali, Indonesia 80363
+                  {customizerSettings.site.baliAddress}
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-sage shrink-0" />
                 <a
-                  href="tel:08112906792"
+                  href={`tel:${customizerSettings.site.whatsappBali}`}
                   className="hover:text-softwhite transition-colors"
                 >
-                  0811 2906 792
+                  {customizerSettings.site.whatsappBali}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-sage shrink-0" />
                 <a
-                  href="mailto:nunik@noviotrade.com"
+                  href={`mailto:${customizerSettings.site.generalEmail}`}
                   className="hover:text-softwhite transition-colors break-all"
                 >
-                  nunik@noviotrade.com
+                  {customizerSettings.site.generalEmail}
                 </a>
               </div>
             </div>

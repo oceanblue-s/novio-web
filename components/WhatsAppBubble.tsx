@@ -68,7 +68,7 @@ export default function WhatsAppBubble() {
     <aside
       ref={popoverRef}
       aria-label="Kontak WhatsApp Langsung"
-      className="fixed bottom-5 left-5 z-40 select-none sm:bottom-6 sm:left-6"
+      className="fixed bottom-5 right-5 z-40 select-none sm:bottom-6 sm:right-6"
     >
       {/* Popover Card */}
       {isOpen && (
@@ -76,7 +76,7 @@ export default function WhatsAppBubble() {
           role="dialog"
           aria-modal="false"
           aria-label="Pilih Kantor Layanan WhatsApp"
-          className="absolute bottom-16 left-0 mb-2 w-80 sm:w-96 bg-softwhite rounded-2xl shadow-2xl border border-sage/40 overflow-hidden animate-fade-in z-50 text-charcoal"
+          className="absolute bottom-16 right-0 mb-2 w-80 sm:w-96 bg-softwhite rounded-2xl shadow-2xl border border-sage/40 overflow-hidden animate-fade-in z-50 text-charcoal"
         >
           {/* Header */}
           <div className="bg-forest px-4 py-3.5 text-softwhite flex items-center justify-between border-b border-forest-light">

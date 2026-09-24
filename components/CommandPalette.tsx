@@ -4,10 +4,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useChefCuration } from '@/context/ChefCurationContext';
-import { products } from '@/data/products';
-import { servicePackages } from '@/data/services';
-import { portfolioProjects } from '@/data/portfolio';
-import { blogPosts } from '@/data/blog';
+import { useSiteData } from '@/context/SiteDataContext';
 import { siteConfig } from '@/data/site';
 import {
   Search,
@@ -37,6 +34,7 @@ interface SearchResultItem {
 export default function CommandPalette() {
   const router = useRouter();
   const { isCommandPaletteOpen, closeCommandPalette } = useChefCuration();
+  const { products, servicePackages, portfolioProjects, blogPosts } = useSiteData();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
