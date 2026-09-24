@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { siteConfig, navItems, offices } from '@/data/site';
-import { Mail, Phone, MapPin, MessageSquare, ArrowUpRight } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, ArrowUpRight, Lock } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -144,6 +144,15 @@ export default function Footer() {
             <span>•</span>
             <Link href="/contact" className="hover:text-softwhite transition-colors">
               Kontak & Informasi
+            </Link>
+            <span>•</span>
+            <Link
+              href="/admin"
+              className="hover:text-softwhite text-cream/40 transition-colors inline-flex items-center gap-1"
+              title="Portal Pengelola NOVIO"
+            >
+              <Lock className="w-3 h-3" />
+              <span>Admin</span>
             </Link>
           </div>
         </div>
