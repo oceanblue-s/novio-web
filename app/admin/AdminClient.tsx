@@ -1493,6 +1493,421 @@ export default function AdminClient() {
             </div>
           </div>
         )}
+        {/* ------------------------------------------------------------- */}
+        {/* MODAL: EDIT / CREATE ARTIKEL BLOG */}
+        {/* ------------------------------------------------------------- */}
+        {editingBlog && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+            <div
+              className="fixed inset-0 bg-charcoal/70 backdrop-blur-sm"
+              onClick={() => setEditingBlog(null)}
+            />
+            <div className="relative w-full max-w-2xl bg-softwhite rounded-2xl shadow-2xl border border-sage/40 p-6 sm:p-8 z-10 max-h-[90vh] overflow-y-auto space-y-5">
+              <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+                <h3 className="font-serif text-xl font-medium text-charcoal">
+                  {isCreatingBlog ? 'Tulis Artikel Jurnal Baru' : `Edit: ${editingBlog.title}`}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setEditingBlog(null)}
+                  className="p-1 text-charcoal-muted hover:text-charcoal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  let updated = [...blogList];
+                  if (isCreatingBlog) {
+                    updated = [editingBlog, ...blogList];
+                  } else {
+                    updated = blogList.map((b) => (b.id === editingBlog.id ? editingBlog : b));
+                  }
+                  setBlogList(updated);
+                  persist('blog', updated);
+                  setEditingBlog(null);
+                }}
+                className="space-y-4 text-xs"
+              >
+                <div className="space-y-1">
+                  <label className="font-semibold uppercase tracking-wider text-charcoal">
+                    Judul Artikel *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editingBlog.title}
+                    onChange={(e) => {
+                      const title = e.target.value;
+                      const slug = title
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/(^-|-$)+/g, '');
+                      setEditingBlog({
+                        ...editingBlog,
+                        title,
+                        slug: isCreatingBlog ? slug : editingBlog.slug,
+                      });
+                    }}
+                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Slug URL (/blog/...) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editingBlog.slug}
+                      onChange={(e) =>
+                        setEditingBlog({ ...editingBlog, slug: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal font-mono"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Kategori *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editingBlog.category}
+                      onChange={(e) =>
+                        setEditingBlog({ ...editingBlog, category: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                    />
+                  </div>
+                </div>
+
+                {/* Cover Image Upload */}
+                <div className="space-y-2 p-3 bg-cream/40 rounded-xl border border-sage/30">
+                  <label className="font-semibold uppercase tracking-wider text-charcoal flex items-center justify-between">
+                    <span>Foto Sampul Artikel *</span>
+                    <span className="text-[10px] text-garden">Pilih dari laptop</span>
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      required
+                      value={editingBlog.coverImage}
+                      onChange={(e) =>
+                        setEditingBlog({ ...editingBlog, coverImage: e.target.value })
+                      }
+                      className="flex-1 px-3 py-2 rounded-lg bg-softwhite border border-sage/40 text-charcoal"
+                    />
+                    <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-forest text-softwhite font-semibold text-xs cursor-pointer shrink-0">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Upload</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) =>
+                          handleImageUpload(e, (dataUrl) =>
+                            setEditingBlog({ ...editingBlog, coverImage: dataUrl })
+                          )
+                        }
+                      />
+                    </label>
+                  </div>
+                  {editingBlog.coverImage && (
+                    <div className="relative w-24 h-16 rounded-lg overflow-hidden border border-sage/40 mt-1">
+                      <Image src={editingBlog.coverImage} alt="Preview" fill sizes="96px" className="object-cover" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Nama Penulis *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editingBlog.author.name}
+                      onChange={(e) =>
+                        setEditingBlog({
+                          ...editingBlog,
+                          author: { ...editingBlog.author, name: e.target.value },
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Peran / Jabatan Penulis
+                    </label>
+                    <input
+                      type="text"
+                      value={editingBlog.author.role}
+                      onChange={(e) =>
+                        setEditingBlog({
+                          ...editingBlog,
+                          author: { ...editingBlog.author, role: e.target.value },
+                        })
+                      }
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-semibold uppercase tracking-wider text-charcoal">
+                    Ringkasan Artikel (Excerpt) *
+                  </label>
+                  <textarea
+                    rows={2}
+                    required
+                    value={editingBlog.excerpt}
+                    onChange={(e) =>
+                      setEditingBlog({ ...editingBlog, excerpt: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-semibold uppercase tracking-wider text-charcoal">
+                    Isi Artikel Lengkap *
+                  </label>
+                  <textarea
+                    rows={6}
+                    required
+                    value={editingBlog.content}
+                    onChange={(e) =>
+                      setEditingBlog({ ...editingBlog, content: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal font-sans"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                  <button
+                    type="button"
+                    onClick={() => setEditingBlog(null)}
+                    className="px-4 py-2 rounded-lg border border-sage/40 text-charcoal"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 rounded-lg bg-forest text-softwhite font-semibold flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4 text-sage" />
+                    <span>Simpan Artikel</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ------------------------------------------------------------- */}
+        {/* MODAL: EDIT / CREATE LAYANAN */}
+        {/* ------------------------------------------------------------- */}
+        {editingService && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+            <div
+              className="fixed inset-0 bg-charcoal/70 backdrop-blur-sm"
+              onClick={() => setEditingService(null)}
+            />
+            <div className="relative w-full max-w-2xl bg-softwhite rounded-2xl shadow-2xl border border-sage/40 p-6 sm:p-8 z-10 max-h-[90vh] overflow-y-auto space-y-5">
+              <div className="flex items-center justify-between border-b border-sage/30 pb-3">
+                <h3 className="font-serif text-xl font-medium text-charcoal">
+                  {isCreatingService ? 'Tambah Layanan Baru' : `Edit: ${editingService.title}`}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setEditingService(null)}
+                  className="p-1 text-charcoal-muted hover:text-charcoal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  let updated = [...servicesList];
+                  if (isCreatingService) {
+                    updated = [editingService, ...servicesList];
+                  } else {
+                    updated = servicesList.map((s) => (s.id === editingService.id ? editingService : s));
+                  }
+                  setServicesList(updated);
+                  persist('services', updated);
+                  setEditingService(null);
+                }}
+                className="space-y-4 text-xs"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Nama Layanan *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editingService.title}
+                      onChange={(e) => {
+                        const title = e.target.value;
+                        const slug = title
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, '-')
+                          .replace(/(^-|-$)+/g, '');
+                        setEditingService({
+                          ...editingService,
+                          title,
+                          slug: isCreatingService ? slug : editingService.slug,
+                        });
+                      }}
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Target Pengguna *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editingService.targetAudience}
+                      onChange={(e) =>
+                        setEditingService({ ...editingService, targetAudience: e.target.value })
+                      }
+                      placeholder="Vila Mewah, Perkantoran, dsb"
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2 p-3 bg-cream/40 rounded-xl border border-sage/30">
+                  <label className="font-semibold uppercase tracking-wider text-charcoal flex items-center justify-between">
+                    <span>Foto Banner Layanan *</span>
+                    <span className="text-[10px] text-garden">Pilih dari laptop</span>
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      required
+                      value={editingService.coverImage}
+                      onChange={(e) =>
+                        setEditingService({ ...editingService, coverImage: e.target.value })
+                      }
+                      className="flex-1 px-3 py-2 rounded-lg bg-softwhite border border-sage/40 text-charcoal"
+                    />
+                    <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-forest text-softwhite font-semibold text-xs cursor-pointer shrink-0">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Upload</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) =>
+                          handleImageUpload(e, (dataUrl) =>
+                            setEditingService({ ...editingService, coverImage: dataUrl })
+                          )
+                        }
+                      />
+                    </label>
+                  </div>
+                  {editingService.coverImage && (
+                    <div className="relative w-24 h-16 rounded-lg overflow-hidden border border-sage/40 mt-1">
+                      <Image src={editingService.coverImage} alt="Preview" fill sizes="96px" className="object-cover" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-semibold uppercase tracking-wider text-charcoal">
+                    Tagline Ringkas *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editingService.tagline}
+                    onChange={(e) =>
+                      setEditingService({ ...editingService, tagline: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-semibold uppercase tracking-wider text-charcoal">
+                    Deskripsi Lengkap Layanan *
+                  </label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={editingService.description}
+                    onChange={(e) =>
+                      setEditingService({ ...editingService, description: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Model Biaya / Harga
+                    </label>
+                    <input
+                      type="text"
+                      value={editingService.pricingModel}
+                      onChange={(e) =>
+                        setEditingService({ ...editingService, pricingModel: e.target.value })
+                      }
+                      placeholder="cth: Mulai dari Rp 1.500.000"
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-semibold uppercase tracking-wider text-charcoal">
+                      Garansi Layanan
+                    </label>
+                    <input
+                      type="text"
+                      value={editingService.guarantee}
+                      onChange={(e) =>
+                        setEditingService({ ...editingService, guarantee: e.target.value })
+                      }
+                      placeholder="cth: Garansi Aklimatisasi 30 Hari"
+                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
+                  <button
+                    type="button"
+                    onClick={() => setEditingService(null)}
+                    className="px-4 py-2 rounded-lg border border-sage/40 text-charcoal"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 rounded-lg bg-forest text-softwhite font-semibold flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4 text-sage" />
+                    <span>Simpan Layanan</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
