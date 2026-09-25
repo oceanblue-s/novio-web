@@ -10,7 +10,7 @@ import { servicePackages as defaultServices } from '@/data/services';
 import { teamMembers as defaultTeam } from '@/data/team';
 import { siteConfig as defaultSiteConfig, offices as defaultOffices } from '@/data/site';
 import { Product, BlogPost, PortfolioProject, ServicePackage, TeamMember, Office } from '@/types';
-import { compressImageFile, safeSetLocalStorage, safeJsonParse } from '@/lib/imageUtils';
+import { compressImageFile, safeSetLocalStorage, safeJsonParse, mergeListsWithDefaults } from '@/lib/imageUtils';
 import {
   Lock,
   Unlock,
@@ -100,9 +100,9 @@ export default function AdminClient() {
     } catch {}
     try {
       const p = localStorage.getItem(`${STORAGE_PREFIX}products`);
-      if (p) setProductsList(safeJsonParse(p, defaultProducts));
+      if (p) setProductsList(mergeListsWithDefaults(safeJsonParse(p, defaultProducts), defaultProducts));
       const b = localStorage.getItem(`${STORAGE_PREFIX}blog`);
-      if (b) setBlogList(safeJsonParse(b, defaultBlogPosts));
+      if (b) setBlogList(mergeListsWithDefaults(safeJsonParse(b, defaultBlogPosts), defaultBlogPosts));
       const port = localStorage.getItem(`${STORAGE_PREFIX}portfolio`);
       if (port) setPortfolioList(safeJsonParse(port, defaultPortfolio));
       const s = localStorage.getItem(`${STORAGE_PREFIX}services`);

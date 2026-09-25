@@ -569,4 +569,68 @@ export const products: Product[] = [
     origin: 'Kebun Pembibitan Herba Parongpong & Bali',
     published: true,
   },
+  {
+    id: 'prod-13',
+    slug: 'kombucha-sparkling-tea',
+    name: 'Kombucha Sparkling Probiotic Tea',
+    shortDescription:
+      'Kombucha adalah minuman fermentasi berbahan dasar teh yang memiliki rasa segar, sedikit asam, dan naturally sparkling. Melalui proses fermentasi, kombucha menghasilkan karakter rasa yang unik dan cocok dinikmati sebagai alternatif minuman harian yang lebih refreshing',
+    description:
+      'Kombucha merupakan minuman hasil fermentasi teh yang dikenal dengan karakter rasa segar, sedikit asam, dan naturally sparkling. Proses fermentasi membentuk rasa yang kompleks, ringan, dan khas, sehingga kombucha dapat dinikmati langsung sebagai minuman penyegar maupun dipadukan dengan berbagai sajian.\n\nDalam dunia kuliner, kombucha juga menarik digunakan sebagai pairing untuk makanan bercita rasa gurih, pedas, grilled, hingga hidangan ringan seperti salad dan pastry. Karakter acidity-nya membantu memberikan sensasi segar di antara suapan, sementara aroma teh dan botanical ingredients memberikan lapisan rasa yang lebih kompleks. Menghadirkan 4 varian cita rasa unik dalam kemasan kaleng praktis: Shishito Pepper dengan aksen segar eksotis, Rosella asam manis kaya antioksidan, Jamu Warisan Herbal Indonesia berpadu rempah rimpang berkhasiat, dan Blue Pea (bunga telang) beraroma floral menenangkan. Sangat cocok dinikmati langsung atau dikreasikan menjadi mocktail, welcome drink, atau beverage pairing untuk restoran, café, hotel, dan berbagai acara.',
+    coverImage: '/novio-kombucha-cans.jpg',
+    gallery: [
+      '/novio-kombucha-cans.jpg',
+      'https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=1200&q=80',
+    ],
+    category: 'Fermentasi & Minuman',
+    environment: 'Low-Light Quiet',
+    features: [
+      '100% Fermentasi Teh Alami Tanpa Karbonasi Buatan',
+      'Naturally Sparkling & Kaya Probiotik Alami untuk Kesehatan Pencernaan',
+      '4 Karakter Varian: Shishito Pepper, Rosella, Jamu Herbal, dan Blue Pea',
+      'Beverage Pairing Sempurna untuk Sajian Gurih, Grilled, Salad, & Pastry',
+      'Kemasan Kaleng 250 ml yang Praktis, Higienis, & Menjaga Kesegaran Maksimal',
+    ],
+    specifications: {
+      'Bahan Dasar': 'Teh Pilihan, Kultur Probiotik Alami (SCOBY), Air Mata Air Pegunungan, Gula Tebu Alami',
+      'Varian Kaleng': 'Shishito Pepper, Rosella, Jamu Warisan Herbal, Blue Pea',
+      'Karakteristik Rasa': 'Segar, Sedikit Asam (Crisp Acidity), Naturally Sparkling',
+      'Isi Bersih (Netto)': '250 ml (Kemasan Kaleng Aluminium Food Grade)',
+      'Saran Penyimpanan': 'Simpan dingin 4–8°C untuk sensasi kesegaran terbaik',
+      'Aplikasi Kuliner': 'Minuman Harian, Welcome Drink, Food Pairing, Bahan Racikan Mocktail',
+      'Asal Produksi': 'Fasilitas Fermentasi Artisan Novio, Parongpong & Bali',
+    },
+    hotspots: [
+      {
+        x: 18,
+        y: 55,
+        title: 'Shishito Pepper Kombucha',
+        description:
+          'Kombucha dengan sensasi unik cabai shishito berkarakter vegetal segar dan lembut.',
+      },
+      {
+        x: 38,
+        y: 45,
+        title: 'Rosella Kombucha',
+        description:
+          'Ekstrak kelopak kembang rosella merah dengan karakter asam buah segar kaya antioksidan.',
+      },
+      {
+        x: 62,
+        y: 55,
+        title: 'Jamu Warisan Herbal Indonesia',
+        description:
+          'Racikan rempah rimpang kunyit dan temulawak dalam sparkling tea yang menyehatkan lambung.',
+      },
+      {
+        x: 82,
+        y: 45,
+        title: 'Blue Pea (Bunga Telang) Kombucha',
+        description:
+          'Infusi bunga telang biru alami dengan aroma floral yang menenangkan dan visual memikat.',
+      },
+    ],
+    origin: 'Fasilitas Fermentasi Artisan Parongpong',
+    published: true,
+  },
 ];

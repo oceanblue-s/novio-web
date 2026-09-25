@@ -94,3 +94,18 @@ export function safeJsonParse<T>(raw: string | null | undefined, fallback: T): T
     return fallback;
   }
 }
+
+/**
+ * Merges a stored list with default items so newly added official items appear
+ * even if the user has a previously cached list in localStorage.
+ */
+export function mergeListsWithDefaults<T extends { id: string }>(
+  stored: T[],
+  defaults: T[]
+): T[] {
+  if (!Array.isArray(stored) || stored.length === 0) return defaults;
+  const storedIds = new Set(stored.map((item) => item.id));
+  const missing = defaults.filter((item) => !storedIds.has(item.id));
+  return missing.length > 0 ? [...stored, ...missing] : stored;
+}
+

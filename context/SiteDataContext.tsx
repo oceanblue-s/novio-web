@@ -14,7 +14,7 @@ import {
   defaultCustomizerSettings,
   safeMergeSettings,
 } from '@/context/LiveCustomizerContext';
-import { compressImageFile, safeSetLocalStorage, safeJsonParse } from '@/lib/imageUtils';
+import { compressImageFile, safeSetLocalStorage, safeJsonParse, mergeListsWithDefaults } from '@/lib/imageUtils';
 import {
   X,
   Upload,
@@ -369,21 +369,36 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
 
-        // Load datasets from localStorage safely with fallbacks
+        // Load datasets from localStorage safely with fallbacks & auto-include new defaults
         const p = window.localStorage.getItem(`${STORAGE_PREFIX}products`);
-        if (p) setProducts(safeJsonParse(p, defaultProducts));
+        if (p) {
+          const parsed = safeJsonParse(p, defaultProducts);
+          setProducts(mergeListsWithDefaults(parsed, defaultProducts));
+        }
 
         const b = window.localStorage.getItem(`${STORAGE_PREFIX}blog`);
-        if (b) setBlogPosts(safeJsonParse(b, defaultBlogPosts));
+        if (b) {
+          const parsed = safeJsonParse(b, defaultBlogPosts);
+          setBlogPosts(mergeListsWithDefaults(parsed, defaultBlogPosts));
+        }
 
         const port = window.localStorage.getItem(`${STORAGE_PREFIX}portfolio`);
-        if (port) setPortfolioProjects(safeJsonParse(port, defaultPortfolio));
+        if (port) {
+          const parsed = safeJsonParse(port, defaultPortfolio);
+          setPortfolioProjects(mergeListsWithDefaults(parsed, defaultPortfolio));
+        }
 
         const s = window.localStorage.getItem(`${STORAGE_PREFIX}services`);
-        if (s) setServicePackages(safeJsonParse(s, defaultServices));
+        if (s) {
+          const parsed = safeJsonParse(s, defaultServices);
+          setServicePackages(mergeListsWithDefaults(parsed, defaultServices));
+        }
 
         const t = window.localStorage.getItem(`${STORAGE_PREFIX}team`);
-        if (t) setTeamMembers(safeJsonParse(t, defaultTeam));
+        if (t) {
+          const parsed = safeJsonParse(t, defaultTeam);
+          setTeamMembers(mergeListsWithDefaults(parsed, defaultTeam));
+        }
 
         const cust = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
         if (cust) setCustomizerSettings((prev) => safeMergeSettings(prev, safeJsonParse(cust, defaultCustomizerSettings)));
@@ -402,12 +417,14 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
             .then((cloudData) => {
               if (cloudData) {
                 if (cloudData.products && Array.isArray(cloudData.products) && cloudData.products.length > 0) {
-                  setProducts(cloudData.products);
-                  safeSetLocalStorage(`${STORAGE_PREFIX}products`, JSON.stringify(cloudData.products));
+                  const mergedP = mergeListsWithDefaults(cloudData.products, defaultProducts);
+                  setProducts(mergedP);
+                  safeSetLocalStorage(`${STORAGE_PREFIX}products`, JSON.stringify(mergedP));
                 }
                 if (cloudData.blog && Array.isArray(cloudData.blog) && cloudData.blog.length > 0) {
-                  setBlogPosts(cloudData.blog);
-                  safeSetLocalStorage(`${STORAGE_PREFIX}blog`, JSON.stringify(cloudData.blog));
+                  const mergedB = mergeListsWithDefaults(cloudData.blog, defaultBlogPosts);
+                  setBlogPosts(mergedB);
+                  safeSetLocalStorage(`${STORAGE_PREFIX}blog`, JSON.stringify(mergedB));
                 }
                 if (cloudData.portfolio && Array.isArray(cloudData.portfolio) && cloudData.portfolio.length > 0) {
                   setPortfolioProjects(cloudData.portfolio);
