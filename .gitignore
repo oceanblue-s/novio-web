@@ -24,6 +24,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# typescript & build caches
+*.tsbuildinfo
+next-env.d.ts.bak
+.eslintcache
+
 # system files
 .DS_Store
 Thumbs.db
+*.tmp
+

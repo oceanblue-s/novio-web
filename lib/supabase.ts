@@ -38,7 +38,7 @@ export function getActiveSupabaseConfig(): SupabaseConfig {
       const stored = window.localStorage.getItem(STORAGE_SUPABASE_CONFIG_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (parsed.url && parsed.anonKey) {
+        if (parsed && typeof parsed === 'object' && parsed.url && parsed.anonKey) {
           url = cleanSupabaseUrl(parsed.url);
           anonKey = parsed.anonKey;
         }

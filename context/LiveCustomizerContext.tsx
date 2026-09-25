@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { siteConfig, offices } from '@/data/site';
+import { safeJsonParse } from '@/lib/imageUtils';
 
 export interface CustomizerSettings {
   site: {
@@ -186,7 +187,7 @@ export function LiveCustomizerProvider({ children }: { children: React.ReactNode
       if (typeof window !== 'undefined' && window.localStorage) {
         const stored = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
         if (stored) {
-          const parsed = JSON.parse(stored);
+          const parsed = safeJsonParse(stored, defaultCustomizerSettings);
           setSettings((prev) => safeMergeSettings(prev, parsed));
         }
       }

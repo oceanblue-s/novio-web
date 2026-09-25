@@ -10,7 +10,7 @@ import { servicePackages as defaultServices } from '@/data/services';
 import { teamMembers as defaultTeam } from '@/data/team';
 import { siteConfig as defaultSiteConfig, offices as defaultOffices } from '@/data/site';
 import { Product, BlogPost, PortfolioProject, ServicePackage, TeamMember, Office } from '@/types';
-import { compressImageFile, safeSetLocalStorage } from '@/lib/imageUtils';
+import { compressImageFile, safeSetLocalStorage, safeJsonParse } from '@/lib/imageUtils';
 import {
   Lock,
   Unlock,
@@ -100,19 +100,19 @@ export default function AdminClient() {
     } catch {}
     try {
       const p = localStorage.getItem(`${STORAGE_PREFIX}products`);
-      if (p) setProductsList(JSON.parse(p));
+      if (p) setProductsList(safeJsonParse(p, defaultProducts));
       const b = localStorage.getItem(`${STORAGE_PREFIX}blog`);
-      if (b) setBlogList(JSON.parse(b));
+      if (b) setBlogList(safeJsonParse(b, defaultBlogPosts));
       const port = localStorage.getItem(`${STORAGE_PREFIX}portfolio`);
-      if (port) setPortfolioList(JSON.parse(port));
+      if (port) setPortfolioList(safeJsonParse(port, defaultPortfolio));
       const s = localStorage.getItem(`${STORAGE_PREFIX}services`);
-      if (s) setServicesList(JSON.parse(s));
+      if (s) setServicesList(safeJsonParse(s, defaultServices));
       const t = localStorage.getItem(`${STORAGE_PREFIX}team`);
-      if (t) setTeamList(JSON.parse(t));
+      if (t) setTeamList(safeJsonParse(t, defaultTeam));
       const sc = localStorage.getItem(`${STORAGE_PREFIX}site`);
-      if (sc) setSiteData(JSON.parse(sc));
+      if (sc) setSiteData(safeJsonParse(sc, defaultSiteConfig));
       const off = localStorage.getItem(`${STORAGE_PREFIX}offices`);
-      if (off) setOfficesData(JSON.parse(off));
+      if (off) setOfficesData(safeJsonParse(off, defaultOffices));
     } catch {}
   }, []);
 

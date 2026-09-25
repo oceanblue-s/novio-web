@@ -8,7 +8,7 @@ import {
   CustomizerSettings,
   safeMergeSettings,
 } from '@/context/LiveCustomizerContext';
-import { compressImageFile, safeSetLocalStorage } from '@/lib/imageUtils';
+import { compressImageFile, safeSetLocalStorage, safeJsonParse } from '@/lib/imageUtils';
 import {
   Monitor,
   Tablet,
@@ -81,7 +81,7 @@ export default function CustomizerClient() {
       if (typeof window !== 'undefined' && window.localStorage) {
         const stored = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
         if (stored) {
-          const parsed = JSON.parse(stored);
+          const parsed = safeJsonParse(stored, defaultCustomizerSettings);
           setSettings((prev) => safeMergeSettings(prev, parsed));
         }
       }

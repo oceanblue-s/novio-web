@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/types';
+import { safeJsonParse } from '@/lib/imageUtils';
 
 export interface CuratedItem {
   product: Product;
@@ -48,7 +49,7 @@ export function ChefCurationProvider({ children }: { children: React.ReactNode }
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored);
+        const parsed = safeJsonParse<CuratedItem[]>(stored, []);
         if (Array.isArray(parsed)) {
           setCuratedItems(parsed);
         }

@@ -80,3 +80,17 @@ export function safeSetLocalStorage(key: string, value: string): boolean {
     return false;
   }
 }
+
+/**
+ * Safely parses JSON string, returning a fallback value if parsing fails or input is null/invalid.
+ */
+export function safeJsonParse<T>(raw: string | null | undefined, fallback: T): T {
+  if (!raw) return fallback;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed !== undefined && parsed !== null ? (parsed as T) : fallback;
+  } catch (err) {
+    console.warn('[NOVIO Storage] Failed to parse JSON, using fallback:', err);
+    return fallback;
+  }
+}

@@ -14,7 +14,7 @@ import {
   defaultCustomizerSettings,
   safeMergeSettings,
 } from '@/context/LiveCustomizerContext';
-import { compressImageFile, safeSetLocalStorage } from '@/lib/imageUtils';
+import { compressImageFile, safeSetLocalStorage, safeJsonParse } from '@/lib/imageUtils';
 import {
   X,
   Upload,
@@ -369,24 +369,24 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
       if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
 
-        // Load datasets from localStorage
+        // Load datasets from localStorage safely with fallbacks
         const p = window.localStorage.getItem(`${STORAGE_PREFIX}products`);
-        if (p) setProducts(JSON.parse(p));
+        if (p) setProducts(safeJsonParse(p, defaultProducts));
 
         const b = window.localStorage.getItem(`${STORAGE_PREFIX}blog`);
-        if (b) setBlogPosts(JSON.parse(b));
+        if (b) setBlogPosts(safeJsonParse(b, defaultBlogPosts));
 
         const port = window.localStorage.getItem(`${STORAGE_PREFIX}portfolio`);
-        if (port) setPortfolioProjects(JSON.parse(port));
+        if (port) setPortfolioProjects(safeJsonParse(port, defaultPortfolio));
 
         const s = window.localStorage.getItem(`${STORAGE_PREFIX}services`);
-        if (s) setServicePackages(JSON.parse(s));
+        if (s) setServicePackages(safeJsonParse(s, defaultServices));
 
         const t = window.localStorage.getItem(`${STORAGE_PREFIX}team`);
-        if (t) setTeamMembers(JSON.parse(t));
+        if (t) setTeamMembers(safeJsonParse(t, defaultTeam));
 
         const cust = window.localStorage.getItem(STORAGE_CUSTOMIZER_KEY);
-        if (cust) setCustomizerSettings((prev) => safeMergeSettings(prev, JSON.parse(cust)));
+        if (cust) setCustomizerSettings((prev) => safeMergeSettings(prev, safeJsonParse(cust, defaultCustomizerSettings)));
 
         // Check and fetch from Supabase Cloud on mount (background cloud sync)
         const activeCfg = getActiveSupabaseConfig();
