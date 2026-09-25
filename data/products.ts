@@ -633,4 +633,62 @@ export const products: Product[] = [
     origin: 'Fasilitas Fermentasi Artisan Parongpong',
     published: true,
   },
+  {
+    id: 'prod-14',
+    slug: 'kombucha-syrup',
+    name: 'Kombucha Syrup (Custard Apple Kombucha Syrup)',
+    latinName: 'Annona squamosa',
+    shortDescription:
+      'Kombucha syrup adalah sirup artisan dengan karakter manis, asam, dan kompleks yang terinspirasi dari profil rasa fermentasi kombucha. Cocok digunakan sebagai mixer minuman, topping, maupun bahan kreasi kuliner.',
+    description:
+      'Kombucha syrup menghadirkan perpaduan rasa manis dan acidity yang khas, sehingga memberikan karakter yang lebih kompleks dibanding sirup biasa. Profil rasanya dapat memperkaya berbagai kreasi minuman maupun hidangan tanpa terasa terlalu flat atau sekadar manis.\n\nDalam dunia kuliner, kombucha syrup dapat digunakan sebagai base atau mixer untuk mocktail, sparkling drink, iced beverage, tea-based drink, hingga signature menu. Selain untuk minuman, produk ini juga dapat diaplikasikan sebagai topping dessert, glaze, dressing, drizzle, maupun elemen tambahan pada plating. Dibuat secara artisanal di Bali dengan memadukan sari buah srikaya (custard apple) tropis pilihan dan reduksi fermentasi kombucha alami dalam kemasan botol kaca elegan 250 ml.',
+    coverImage: '/novio-kombucha-syrup.jpg',
+    gallery: [
+      '/novio-kombucha-syrup.jpg',
+      'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1200&q=80',
+    ],
+    category: 'Fermentasi & Saus',
+    environment: 'Low-Light Quiet',
+    features: [
+      'Perpaduan Manis Tropis Srikaya & Acidity Khas Fermentasi Kombucha',
+      'Sangat Fleksibel: Mixer Mocktail, Kopi, Teh, Soda, hingga Topping Es Krim',
+      'Handcrafted in Bali Menggunakan Sari Buah Srikaya (Custard Apple) Asli',
+      'Memberikan Kedalaman Rasa Kompleks Tanpa Rasa Terlalu Flat atau Sekadar Manis',
+      'Kemasan Botol Kaca Premium 250 ml Kedap Udara dengan Tutup Segel Higienis',
+    ],
+    specifications: {
+      'Bahan Dasar': 'Ekstrak Buah Srikaya (Custard Apple), Konsentrat Fermentasi Teh Kombucha, Gula Tebu Alami',
+      'Profil Rasa': 'Manis Lembut Tropis, Asam Segar Halus, Aroma Botanical Kompleks',
+      'Isi Bersih': '250 ml (Botol Kaca Persegi Estetik)',
+      'Aplikasi Beverage': 'Mocktail, Cocktail, Sparkling Soda, Cold Brew, Iced Tea',
+      'Aplikasi Kuliner': 'Dessert Topping, Glaze Pastry, Drizzle Es Krim, Plating Fine Dining',
+      'Saran Penyimpanan': 'Simpan di tempat sejuk dan terhindar dari sinar matahari langsung',
+      'Asal Pembuatan': 'Handcrafted in Bali — Fasilitas Artisan Novio',
+    },
+    hotspots: [
+      {
+        x: 50,
+        y: 40,
+        title: 'Botol Kaca Artisan 250 ml',
+        description:
+          'Botol kaca persegi elegan kedap udara yang menjaga kestabilan rasa dan aroma botanical buah tropis.',
+      },
+      {
+        x: 20,
+        y: 75,
+        title: 'Buah Srikaya (Custard Apple)',
+        description:
+          'Sari buah srikaya tropis pilihan yang memberikan tekstur rasa manis lembut khas buah surga.',
+      },
+      {
+        x: 80,
+        y: 70,
+        title: 'Aplikasi Kreasi Minuman & Plating',
+        description:
+          'Mixer sempurna untuk mocktail berkilau, iced beverage segar, hingga garnish saus plating dessert.',
+      },
+    ],
+    origin: 'Handcrafted in Bali',
+    published: true,
+  },
 ];

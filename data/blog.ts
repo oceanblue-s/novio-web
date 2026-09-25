@@ -177,4 +177,52 @@ Dengan mencampurkan kombucha bersama sirup herba alami, garnish daun rosemary se
       keywords: ['kombucha', 'minuman fermentasi', 'beverage pairing', 'teh probiotik', 'NOVIO'],
     },
   },
+  {
+    id: 'post-05',
+    slug: 'kombucha-syrup-kreasi-minuman-dan-kuliner-artisan',
+    title: 'Kombucha Syrup: Karakter Manis, Asam, & Kompleks untuk Kreasi Beverage serta Seni Plating Kuliner',
+    excerpt:
+      'Kombucha syrup menghadirkan perpaduan rasa manis dan acidity khas fermentasi—memperkaya mocktail, sparkling drink, dessert topping, hingga glaze kuliner berkelas.',
+    content: `Kombucha syrup menghadirkan perpaduan rasa manis dan acidity yang khas, sehingga memberikan karakter yang lebih kompleks dibanding sirup biasa. Profil rasanya dapat memperkaya berbagai kreasi minuman maupun hidangan tanpa terasa terlalu flat atau sekadar manis.
+
+Dihasilkan melalui perpaduan cermat antara reduksi kultur fermentasi kombucha dan ekstrak botanical buah eksotis—seperti buah srikaya (*custard apple*) khas tanah tropis Bali—sirup ini mempertahankan kedalaman rasa asam organik alami yang memikat lidah para pecinta kuliner dan mixologist.
+
+### Eksplorasi dalam Dunia Beverage & Mixology
+
+Dalam dunia kuliner dan kreasi minuman, sirup konvensional sering kali hanya memberikan rasa manis satu dimensi yang menutupi karakter bahan dasar lainnya. Kombucha syrup hadir memperkaya racikan gelas saji Anda dengan fleksibilitas tinggi:
+
+1. **Base & Mixer untuk Mocktail & Signature Drink**
+Kombucha syrup dapat digunakan sebagai base atau mixer untuk mocktail, sparkling drink, iced beverage, tea-based drink, hingga signature menu restoran dan café. Cukup padukan 20–30 ml kombucha syrup dengan air soda dingin, perasan sitrus segar, dan es batu untuk menghadirkan sensasi craft mocktail yang menyegarkan.
+
+2. **Sparkling Drink & Iced Beverages**
+Profil rasa manis dan asam seimbangnya menyatu sempurna dengan soda, tonik, maupun es teh artisan. Menghasilkan minuman pelepas dahaga yang berkarakter elegan dan tidak enek.
+
+3. **Tea-Based Drink & Specialty Coffee**
+Memberikan lapisan rasa manis fruity yang lembut pada seduhan cold brew coffee maupun racikan teh bunga telang dan tisane herbal, menciptakan dimensi rasa baru yang khas.
+
+### Aplikasi Kuliner, Dessert Topping, & Seni Plating
+
+Selain untuk kreasi minuman, keunggulan kombucha syrup terletak pada fleksibilitasnya di dapur kuliner dan pastry:
+
+- **Topping Dessert & Es Krim**: Tuangkan di atas es krim vanila, gelato kelapa, panna cotta, atau yoghurt untuk kontras rasa manis dan keasaman segar yang menggugah selera.
+- **Glaze & Drizzle Pastry**: Aplikasikan sebagai glasir mengilap pada fruit tart, waffle hangat, pancake, atau croissant panggang.
+- **Dressing & Vinaigrette Buah**: Campurkan bersama minyak zaitun extra virgin untuk saus salad buah atau sayuran mikro yang segar dan harum.
+- **Elemen Tambahan pada Plating Fine Dining**: Teksturnya yang kental dengan kilau keemasan sangat menawan digoreskan sebagai aksen dekoratif sekaligus pengaya cita rasa pada piring saji dessert profesional.`,
+    coverImage: '/novio-kombucha-syrup.jpg',
+    category: 'Seni Kuliner',
+    author: {
+      name: 'Nunik Saraswati',
+      role: 'Co-Founder & Hubungan Kemitraan Chef',
+      avatar: '/team-member-3.png',
+    },
+    publishedAt: '2025-01-20',
+    readTimeMinutes: 4,
+    tags: ['Kombucha Syrup', 'Mixer Minuman', 'Mocktail Artisan', 'Dessert Topping', 'Seni Kuliner', 'Bali Handcrafted'],
+    seo: {
+      title: 'Kombucha Syrup: Kreasi Minuman & Seni Kuliner Artisan | Jurnal NOVIO',
+      description:
+        'Kombucha syrup: perpaduan rasa manis dan acidity kompleks untuk mocktail, iced beverage, dessert topping, dan elemen plating kuliner.',
+      keywords: ['kombucha syrup', 'custard apple syrup', 'sirup artisan', 'resep mocktail', 'beverage mixer', 'NOVIO'],
+    },
+  },
 ];
