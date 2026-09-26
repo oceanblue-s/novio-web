@@ -88,10 +88,18 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="absolute inset-0 bg-forest/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </Link>
 
-        {/* Category Pill */}
-        <span className="absolute top-3 left-3 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider bg-forest/85 backdrop-blur-sm text-softwhite rounded-md shadow-xs pointer-events-none">
-          {product.category}
-        </span>
+        {/* Category Pill & New Release Badge */}
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none z-10">
+          <span className="px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider bg-forest/85 backdrop-blur-sm text-softwhite rounded-md shadow-xs">
+            {product.category}
+          </span>
+          {(product.slug.includes('kombucha') || product.id === 'prod-13' || product.id === 'prod-14') && (
+            <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-amber-400 text-forest rounded-md shadow-xs flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-forest inline-block animate-pulse" />
+              Baru
+            </span>
+          )}
+        </div>
 
         {/* Origin / Characteristic Pill (Top Right) */}
         {product.origin && !(isEditMode && !isPreviewMode) && (

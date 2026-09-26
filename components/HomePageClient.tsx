@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import HomeHeroClient from '@/components/HomeHeroClient';
@@ -50,8 +50,48 @@ export default function HomePageClient() {
     openEditBlogSection,
   } = useSiteData();
 
-  // Curated products for home preview
-  const featuredProducts = products.slice(0, 6);
+  const [homeProductFilter, setHomeProductFilter] = useState<string>('all');
+
+  // Prioritize newly added artisan products (Kombucha series) while keeping full catalog available
+  const sortedProducts = useMemo(() => {
+    const newItems = products.filter((p) => p.slug.includes('kombucha'));
+    const standardItems = products.filter((p) => !p.slug.includes('kombucha'));
+    return [...newItems, ...standardItems];
+  }, [products]);
+
+  const filteredProducts = useMemo(() => {
+    let list = sortedProducts;
+    if (homeProductFilter === 'fermentasi') {
+      list = sortedProducts.filter(
+        (p) =>
+          p.category.toLowerCase().includes('fermentasi') ||
+          p.category.toLowerCase().includes('minuman') ||
+          p.category.toLowerCase().includes('saus')
+      );
+    } else if (homeProductFilter === 'tisane') {
+      list = sortedProducts.filter(
+        (p) =>
+          p.category.toLowerCase().includes('tisane') ||
+          p.category.toLowerCase().includes('herba')
+      );
+    } else if (homeProductFilter === 'sayuran') {
+      list = sortedProducts.filter(
+        (p) =>
+          p.category.toLowerCase().includes('sayur') ||
+          p.category.toLowerCase().includes('microgreen') ||
+          p.category.toLowerCase().includes('bunga')
+      );
+    } else if (homeProductFilter === 'awetan') {
+      list = sortedProducts.filter(
+        (p) =>
+          p.category.toLowerCase().includes('olahan') ||
+          p.category.toLowerCase().includes('awetan') ||
+          p.category.toLowerCase().includes('madu')
+      );
+    }
+    return list.slice(0, 6);
+  }, [sortedProducts, homeProductFilter]);
+
   // Featured project for before/after spotlight
   const featuredProject = portfolioProjects.find((p) => p.featured) || portfolioProjects[0];
   // Latest 3 blog articles
@@ -225,8 +265,62 @@ export default function HomePageClient() {
             </div>
           </div>
 
+          {/* New Release Artisan Kombucha Spotlight Banner */}
+          <div className="mb-10 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-forest via-forest-light to-garden text-softwhite shadow-xl border border-sage/40 flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <div className="space-y-2 z-10 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400 text-forest text-xs font-extrabold uppercase tracking-wider shadow-sm">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Rilisan Baru • Botanical Probiotic Collection</span>
+              </div>
+              <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight">
+                Kombucha Sparkling Probiotic Tea &amp; Custard Apple Syrup
+              </h3>
+              <p className="text-xs sm:text-sm text-softwhite/85 leading-relaxed font-light">
+                Sensasi teh fermentasi alami naturally effervescent dalam 4 varian kaleng botani nusantara, serta sirup srikaya artisan untuk racikan beverage mixer dan plating kuliner gourmet.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 z-10 shrink-0 flex-wrap">
+              <Link
+                href="/product/kombucha-sparkling-tea"
+                className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-forest font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-95"
+              >
+                Kombucha Kaleng
+              </Link>
+              <Link
+                href="/product/kombucha-syrup"
+                className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-softwhite border border-white/30 font-bold text-xs uppercase tracking-wider transition-all backdrop-blur-sm active:scale-95"
+              >
+                Kombucha Syrup
+              </Link>
+            </div>
+          </div>
+
+          {/* Category Filter Tabs */}
+          <div className="flex flex-wrap items-center gap-2 mb-8">
+            {[
+              { id: 'all', label: 'Semua Koleksi' },
+              { id: 'fermentasi', label: 'Fermentasi & Minuman' },
+              { id: 'tisane', label: 'Tisane & Herba' },
+              { id: 'sayuran', label: 'Microgreens & Sayur' },
+              { id: 'awetan', label: 'Olahan & Awetan' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setHomeProductFilter(tab.id)}
+                className={`text-xs px-4 py-2 rounded-full font-semibold uppercase tracking-wider transition-all duration-300 ${
+                  homeProductFilter === tab.id
+                    ? 'bg-forest text-softwhite shadow-md'
+                    : 'bg-softwhite text-charcoal/70 border border-sage/40 hover:bg-cream hover:text-charcoal'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
+            {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

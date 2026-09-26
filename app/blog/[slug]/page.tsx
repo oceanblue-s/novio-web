@@ -4,13 +4,43 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/data/blog';
+import { products } from '@/data/products';
 import { siteConfig } from '@/data/site';
-import { ArrowLeft, Calendar, Clock, Tag, Share2, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, Share2, ArrowRight, Sparkles } from 'lucide-react';
 
 interface BlogPostPageProps {
   params: {
     slug: string;
   };
+}
+
+const BLOG_PRODUCT_MAP: Record<string, string> = {
+  'racikan-tisane-terbaru-novio-segar-alami': 'novio-tisane-blends',
+  'cuka-fermentasi-artisan-cita-rasa-gourmet': 'cuka-fermentasi-alami',
+  'microgreens-dan-bunga-konsumsi-estetika-kuliner': 'microgreens-organik-premium',
+  'kombucha-minuman-fermentasi-dan-pairing-kuliner': 'kombucha-sparkling-tea',
+  'kombucha-syrup-kreasi-minuman-dan-kuliner-artisan': 'kombucha-syrup',
+};
+
+function formatInlineText(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={i} className="font-semibold text-charcoal">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return (
+        <em key={i} className="italic text-charcoal/90">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    return part;
+  });
 }
 
 export async function generateStaticParams() {
@@ -68,6 +98,11 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
+
+  const relatedProductSlug = BLOG_PRODUCT_MAP[post.slug];
+  const relatedProduct = relatedProductSlug
+    ? products.find((p) => p.slug === relatedProductSlug)
+    : null;
 
   const relatedPosts = blogPosts
     .filter((p) => p.slug !== post.slug)
@@ -205,22 +240,81 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             if (paragraph.startsWith('- ')) {
               const items = paragraph.split('\n');
               return (
-                <ul key={index} className="space-y-2 my-4 pl-4 list-disc marker:text-garden">
+                <ul key={index} className="space-y-2.5 my-4 pl-4 list-disc marker:text-garden">
                   {items.map((item, i) => (
                     <li key={i} className="text-base leading-relaxed">
-                      {item.replace('- ', '')}
+                      {formatInlineText(item.replace('- ', ''))}
                     </li>
                   ))}
                 </ul>
               );
             }
+            if (/^\d+\.\s/.test(paragraph)) {
+              const items = paragraph.split('\n');
+              return (
+                <ol key={index} className="space-y-3 my-4 pl-5 list-decimal marker:font-bold marker:text-garden">
+                  {items.map((item, i) => (
+                    <li key={i} className="text-base leading-relaxed">
+                      {formatInlineText(item.replace(/^\d+\.\s*/, ''))}
+                    </li>
+                  ))}
+                </ol>
+              );
+            }
             return (
               <p key={index} className="leading-relaxed">
-                {paragraph}
+                {formatInlineText(paragraph)}
               </p>
             );
           })}
         </div>
+
+        {/* Mentioned Product Highlight Box */}
+        {relatedProduct && (
+          <div className="my-12 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-cream via-softwhite to-cream border border-sage/40 shadow-sm flex flex-col sm:flex-row items-center gap-6">
+            <div className="relative w-full sm:w-44 aspect-square rounded-xl overflow-hidden shrink-0 border border-sage/30 bg-cream">
+              <Image
+                src={relatedProduct.coverImage}
+                alt={relatedProduct.name}
+                fill
+                className="object-cover"
+              />
+              <span className="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-forest text-softwhite rounded shadow-xs">
+                {relatedProduct.category}
+              </span>
+            </div>
+            <div className="flex-1 space-y-2 text-center sm:text-left">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-garden">
+                Produk Kurasi Terkait Artikel Ini
+              </span>
+              <h4 className="font-serif text-xl sm:text-2xl font-medium text-charcoal">
+                {relatedProduct.name}
+              </h4>
+              <p className="text-xs sm:text-sm text-charcoal/70 line-clamp-2 leading-relaxed">
+                {relatedProduct.shortDescription}
+              </p>
+              <div className="pt-2 flex items-center justify-center sm:justify-start gap-3 flex-wrap">
+                <Link
+                  href={`/product/${relatedProduct.slug}`}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-forest hover:bg-forest-light text-softwhite text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+                >
+                  <span>Lihat Detail Produk</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <a
+                  href={`https://wa.me/${siteConfig.whatsappTarget}?text=${encodeURIComponent(
+                    `Halo NOVIO, saya membaca artikel "${post.title}" dan tertarik dengan produk "${relatedProduct.name}". Mohon informasi pemesanannya.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-garden/15 hover:bg-garden/25 text-forest border border-garden/40 text-xs font-bold uppercase tracking-wider transition-all"
+                >
+                  <span>Tanya via WhatsApp</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Article Tags */}
         <div className="mt-12 pt-8 border-t border-sage/30 flex flex-wrap items-center gap-2">

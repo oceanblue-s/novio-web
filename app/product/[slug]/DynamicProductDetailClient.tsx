@@ -15,6 +15,7 @@ import {
   Sparkles,
   Smartphone,
   Share2,
+  ArrowRight,
 } from 'lucide-react';
 import ProductGallery from './ProductGallery';
 import ProductDetailActions from './ProductDetailActions';
@@ -24,12 +25,36 @@ interface DynamicProductDetailClientProps {
   initialProduct?: Product;
 }
 
+const PRODUCT_BLOG_MAP: Record<string, { slug: string; title: string }> = {
+  'novio-tisane-blends': {
+    slug: 'racikan-tisane-terbaru-novio-segar-alami',
+    title: 'Mengenal Racikan Tisane Terbaru NOVIO: Cara Alami Menyegarkan Tubuh dan Pikiran',
+  },
+  'cuka-fermentasi-alami': {
+    slug: 'cuka-fermentasi-artisan-cita-rasa-gourmet',
+    title: 'Cuka Fermentasi Artisan: Ledakan Cita Rasa di Setiap Tetesan Hidangan Gourmet',
+  },
+  'microgreens-organik-premium': {
+    slug: 'microgreens-dan-bunga-konsumsi-estetika-kuliner',
+    title: 'Microgreens & Bunga Konsumsi: Sentuhan Estetika dan Ledakan Nutrisi di Piring Saji',
+  },
+  'kombucha-sparkling-tea': {
+    slug: 'kombucha-minuman-fermentasi-dan-pairing-kuliner',
+    title: 'Kombucha: Minuman Fermentasi Naturally Sparkling dan Eksplorasi Pairing Kuliner Gourmet',
+  },
+  'kombucha-syrup': {
+    slug: 'kombucha-syrup-kreasi-minuman-dan-kuliner-artisan',
+    title: 'Kombucha Syrup: Karakter Manis, Asam, & Kompleks untuk Kreasi Beverage serta Seni Plating Kuliner',
+  },
+};
+
 export default function DynamicProductDetailClient({
   slug,
   initialProduct,
 }: DynamicProductDetailClientProps) {
   const { products, openSyncModal } = useSiteData();
   const [isMounted, setIsMounted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -104,6 +129,28 @@ export default function DynamicProductDetailClient({
     .filter((p) => p.slug !== product.slug)
     .slice(0, 3);
 
+  const matchingBlog = product ? PRODUCT_BLOG_MAP[product.slug] : null;
+
+  const handleShare = () => {
+    if (typeof window !== 'undefined') {
+      const url = window.location.href;
+      if (navigator.share) {
+        navigator
+          .share({
+            title: `${product.name} | NOVIO`,
+            text: product.shortDescription,
+            url,
+          })
+          .catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        });
+      }
+    }
+  };
+
   const whatsappInquiryUrl = `https://wa.me/${siteConfig.whatsappTarget}?text=${encodeURIComponent(
     `Halo NOVIO, saya tertarik untuk menanyakan produk "${product.name}" (ID: ${product.id}). Bisakah memberikan detail ketersediaan, kemasan, dan pemesanan saat ini?`
   )}`;
@@ -140,16 +187,28 @@ export default function DynamicProductDetailClient({
           {/* Details & Inquiries Column */}
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-forest/10 text-forest rounded-full">
-                  {product.category}
-                </span>
-                {product.origin && (
-                  <span className="text-xs text-charcoal-muted flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-sage" />
-                    {product.origin}
+              <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-forest/10 text-forest rounded-full">
+                    {product.category}
                   </span>
-                )}
+                  {product.origin && (
+                    <span className="text-xs text-charcoal-muted flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-sage" />
+                      {product.origin}
+                    </span>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cream hover:bg-cream-dark text-charcoal text-xs font-semibold border border-sage/40 transition-all active:scale-95 shadow-2xs"
+                  title="Bagikan Tautan Produk"
+                >
+                  <Share2 className="w-3.5 h-3.5 text-garden" />
+                  <span>{copied ? 'Tautan Disalin!' : 'Bagikan'}</span>
+                </button>
               </div>
 
               <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium text-charcoal tracking-tight leading-tight mb-4">
@@ -180,6 +239,28 @@ export default function DynamicProductDetailClient({
                   ))}
                 </ul>
               </div>
+
+              {/* Linked Editorial Journal / Pairing Guide */}
+              {matchingBlog && (
+                <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-cream via-softwhite to-cream border border-sage/40 shadow-xs flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-garden flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" />
+                      <span>Jurnal &amp; Panduan Kuliner Terkait</span>
+                    </span>
+                    <h4 className="font-serif text-sm sm:text-base font-medium text-charcoal line-clamp-1">
+                      {matchingBlog.title}
+                    </h4>
+                  </div>
+                  <Link
+                    href={`/blog/${matchingBlog.slug}`}
+                    className="shrink-0 inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-forest hover:bg-forest-light text-softwhite text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+                  >
+                    <span>Baca</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Quality Seal */}

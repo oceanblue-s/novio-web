@@ -102,6 +102,30 @@ const HARVEST_ITEMS: HarvestItem[] = [
     aromaNote: 'Karamelisasi nektar kelapa alami dengan serat buah legit.',
     culinaryUse: 'Cheese platter pairing, sourdough spread, glaze daging panggang.',
   },
+  {
+    id: 'h-7',
+    name: 'Kombucha Sparkling Probiotic Tea',
+    category: 'fermentasi',
+    categoryLabel: 'Minuman & Fermentasi',
+    seasonStatus: 'Tersedia Harian',
+    statusColor: 'emerald',
+    months: 'Fermentasi Kontinu (Kaleng 250ml)',
+    altitude: 'Fasilitas Artisan Parongpong',
+    aromaNote: 'Naturally effervescent, asam segar halus, 4 varian: Shishito, Rosella, Jamu, Blue Pea.',
+    culinaryUse: 'Pairing hidangan gurih/grilled, penyeimbang masakan pedas, mocktail.',
+  },
+  {
+    id: 'h-8',
+    name: 'Custard Apple Kombucha Syrup',
+    category: 'fermentasi',
+    categoryLabel: 'Sirup & Fermentasi',
+    seasonStatus: 'Pematangan Artisan',
+    statusColor: 'amber',
+    months: 'Panen Srikaya Tropis (Botol 250ml)',
+    altitude: 'Handcrafted in Bali',
+    aromaNote: 'Manis buah srikaya tropis lembut berpadu acidity kompleks kultur kombucha.',
+    culinaryUse: 'Mixer mocktail craft, tea/coffee, topping dessert, pastry glaze & plating.',
+  },
 ];
 
 export default function HarvestCalendarBanner() {
