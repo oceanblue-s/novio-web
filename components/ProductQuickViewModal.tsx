@@ -266,14 +266,14 @@ export default function ProductQuickViewModal() {
               </Link>
             </div>
 
-            {/* View Project Brief Link */}
+            {/* View Contact Link */}
             <div className="text-center pt-1 text-xs">
               <Link
-                href="/brief"
+                href="/contact"
                 onClick={closeQuickView}
                 className="text-charcoal-muted hover:text-garden transition-colors"
               >
-                Ingin pasokan rutin atau kontrak B2B khusus? <span className="underline font-semibold text-garden">Kirimkan Brief Kebutuhan →</span>
+                Butuh jadwal panen khusus atau pasokan rutin? <span className="underline font-semibold text-garden">Hubungi Kontak Kami →</span>
               </Link>
             </div>
           </div>

@@ -10,7 +10,6 @@ import { LiveCustomizerProvider } from '@/context/LiveCustomizerContext';
 import { SiteDataProvider } from '@/context/SiteDataContext';
 import VisualEditBar from '@/components/VisualEditBar';
 import { ChefCurationProvider } from '@/context/ChefCurationContext';
-import CommandPalette from '@/components/CommandPalette';
 import ProductQuickViewModal from '@/components/ProductQuickViewModal';
 
 const playfair = Playfair_Display({
@@ -195,7 +194,6 @@ export default function RootLayout({
               <main className="flex-grow">{children}</main>
               <Footer />
               <WhatsAppBubble />
-              <CommandPalette />
               <ProductQuickViewModal />
               <AmbientAudioToggle />
               <GoogleTranslateScript />

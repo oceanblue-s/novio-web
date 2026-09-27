@@ -15,9 +15,7 @@ export const siteConfig = {
 export const navItems: NavItem[] = [
   { label: 'Beranda', href: '/' },
   { label: 'Tentang Kami', href: '/about' },
-  { label: 'Layanan', href: '/services' },
   { label: 'Produk', href: '/product' },
-  { label: 'Portofolio', href: '/portfolio' },
   { label: 'Blog', href: '/blog' },
   { label: 'Kontak', href: '/contact' },
 ];

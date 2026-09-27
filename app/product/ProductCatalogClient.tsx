@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard';
 import { useSiteData } from '@/context/SiteDataContext';
+import { siteConfig } from '@/data/site';
 import {
   Search,
   SlidersHorizontal,
@@ -94,13 +95,15 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
           </p>
         </div>
 
-        <Link
-          href="/brief"
+        <a
+          href={`https://wa.me/${siteConfig.whatsappTarget}?text=${encodeURIComponent('Halo NOVIO, saya ingin berkonsultasi mengenai ketersediaan panen & pasokan produk untuk dapur kami.')}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-garden hover:bg-garden-light text-softwhite font-semibold text-xs uppercase tracking-wider transition-all shadow-md shrink-0"
         >
-          <span>Buat Brief Pasokan</span>
+          <span>Konsultasi via WhatsApp</span>
           <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+        </a>
       </div>
 
       {/* In-Context Admin Edit Action Banner */}

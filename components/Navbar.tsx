@@ -5,16 +5,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { navItems, siteConfig } from '@/data/site';
-import { Menu, X, ArrowUpRight, Search } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { useChefCuration } from '@/context/ChefCurationContext';
 import { useSiteData } from '@/context/SiteDataContext';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { openCommandPalette } = useChefCuration();
   const { isEditMode, isPreviewMode } = useSiteData();
   const showEditBar = isEditMode && !isPreviewMode;
 
@@ -94,38 +92,16 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Action Button, Search, & Mobile Hamburger */}
+        {/* Action Button & Mobile Hamburger */}
         <div className="flex items-center space-x-2 sm:space-x-2.5">
-          {/* Global Search Button (⌘K / Ctrl+K) */}
-          <button
-            type="button"
-            onClick={openCommandPalette}
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 hover:border-sage transition-all text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-sage hover:scale-105"
-            aria-label="Buka pencarian global (Ctrl+K)"
-            title="Cari produk, layanan, atau artikel (Ctrl+K)"
-          >
-            <Search className="w-3.5 h-3.5 text-sage" />
-            <span className="hidden xl:inline text-[11px] font-medium tracking-wide uppercase">Cari</span>
-            <kbd className="hidden sm:inline-block px-1.5 py-0.2 text-[9px] font-mono bg-forest/80 rounded border border-sage/30 text-sage font-semibold">
-              ⌘K
-            </kbd>
-          </button>
-
           {/* Language Switcher */}
           <LanguageSwitcher />
-
-          <Link
-            href="/brief"
-            className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-semibold uppercase tracking-wider bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 hover:border-sage transition-all hover:scale-105"
-          >
-            <span>Buat Brief</span>
-          </Link>
 
           <a
             href={`https://wa.me/${siteConfig.whatsappTarget}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="shine-hover hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-bold uppercase tracking-wider bg-garden hover:bg-garden-light text-softwhite transition-all shadow-md hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-garden"
+            className="shine-hover inline-flex items-center gap-1.5 px-3.5 py-2 rounded text-xs font-bold uppercase tracking-wider bg-garden hover:bg-garden-light text-softwhite transition-all shadow-md hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-garden"
           >
             <span>WhatsApp</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -148,24 +124,6 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-forest/98 backdrop-blur-xl border-t border-forest-light px-6 py-6 transition-all duration-300 animate-in fade-in slide-in-from-top-4 max-h-[calc(100vh-80px)] overflow-y-auto shadow-2xl">
           <nav className="flex flex-col space-y-4" aria-label="Mobile Navigation">
-            {/* Mobile Search Button */}
-            <button
-              type="button"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                openCommandPalette();
-              }}
-              className="flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-cream/15 text-cream border border-sage/40 text-xs font-semibold uppercase tracking-wider text-left"
-            >
-              <div className="flex items-center gap-2">
-                <Search className="w-4 h-4 text-sage" />
-                <span>Cari Produk & Info (⌘K)</span>
-              </div>
-              <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-forest/80 rounded border border-sage/30 text-sage">
-                Cari
-              </kbd>
-            </button>
-
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -184,12 +142,6 @@ export default function Navbar() {
             {/* Mobile Language Switcher */}
             <LanguageSwitcher variant="mobile" />
 
-            <Link
-              href="/brief"
-              className="mt-2 inline-flex items-center justify-center gap-2 w-full py-3 rounded bg-cream/15 text-cream border border-sage/40 font-medium text-sm tracking-wider uppercase hover:bg-cream/25"
-            >
-              <span>Buat Brief Proyek</span>
-            </Link>
             <a
               href={`https://wa.me/${siteConfig.whatsappTarget}`}
               target="_blank"

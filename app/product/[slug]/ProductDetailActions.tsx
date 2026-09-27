@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Product } from '@/types';
-import { MessageSquare, Sparkles, Pencil, FileText } from 'lucide-react';
+import { MessageSquare, Sparkles, Pencil, ArrowRight } from 'lucide-react';
 import { useSiteData } from '@/context/SiteDataContext';
 
 interface ProductDetailActionsProps {
@@ -45,7 +45,7 @@ export default function ProductDetailActions({
       </div>
 
       <p className="text-xs text-charcoal/70 leading-relaxed">
-        Setiap produk dipanen dan diolah dengan standar kualitas tertinggi. Hubungi tim kami langsung via WhatsApp untuk ketersediaan jadwal panen dan sampel, atau ajukan brief pasokan untuk kebutuhan reguler restoran Anda.
+        Setiap produk dipanen dan diolah dengan standar kualitas tertinggi. Hubungi tim kami langsung via WhatsApp untuk ketersediaan jadwal panen dan sampel, atau kunjungi kantor studio kami di Bandung Barat &amp; Bali.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -60,13 +60,13 @@ export default function ProductDetailActions({
           <span>Hubungi via WhatsApp</span>
         </a>
 
-        {/* Buat Brief Pasokan */}
+        {/* Kontak & Lokasi */}
         <Link
-          href="/brief"
+          href="/contact"
           className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-forest hover:bg-forest-light text-softwhite font-semibold text-xs tracking-wider uppercase transition-all shadow-xs"
         >
-          <FileText className="w-4 h-4 text-sage" />
-          <span>Buat Brief Pasokan</span>
+          <ArrowRight className="w-4 h-4 text-sage" />
+          <span>Kontak &amp; Alamat Kebun</span>
         </Link>
       </div>
     </div>
