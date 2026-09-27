@@ -44,8 +44,6 @@ const PAGES = [
   { label: 'Beranda (Home)', path: '/' },
   { label: 'Tentang Kami', path: '/about' },
   { label: 'Katalog Produk', path: '/product' },
-  { label: 'Layanan Botani', path: '/services' },
-  { label: 'Portofolio Ruang', path: '/portfolio' },
   { label: 'Jurnal & Artikel', path: '/blog' },
   { label: 'Kontak & Kantor', path: '/contact' },
 ];

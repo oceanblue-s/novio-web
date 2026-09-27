@@ -5,11 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { products as defaultProducts } from '@/data/products';
 import { blogPosts as defaultBlogPosts } from '@/data/blog';
-import { portfolioProjects as defaultPortfolio } from '@/data/portfolio';
-import { servicePackages as defaultServices } from '@/data/services';
 import { teamMembers as defaultTeam } from '@/data/team';
 import { siteConfig as defaultSiteConfig, offices as defaultOffices } from '@/data/site';
-import { Product, BlogPost, PortfolioProject, ServicePackage, TeamMember, Office } from '@/types';
+import { Product, BlogPost, TeamMember, Office } from '@/types';
 import { compressImageFile, safeSetLocalStorage, safeJsonParse, mergeListsWithDefaults } from '@/lib/imageUtils';
 import {
   Lock,
@@ -24,7 +22,6 @@ import {
   Save,
   Check,
   X,
-  Search,
   ExternalLink,
   ChefHat,
   Leaf,
@@ -34,9 +31,7 @@ import {
   Download,
   Copy,
   AlertCircle,
-  Briefcase,
   Users,
-  Compass,
   Upload,
   Image as ImageIcon,
   Sliders,
@@ -54,22 +49,17 @@ export default function AdminClient() {
   const [showPin, setShowPin] = useState(false);
   const [pinError, setPinError] = useState('');
 
-  // Active Tab: products, blog, portfolio, services, team, site, export
+  // Active Tab: products, blog, team, site, export
   const [activeTab, setActiveTab] = useState<
-    'products' | 'blog' | 'portfolio' | 'services' | 'team' | 'site' | 'export'
+    'products' | 'blog' | 'team' | 'site' | 'export'
   >('products');
 
   // State Datasets
   const [productsList, setProductsList] = useState<Product[]>(defaultProducts);
   const [blogList, setBlogList] = useState<BlogPost[]>(defaultBlogPosts);
-  const [portfolioList, setPortfolioList] = useState<PortfolioProject[]>(defaultPortfolio);
-  const [servicesList, setServicesList] = useState<ServicePackage[]>(defaultServices);
   const [teamList, setTeamList] = useState<TeamMember[]>(defaultTeam);
   const [siteData, setSiteData] = useState(defaultSiteConfig);
   const [officesData, setOfficesData] = useState<Office[]>(defaultOffices);
-
-  // Search
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Active Editing Modals
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -77,12 +67,6 @@ export default function AdminClient() {
 
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
   const [isCreatingBlog, setIsCreatingBlog] = useState(false);
-
-  const [editingProject, setEditingProject] = useState<PortfolioProject | null>(null);
-  const [isCreatingProject, setIsCreatingProject] = useState(false);
-
-  const [editingService, setEditingService] = useState<ServicePackage | null>(null);
-  const [isCreatingService, setIsCreatingService] = useState(false);
 
   const [editingTeam, setEditingTeam] = useState<TeamMember | null>(null);
   const [isCreatingTeam, setIsCreatingTeam] = useState(false);
@@ -103,10 +87,6 @@ export default function AdminClient() {
       if (p) setProductsList(mergeListsWithDefaults(safeJsonParse(p, defaultProducts), defaultProducts));
       const b = localStorage.getItem(`${STORAGE_PREFIX}blog`);
       if (b) setBlogList(mergeListsWithDefaults(safeJsonParse(b, defaultBlogPosts), defaultBlogPosts));
-      const port = localStorage.getItem(`${STORAGE_PREFIX}portfolio`);
-      if (port) setPortfolioList(safeJsonParse(port, defaultPortfolio));
-      const s = localStorage.getItem(`${STORAGE_PREFIX}services`);
-      if (s) setServicesList(safeJsonParse(s, defaultServices));
       const t = localStorage.getItem(`${STORAGE_PREFIX}team`);
       if (t) setTeamList(safeJsonParse(t, defaultTeam));
       const sc = localStorage.getItem(`${STORAGE_PREFIX}site`);
@@ -181,7 +161,7 @@ export default function AdminClient() {
               Portal Admin Sentral NOVIO
             </h1>
             <p className="text-xs text-charcoal/70 leading-relaxed">
-              Pusat kendali penuh untuk mengedit Produk, Artikel, Portofolio, Layanan, Tim, dan Kontak.
+              Pusat kendali penuh untuk mengedit Produk, Artikel, Tim, dan Kontak &amp; WhatsApp.
             </p>
           </div>
 
@@ -312,7 +292,7 @@ export default function AdminClient() {
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-charcoal/75 leading-relaxed">
-                Tampilan website persis seperti biasa, dilengkapi tombol <strong>[✏️ Edit]</strong> dan <strong>[🗑️ Hapus]</strong> di setiap produk, artikel, layanan, dan portofolio, serta tombol <strong>[+ Tambah ...]</strong> di setiap bagian. Sangat mudah dimengerti bahkan untuk admin awam!
+                Tampilan website persis seperti biasa, dilengkapi tombol <strong>[✏️ Edit]</strong> dan <strong>[🗑️ Hapus]</strong> di setiap produk dan artikel, serta tombol <strong>[+ Tambah ...]</strong> di setiap bagian. Sangat mudah dimengerti bahkan untuk admin awam!
               </p>
             </div>
           </div>
@@ -325,7 +305,7 @@ export default function AdminClient() {
           </Link>
         </div>
 
-        {/* Tab Navigation Menu (All 7 Sections) */}
+        {/* Tab Navigation Menu */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 border-b border-sage/30 scrollbar-none">
           <button
             type="button"
@@ -351,32 +331,6 @@ export default function AdminClient() {
           >
             <FileText className="w-4 h-4 text-sage" />
             <span>Artikel ({blogList.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('portfolio')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap ${
-              activeTab === 'portfolio'
-                ? 'bg-forest text-softwhite shadow-sm'
-                : 'bg-cream text-charcoal/70 hover:bg-cream-dark'
-            }`}
-          >
-            <Compass className="w-4 h-4 text-sage" />
-            <span>Portofolio ({portfolioList.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('services')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap ${
-              activeTab === 'services'
-                ? 'bg-forest text-softwhite shadow-sm'
-                : 'bg-cream text-charcoal/70 hover:bg-cream-dark'
-            }`}
-          >
-            <Briefcase className="w-4 h-4 text-sage" />
-            <span>Layanan ({servicesList.length})</span>
           </button>
 
           <button
@@ -425,15 +379,13 @@ export default function AdminClient() {
         {activeTab === 'products' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-              <div className="relative w-full sm:w-80">
-                <Search className="w-4 h-4 text-charcoal-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari produk..."
-                  className="w-full pl-10 pr-4 py-2 text-xs rounded-full bg-cream border border-sage/40 text-charcoal focus:outline-none focus:ring-1 focus:ring-garden"
-                />
+              <div>
+                <h2 className="font-serif text-xl font-medium text-charcoal">
+                  Daftar Katalog Produk ({productsList.length})
+                </h2>
+                <p className="text-xs text-charcoal/70">
+                  Kelola produk botani, kombucha, dan artisan culinary ingredients.
+                </p>
               </div>
 
               <button
@@ -467,9 +419,7 @@ export default function AdminClient() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {productsList
-                .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                .map((p) => (
+              {productsList.map((p) => (
                   <div
                     key={p.id}
                     className="bg-cream/60 rounded-xl p-5 border border-sage/40 flex flex-col justify-between hover:bg-cream transition-all group"
@@ -619,189 +569,7 @@ export default function AdminClient() {
         )}
 
         {/* ------------------------------------------------------------- */}
-        {/* 3. PORTOFOLIO PROYEK */}
-        {/* ------------------------------------------------------------- */}
-        {activeTab === 'portfolio' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="font-serif text-xl font-medium text-charcoal">
-                Portofolio Ruang & Lanskap ({portfolioList.length})
-              </h2>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingProject({
-                    id: `proj-${Date.now().toString().slice(-4)}`,
-                    slug: 'proyek-baru',
-                    title: '',
-                    subtitle: '',
-                    clientCategory: 'Perhotelan Mewah',
-                    location: 'Bali / Bandung',
-                    year: '2025',
-                    coverImage: '/luxury-hospitality-lab.jpg',
-                    gallery: ['/luxury-hospitality-lab.jpg'],
-                    beforeImage: '/compare-before-flora.jpg',
-                    afterImage: '/compare-after-flora.jpg',
-                    excerpt: '',
-                    challenge: '',
-                    solution: '',
-                    curatedSpecimens: ['Ficus Lyrata', 'Philodendron Bipinnatifidum'],
-                    featured: false,
-                  });
-                  setIsCreatingProject(true);
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-garden hover:bg-garden-light text-softwhite text-xs font-semibold uppercase tracking-wider transition-all shadow-sm"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Tambah Proyek Baru</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {portfolioList.map((proj) => (
-                <div key={proj.id} className="bg-cream/60 rounded-xl p-5 border border-sage/40 space-y-4">
-                  <div className="relative aspect-[16/9] rounded-lg overflow-hidden bg-softwhite border border-sage/30">
-                    <Image src={proj.coverImage} alt={proj.title} fill sizes="50vw" className="object-cover" />
-                    <span className="absolute top-2 left-2 text-[10px] font-semibold uppercase bg-forest/90 text-softwhite px-2 py-0.5 rounded">
-                      {proj.clientCategory}
-                    </span>
-                    {proj.featured && (
-                      <span className="absolute top-2 right-2 text-[10px] font-semibold uppercase bg-garden text-softwhite px-2 py-0.5 rounded shadow-sm">
-                        Unggulan Home
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-mono text-charcoal-muted uppercase">
-                      {proj.location} • {proj.year}
-                    </span>
-                    <h3 className="font-serif text-lg font-medium text-charcoal">{proj.title}</h3>
-                    <p className="text-xs text-charcoal/70 line-clamp-2 mt-1">{proj.excerpt}</p>
-                  </div>
-                  <div className="pt-3 border-t border-sage/30 flex items-center justify-between">
-                    <Link
-                      href={`/portfolio/${proj.slug}`}
-                      target="_blank"
-                      className="text-xs font-semibold text-garden hover:text-forest flex items-center gap-1"
-                    >
-                      <span>Lihat Halaman</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </Link>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingProject(proj);
-                          setIsCreatingProject(false);
-                        }}
-                        className="p-2 rounded-lg bg-softwhite hover:bg-forest hover:text-softwhite text-charcoal border border-sage/30 text-xs transition-colors"
-                      >
-                        <Pencil className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (window.confirm(`Hapus proyek "${proj.title}"?`)) {
-                            const updated = portfolioList.filter((item) => item.id !== proj.id);
-                            setPortfolioList(updated);
-                            persist('portfolio', updated);
-                          }
-                        }}
-                        className="p-2 rounded-lg bg-softwhite hover:bg-earth hover:text-softwhite text-charcoal border border-sage/30 text-xs transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ------------------------------------------------------------- */}
-        {/* 4. LAYANAN & PAKET */}
-        {/* ------------------------------------------------------------- */}
-        {activeTab === 'services' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="font-serif text-xl font-medium text-charcoal">
-                Paket Layanan Botani ({servicesList.length})
-              </h2>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingService({
-                    id: `srv-${Date.now().toString().slice(-4)}`,
-                    slug: 'layanan-baru',
-                    title: '',
-                    tagline: '',
-                    description: '',
-                    targetAudience: 'Residensial / Korporat',
-                    coverImage: '/private-villas-cultivation.jpg',
-                    features: ['Konsultasi Botani Langsung', 'Aklimatisasi Tanaman Parongpong'],
-                    deliverables: ['Laporan Analisis Iklim Mikro', 'Jadwal Perawatan Berkala'],
-                    pricingModel: 'Paket Kustom Sesuai Kebutuhan',
-                    guarantee: 'Garansi Kesehatan Tanaman 30 Hari',
-                    recommendedFor: 'Pemilik hunian atau ruang kantor biofilik',
-                    whatsappMessage: 'Halo NOVIO, saya ingin bertanya tentang layanan baru.',
-                  });
-                  setIsCreatingService(true);
-                }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-garden hover:bg-garden-light text-softwhite text-xs font-semibold uppercase tracking-wider transition-all shadow-sm"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Tambah Layanan Baru</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {servicesList.map((srv) => (
-                <div key={srv.id} className="bg-cream/60 rounded-xl p-5 border border-sage/40 space-y-3">
-                  <div className="relative aspect-[16/9] rounded-lg overflow-hidden bg-softwhite border border-sage/30">
-                    <Image src={srv.coverImage} alt={srv.title} fill sizes="50vw" className="object-cover" />
-                    <span className="absolute top-2 left-2 text-[10px] font-semibold uppercase bg-forest/90 text-softwhite px-2 py-0.5 rounded">
-                      {srv.targetAudience.split(',')[0]}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-lg font-medium text-charcoal">{srv.title}</h3>
-                    <p className="text-xs text-charcoal/70 line-clamp-2 mt-1">{srv.tagline}</p>
-                    <p className="text-[11px] font-mono text-garden font-semibold mt-2">{srv.pricingModel}</p>
-                  </div>
-                  <div className="pt-3 border-t border-sage/30 flex items-center justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingService(srv);
-                        setIsCreatingService(false);
-                      }}
-                      className="p-2 rounded-lg bg-softwhite hover:bg-forest hover:text-softwhite text-charcoal border border-sage/30 text-xs transition-colors"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (window.confirm(`Hapus layanan "${srv.title}"?`)) {
-                          const updated = servicesList.filter((s) => s.id !== s.id);
-                          setServicesList(updated);
-                          persist('services', updated);
-                        }
-                      }}
-                      className="p-2 rounded-lg bg-softwhite hover:bg-earth hover:text-softwhite text-charcoal border border-sage/30 text-xs transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ------------------------------------------------------------- */}
-        {/* 5. TIM & PENDIRI */}
+        {/* 3. TIM & PENDIRI */}
         {/* ------------------------------------------------------------- */}
         {activeTab === 'team' && (
           <div className="space-y-6">
@@ -995,7 +763,7 @@ export default function AdminClient() {
                 Pusat Ekspor & Salin Kode Permanen (GitHub / Vercel)
               </h2>
               <p className="text-xs text-charcoal/80 leading-relaxed">
-                Setiap kali Anda mengedit produk, artikel, portofolio, atau kontak di halaman ini, Anda bisa menyalin kode TypeScript yang sudah terformat rapi untuk ditempelkan ke file proyek jika ingin perubahan langsung terunggah ke Vercel!
+                Setiap kali Anda mengedit produk, artikel, atau kontak di halaman ini, Anda bisa menyalin kode TypeScript yang sudah terformat rapi untuk ditempelkan ke file proyek jika ingin perubahan langsung terunggah ke Vercel!
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2">
@@ -1039,42 +807,6 @@ export default function AdminClient() {
                   type="button"
                   onClick={() =>
                     copyToClipboard(
-                      `import { PortfolioProject } from '@/types';\n\nexport const portfolioProjects: PortfolioProject[] = ${JSON.stringify(
-                        portfolioList,
-                        null,
-                        2
-                      )};\n`,
-                      'data/portfolio.ts'
-                    )
-                  }
-                  className="p-3 rounded-xl bg-softwhite hover:bg-forest hover:text-softwhite text-charcoal border border-sage/40 text-xs font-semibold text-left transition-colors flex items-center justify-between"
-                >
-                  <span>3. Salin data/portfolio.ts</span>
-                  <Copy className="w-4 h-4 text-garden" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    copyToClipboard(
-                      `import { ServicePackage, ServiceWorkflowStep, ServiceFAQ } from '@/types';\n\nexport const servicePackages: ServicePackage[] = ${JSON.stringify(
-                        servicesList,
-                        null,
-                        2
-                      )};\n`,
-                      'data/services.ts'
-                    )
-                  }
-                  className="p-3 rounded-xl bg-softwhite hover:bg-forest hover:text-softwhite text-charcoal border border-sage/40 text-xs font-semibold text-left transition-colors flex items-center justify-between"
-                >
-                  <span>4. Salin data/services.ts</span>
-                  <Copy className="w-4 h-4 text-garden" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    copyToClipboard(
                       `import { TeamMember } from '@/types';\n\nexport const teamMembers: TeamMember[] = ${JSON.stringify(
                         teamList,
                         null,
@@ -1085,7 +817,7 @@ export default function AdminClient() {
                   }
                   className="p-3 rounded-xl bg-softwhite hover:bg-forest hover:text-softwhite text-charcoal border border-sage/40 text-xs font-semibold text-left transition-colors flex items-center justify-between"
                 >
-                  <span>5. Salin data/team.ts</span>
+                  <span>3. Salin data/team.ts</span>
                   <Copy className="w-4 h-4 text-garden" />
                 </button>
 
@@ -1095,8 +827,6 @@ export default function AdminClient() {
                     const fullBackup = {
                       products: productsList,
                       blog: blogList,
-                      portfolio: portfolioList,
-                      services: servicesList,
                       team: teamList,
                       site: siteData,
                       offices: officesData,
@@ -1289,145 +1019,6 @@ export default function AdminClient() {
                   <button type="submit" className="px-6 py-2.5 rounded-lg bg-forest hover:bg-forest-light text-softwhite font-semibold flex items-center gap-2">
                     <Save className="w-4 h-4 text-sage" />
                     <span>Simpan Produk</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* ------------------------------------------------------------- */}
-        {/* MODAL: EDIT / CREATE PORTOFOLIO */}
-        {/* ------------------------------------------------------------- */}
-        {editingProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <div className="fixed inset-0 bg-charcoal/70 backdrop-blur-sm" onClick={() => setEditingProject(null)} />
-            <div className="relative w-full max-w-2xl bg-softwhite rounded-2xl shadow-2xl border border-sage/40 p-6 sm:p-8 z-10 max-h-[90vh] overflow-y-auto space-y-5">
-              <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-                <h3 className="font-serif text-xl font-medium text-charcoal">
-                  {isCreatingProject ? 'Tambah Proyek Portofolio' : `Edit: ${editingProject.title}`}
-                </h3>
-                <button type="button" onClick={() => setEditingProject(null)} className="p-1 text-charcoal-muted hover:text-charcoal">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  let updated = [...portfolioList];
-                  if (isCreatingProject) {
-                    updated = [editingProject, ...portfolioList];
-                  } else {
-                    updated = portfolioList.map((p) => (p.id === editingProject.id ? editingProject : p));
-                  }
-                  setPortfolioList(updated);
-                  persist('portfolio', updated);
-                  setEditingProject(null);
-                }}
-                className="space-y-4 text-xs"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">Judul Proyek *</label>
-                    <input
-                      type="text"
-                      required
-                      value={editingProject.title}
-                      onChange={(e) => {
-                        const title = e.target.value;
-                        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-                        setEditingProject({
-                          ...editingProject,
-                          title,
-                          slug: isCreatingProject ? slug : editingProject.slug,
-                        });
-                      }}
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">Lokasi *</label>
-                    <input
-                      type="text"
-                      required
-                      value={editingProject.location}
-                      onChange={(e) => setEditingProject({ ...editingProject, location: e.target.value })}
-                      placeholder="cth: Uluwatu, Bali"
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2 p-3 bg-cream/40 rounded-xl border border-sage/30">
-                  <label className="font-semibold uppercase tracking-wider text-charcoal flex items-center justify-between">
-                    <span>Foto Utama Proyek *</span>
-                    <span className="text-[10px] text-garden">Pilih dari laptop</span>
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="text"
-                      required
-                      value={editingProject.coverImage}
-                      onChange={(e) => setEditingProject({ ...editingProject, coverImage: e.target.value })}
-                      className="flex-1 px-3 py-2 rounded-lg bg-softwhite border border-sage/40 text-charcoal"
-                    />
-                    <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-forest hover:bg-forest-light text-softwhite font-semibold text-xs cursor-pointer shrink-0">
-                      <Upload className="w-3.5 h-3.5" />
-                      <span>Upload</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) =>
-                          handleImageUpload(e, (dataUrl) =>
-                            setEditingProject({ ...editingProject, coverImage: dataUrl })
-                          )
-                        }
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="font-semibold uppercase tracking-wider text-charcoal">Ringkasan Proyek *</label>
-                  <textarea
-                    rows={2}
-                    required
-                    value={editingProject.excerpt}
-                    onChange={(e) => setEditingProject({ ...editingProject, excerpt: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">Tantangan Lapangan</label>
-                    <textarea
-                      rows={3}
-                      value={editingProject.challenge}
-                      onChange={(e) => setEditingProject({ ...editingProject, challenge: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">Solusi Botani NOVIO</label>
-                    <textarea
-                      rows={3}
-                      value={editingProject.solution}
-                      onChange={(e) => setEditingProject({ ...editingProject, solution: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-4 border-t border-sage/30">
-                  <button type="button" onClick={() => setEditingProject(null)} className="px-5 py-2.5 rounded-lg border border-sage/40 text-charcoal">
-                    Batal
-                  </button>
-                  <button type="submit" className="px-6 py-2.5 rounded-lg bg-forest hover:bg-forest-light text-softwhite font-semibold flex items-center gap-2">
-                    <Save className="w-4 h-4 text-sage" />
-                    <span>Simpan Proyek</span>
                   </button>
                 </div>
               </form>
@@ -1758,203 +1349,6 @@ export default function AdminClient() {
           </div>
         )}
 
-        {/* ------------------------------------------------------------- */}
-        {/* MODAL: EDIT / CREATE LAYANAN */}
-        {/* ------------------------------------------------------------- */}
-        {editingService && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <div
-              className="fixed inset-0 bg-charcoal/70 backdrop-blur-sm"
-              onClick={() => setEditingService(null)}
-            />
-            <div className="relative w-full max-w-2xl bg-softwhite rounded-2xl shadow-2xl border border-sage/40 p-6 sm:p-8 z-10 max-h-[90vh] overflow-y-auto space-y-5">
-              <div className="flex items-center justify-between border-b border-sage/30 pb-3">
-                <h3 className="font-serif text-xl font-medium text-charcoal">
-                  {isCreatingService ? 'Tambah Layanan Baru' : `Edit: ${editingService.title}`}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setEditingService(null)}
-                  className="p-1 text-charcoal-muted hover:text-charcoal"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  let updated = [...servicesList];
-                  if (isCreatingService) {
-                    updated = [editingService, ...servicesList];
-                  } else {
-                    updated = servicesList.map((s) => (s.id === editingService.id ? editingService : s));
-                  }
-                  setServicesList(updated);
-                  persist('services', updated);
-                  setEditingService(null);
-                }}
-                className="space-y-4 text-xs"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">
-                      Nama Layanan *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={editingService.title}
-                      onChange={(e) => {
-                        const title = e.target.value;
-                        const slug = title
-                          .toLowerCase()
-                          .replace(/[^a-z0-9]+/g, '-')
-                          .replace(/(^-|-$)+/g, '');
-                        setEditingService({
-                          ...editingService,
-                          title,
-                          slug: isCreatingService ? slug : editingService.slug,
-                        });
-                      }}
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">
-                      Target Pengguna *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={editingService.targetAudience}
-                      onChange={(e) =>
-                        setEditingService({ ...editingService, targetAudience: e.target.value })
-                      }
-                      placeholder="Vila Mewah, Perkantoran, dsb"
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2 p-3 bg-cream/40 rounded-xl border border-sage/30">
-                  <label className="font-semibold uppercase tracking-wider text-charcoal flex items-center justify-between">
-                    <span>Foto Banner Layanan *</span>
-                    <span className="text-[10px] text-garden">Pilih dari laptop</span>
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="text"
-                      required
-                      value={editingService.coverImage}
-                      onChange={(e) =>
-                        setEditingService({ ...editingService, coverImage: e.target.value })
-                      }
-                      className="flex-1 px-3 py-2 rounded-lg bg-softwhite border border-sage/40 text-charcoal"
-                    />
-                    <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-forest text-softwhite font-semibold text-xs cursor-pointer shrink-0">
-                      <Upload className="w-3.5 h-3.5" />
-                      <span>Upload</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) =>
-                          handleImageUpload(e, (dataUrl) =>
-                            setEditingService({ ...editingService, coverImage: dataUrl })
-                          )
-                        }
-                      />
-                    </label>
-                  </div>
-                  {editingService.coverImage && (
-                    <div className="relative w-24 h-16 rounded-lg overflow-hidden border border-sage/40 mt-1">
-                      <Image src={editingService.coverImage} alt="Preview" fill sizes="96px" className="object-cover" />
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-1">
-                  <label className="font-semibold uppercase tracking-wider text-charcoal">
-                    Tagline Ringkas *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editingService.tagline}
-                    onChange={(e) =>
-                      setEditingService({ ...editingService, tagline: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="font-semibold uppercase tracking-wider text-charcoal">
-                    Deskripsi Lengkap Layanan *
-                  </label>
-                  <textarea
-                    rows={3}
-                    required
-                    value={editingService.description}
-                    onChange={(e) =>
-                      setEditingService({ ...editingService, description: e.target.value })
-                    }
-                    className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">
-                      Model Biaya / Harga
-                    </label>
-                    <input
-                      type="text"
-                      value={editingService.pricingModel}
-                      onChange={(e) =>
-                        setEditingService({ ...editingService, pricingModel: e.target.value })
-                      }
-                      placeholder="cth: Mulai dari Rp 1.500.000"
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="font-semibold uppercase tracking-wider text-charcoal">
-                      Garansi Layanan
-                    </label>
-                    <input
-                      type="text"
-                      value={editingService.guarantee}
-                      onChange={(e) =>
-                        setEditingService({ ...editingService, guarantee: e.target.value })
-                      }
-                      placeholder="cth: Garansi Aklimatisasi 30 Hari"
-                      className="w-full px-3 py-2 rounded-lg bg-cream/40 border border-sage/40 text-charcoal"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-sage/30">
-                  <button
-                    type="button"
-                    onClick={() => setEditingService(null)}
-                    className="px-4 py-2 rounded-lg border border-sage/40 text-charcoal"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-lg bg-forest text-softwhite font-semibold flex items-center gap-2"
-                  >
-                    <Save className="w-4 h-4 text-sage" />
-                    <span>Simpan Layanan</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -33,7 +33,7 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  if (pathname === '/admin/customize') {
+  if (pathname.startsWith('/admin')) {
     return null;
   }
 

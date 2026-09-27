@@ -25,7 +25,7 @@ export default function Footer() {
     }, 4000);
   };
 
-  if (pathname === '/admin/customize') {
+  if (pathname.startsWith('/admin')) {
     return null;
   }
 
