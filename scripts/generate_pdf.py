@@ -654,7 +654,7 @@ html_content = f"""<!DOCTYPE html>
           <td><code>framer-motion</code></td>
           <td>^11.2.6</td>
           <td>Animasi</td>
-          <td>Slider Before-After, transisi accordion, dan baki kurasi drawer.</td>
+          <td>Slider Before-After, transisi accordion, dan modal Quick View.</td>
         </tr>
       </tbody>
     </table>
@@ -715,18 +715,18 @@ html_content = f"""<!DOCTYPE html>
       <li><strong>Auto-Hide Floating Controls:</strong> Tombol status di pojok kiri bawah otomatis disembunyikan saat modal terbuka sehingga tombol aksi <code>[TUTUP JENDELA]</code> dan <code>[SIMPAN]</code> tidak tertimpa.</li>
     </ul>
 
-    <h2>4.2 Baki Kurasi Chef (Chef Curation Tray)</h2>
+    <h2>4.2 Konsultasi Pasokan Dapur &amp; Quick View Interaktif</h2>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="feature-card-title">🍳 Bookmark Cepat Spesimen Komoditas</div>
+        <div class="feature-card-title">🔍 Quick View Spesifikasi &amp; Logistik</div>
         <div class="feature-card-desc">
-          Koki dapat menambahkan produk ke baki kurasi dari halaman katalog atau halaman detail hanya dengan satu ketukan tombol.
+          Koki dan pengelola dapur dapat meninjau mutu, profil rasa, rekomendasi kuliner, dan standar cold-chain langsung tanpa berpindah halaman.
         </div>
       </div>
       <div class="feature-card">
-        <div class="feature-card-title">📝 Rekap Pesanan &amp; Export ke WhatsApp</div>
+        <div class="feature-card-title">💬 Pemesanan Langsung via WhatsApp &amp; Brief</div>
         <div class="feature-card-desc">
-          Baki kurasi otomatis menyusun daftar komoditas terpilih menjadi pesan teks terformat rapi dan membuka aplikasi WhatsApp tim penjualan NOVIO.
+          Tautan WhatsApp terformat rapi sesuai produk yang dilihat, serta integrasi formulir brief pasokan untuk pesanan batch rutin restoran.
         </div>
       </div>
     </div>
@@ -870,7 +870,7 @@ export interface ServicePackage {{
         <tr>
           <td><code>/product</code></td>
           <td>Static + Client Filter</td>
-          <td>Katalog lengkap produk panen dengan filter kategori instan &amp; baki kurasi.</td>
+          <td>Katalog lengkap produk panen dengan filter kategori instan &amp; quick view.</td>
         </tr>
         <tr>
           <td><code>/product/[slug]</code></td>
@@ -1022,7 +1022,7 @@ export interface ServicePackage {{
         <tr>
           <td><strong>Fase 2</strong></td>
           <td>Hybrid Cloud &amp; Zero-Bleed Modal</td>
-          <td>Integrasi Supabase Cloud, kunci scroll, baki kurasi chef, dan responsive touch mobile.</td>
+          <td>Integrasi Supabase Cloud, kunci scroll, Product Quick View modal, dan responsive touch mobile.</td>
           <td><span style="color: #16A34A; font-weight: bold;">SELESAI</span></td>
         </tr>
         <tr>

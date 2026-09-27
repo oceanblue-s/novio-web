@@ -14,7 +14,6 @@ import {
   Flame,
 } from 'lucide-react';
 import SectionTitle from '@/components/SectionTitle';
-import { useChefCuration } from '@/context/ChefCurationContext';
 
 interface HarvestItem {
   id: string;
@@ -130,7 +129,6 @@ const HARVEST_ITEMS: HarvestItem[] = [
 
 export default function HarvestCalendarBanner() {
   const [filter, setFilter] = useState<'all' | 'bunga' | 'tisane' | 'fermentasi' | 'sayur'>('all');
-  const { openDrawer } = useChefCuration();
 
   const filteredItems = filter === 'all'
     ? HARVEST_ITEMS
@@ -260,14 +258,13 @@ export default function HarvestCalendarBanner() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
-              <button
-                type="button"
-                onClick={openDrawer}
+              <Link
+                href="/product"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-garden hover:bg-garden-light text-softwhite font-bold text-xs uppercase tracking-wider shadow-md hover:scale-105 transition-all"
               >
-                <span>Buka Baki Kurasi Chef</span>
+                <span>Jelajahi Produk Panen</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
               <Link
                 href="/contact"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40 font-semibold text-xs uppercase tracking-wider transition-all"

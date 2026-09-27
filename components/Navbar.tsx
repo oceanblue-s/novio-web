@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { navItems, siteConfig } from '@/data/site';
-import { Menu, X, ArrowUpRight, Search, ChefHat } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Search } from 'lucide-react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useChefCuration } from '@/context/ChefCurationContext';
 import { useSiteData } from '@/context/SiteDataContext';
@@ -14,7 +14,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { openCommandPalette, openDrawer, curatedItems } = useChefCuration();
+  const { openCommandPalette } = useChefCuration();
   const { isEditMode, isPreviewMode } = useSiteData();
   const showEditBar = isEditMode && !isPreviewMode;
 
@@ -111,26 +111,6 @@ export default function Navbar() {
             </kbd>
           </button>
 
-          {/* Chef Curation Tray Trigger */}
-          <button
-            type="button"
-            onClick={openDrawer}
-            className={`relative p-2 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sage hover:scale-105 ${
-              curatedItems.length > 0
-                ? 'bg-garden/40 text-softwhite border border-garden/60 shadow-md ring-2 ring-garden/30'
-                : 'bg-cream/15 hover:bg-cream/25 text-cream border border-sage/40'
-            }`}
-            aria-label={`Baki Kurasi Chef (${curatedItems.length} item)`}
-            title="Baki Kurasi Chef"
-          >
-            <ChefHat className="w-4 h-4 text-sage" />
-            {curatedItems.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 px-1.5 min-w-[18px] h-[18px] rounded-full bg-garden text-softwhite text-[10px] font-extrabold flex items-center justify-center shadow-md animate-pulse">
-                {curatedItems.length}
-              </span>
-            )}
-          </button>
-
           {/* Language Switcher */}
           <LanguageSwitcher />
 
@@ -184,24 +164,6 @@ export default function Navbar() {
               <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-forest/80 rounded border border-sage/30 text-sage">
                 Cari
               </kbd>
-            </button>
-
-            {/* Mobile Chef Curation Tray */}
-            <button
-              type="button"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                openDrawer();
-              }}
-              className="flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-cream/15 text-cream border border-sage/40 text-xs font-semibold uppercase tracking-wider text-left"
-            >
-              <div className="flex items-center gap-2">
-                <ChefHat className="w-4 h-4 text-sage" />
-                <span>Baki Kurasi Chef</span>
-              </div>
-              <span className="w-5 h-5 rounded-full bg-garden text-softwhite text-[11px] font-bold flex items-center justify-center">
-                {curatedItems.length}
-              </span>
             </button>
 
             {navItems.map((item) => {

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard';
-import { useChefCuration } from '@/context/ChefCurationContext';
 import { useSiteData } from '@/context/SiteDataContext';
 import {
   Search,
@@ -13,7 +13,6 @@ import {
   Wind,
   Sparkles,
   X,
-  ChefHat,
   ArrowUpDown,
   ArrowRight,
   Plus,
@@ -31,7 +30,6 @@ const ENVIRONMENTS = [
 ];
 
 export default function ProductCatalogClient({ initialProducts }: ProductCatalogClientProps) {
-  const { openDrawer, curatedItems } = useChefCuration();
   const { products: siteProducts, isEditMode, isPreviewMode, openCreateProduct } = useSiteData();
   const activeProducts = siteProducts ?? initialProducts;
 
@@ -81,30 +79,28 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
 
   return (
     <div className="max-w-7xl mx-auto px-6 sm:px-8 py-16">
-      {/* Chef Curation Welcome Banner */}
+      {/* Supply & Sourcing Welcome Banner */}
       <div className="mb-10 bg-gradient-to-r from-forest to-forest-light text-softwhite rounded-2xl p-6 sm:p-8 shadow-sm border border-sage/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-1.5 max-w-2xl">
           <div className="inline-flex items-center gap-2 text-sage text-xs font-semibold uppercase tracking-wider">
-            <ChefHat className="w-4 h-4" />
-            <span>Layanan Uji Coba & Sampel Dapur Restoran</span>
+            <Sparkles className="w-4 h-4" />
+            <span>Pasokan Komoditas &amp; Produk Artisan Terkurasi</span>
           </div>
           <h2 className="font-serif text-2xl font-medium text-cream">
-            Kurasi Sampel Kuliner untuk Chef Profesional
+            Bahan Baku Segar Langsung dari Kebun Mitra
           </h2>
           <p className="text-xs sm:text-sm text-cream/80 leading-relaxed">
-            Klik tombol <strong>&quot;+ Kurasi Chef&quot;</strong> pada setiap kartu produk untuk mengumpulkan daftar bahan yang ingin Anda uji coba, lalu ajukan permintaan sampel langsung via WhatsApp.
+            Jelajahi seluruh varietas tanaman pangan, komoditas fermentasi, dan herbal artisan. Butuh jadwal panen khusus atau kontrak pasokan rutin? Tim kami siap melayani kebutuhan dapur Anda.
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={openDrawer}
+        <Link
+          href="/brief"
           className="inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-garden hover:bg-garden-light text-softwhite font-semibold text-xs uppercase tracking-wider transition-all shadow-md shrink-0"
         >
-          <ChefHat className="w-4 h-4" />
-          <span>Buka Baki Kurasi ({curatedItems.length})</span>
+          <span>Buat Brief Pasokan</span>
           <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        </Link>
       </div>
 
       {/* In-Context Admin Edit Action Banner */}

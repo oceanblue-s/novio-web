@@ -10,7 +10,6 @@ import { LiveCustomizerProvider } from '@/context/LiveCustomizerContext';
 import { SiteDataProvider } from '@/context/SiteDataContext';
 import VisualEditBar from '@/components/VisualEditBar';
 import { ChefCurationProvider } from '@/context/ChefCurationContext';
-import ChefCurationDrawer from '@/components/ChefCurationDrawer';
 import CommandPalette from '@/components/CommandPalette';
 import ProductQuickViewModal from '@/components/ProductQuickViewModal';
 
@@ -196,7 +195,6 @@ export default function RootLayout({
               <main className="flex-grow">{children}</main>
               <Footer />
               <WhatsAppBubble />
-              <ChefCurationDrawer />
               <CommandPalette />
               <ProductQuickViewModal />
               <AmbientAudioToggle />

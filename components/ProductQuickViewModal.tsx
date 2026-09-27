@@ -7,8 +7,6 @@ import { useChefCuration } from '@/context/ChefCurationContext';
 import { siteConfig } from '@/data/site';
 import {
   X,
-  ChefHat,
-  Check,
   MessageSquare,
   ArrowRight,
   Sparkles,
@@ -18,32 +16,10 @@ import {
 } from 'lucide-react';
 
 export default function ProductQuickViewModal() {
-  const {
-    quickViewProduct,
-    closeQuickView,
-    addItem,
-    removeItem,
-    isItemCurated,
-    openDrawer,
-  } = useChefCuration();
-
+  const { quickViewProduct, closeQuickView } = useChefCuration();
   const [activeTab, setActiveTab] = React.useState<'specs' | 'culinary' | 'harvest'>('specs');
-  const [justAdded, setJustAdded] = React.useState(false);
 
   if (!quickViewProduct) return null;
-
-  const isCurated = isItemCurated(quickViewProduct.id);
-
-  const handleToggleCurate = () => {
-    if (isCurated) {
-      removeItem(quickViewProduct.id);
-      setJustAdded(false);
-    } else {
-      addItem(quickViewProduct);
-      setJustAdded(true);
-      setTimeout(() => setJustAdded(false), 2000);
-    }
-  };
 
   const whatsappInquiryUrl = `https://wa.me/${siteConfig.whatsappTarget}?text=${encodeURIComponent(
     `Halo NOVIO, saya sedang melihat produk "${quickViewProduct.name}" (Kategori: ${quickViewProduct.category}) dan ingin menanyakan ketersediaan serta harga B2B/sampel untuk dapur kami.`
@@ -229,7 +205,7 @@ export default function ProductQuickViewModal() {
                 {quickViewProduct.chefNotes && (
                   <div className="p-3 bg-garden/10 border-l-4 border-garden rounded-r-lg text-xs space-y-1">
                     <span className="font-bold text-forest uppercase tracking-wider text-[10px] block">
-                      Catatan Kurasi Chef:
+                      Catatan Kuliner Chef:
                     </span>
                     <p className="text-charcoal italic leading-relaxed">
                       &quot;{quickViewProduct.chefNotes}&quot;
@@ -268,29 +244,6 @@ export default function ProductQuickViewModal() {
           {/* Action Footer */}
           <div className="pt-4 border-t border-sage/30 space-y-2.5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {/* Add to Curation Tray Button */}
-              <button
-                type="button"
-                onClick={handleToggleCurate}
-                className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md ${
-                  isCurated
-                    ? 'bg-garden hover:bg-forest text-softwhite ring-2 ring-garden/40'
-                    : 'bg-forest hover:bg-forest-light text-softwhite hover:scale-[1.02]'
-                }`}
-              >
-                {justAdded ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-300 animate-bounce" />
-                    <span>Ditambahkan ke Baki!</span>
-                  </>
-                ) : (
-                  <>
-                    <ChefHat className="w-4 h-4 text-sage" />
-                    <span>{isCurated ? 'Di Baki Kurasi (Klik Hapus)' : '+ Baki Kurasi Chef'}</span>
-                  </>
-                )}
-              </button>
-
               {/* WhatsApp Direct Inquiry */}
               <a
                 href={whatsappInquiryUrl}
@@ -299,31 +252,28 @@ export default function ProductQuickViewModal() {
                 className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider shadow-md hover:scale-[1.02] transition-all"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>Tanya WhatsApp</span>
+                <span>Konsultasi via WhatsApp</span>
               </a>
-            </div>
 
-            {/* View Full Detail Page Link */}
-            <div className="text-center pt-1 flex items-center justify-between text-xs">
-              {isCurated && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeQuickView();
-                    openDrawer();
-                  }}
-                  className="text-garden hover:text-forest underline font-semibold"
-                >
-                  Buka Baki Kurasi Sekarang →
-                </button>
-              )}
+              {/* View Full Detail Page Link */}
               <Link
                 href={`/product/${quickViewProduct.slug}`}
                 onClick={closeQuickView}
-                className="ml-auto inline-flex items-center gap-1.5 font-semibold text-garden hover:text-forest transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-forest hover:bg-forest-light text-softwhite text-xs font-bold uppercase tracking-wider shadow-md hover:scale-[1.02] transition-all"
               >
-                <span>Halaman Spesifikasi Lengkap</span>
+                <span>Halaman Spesifikasi</span>
                 <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* View Project Brief Link */}
+            <div className="text-center pt-1 text-xs">
+              <Link
+                href="/brief"
+                onClick={closeQuickView}
+                className="text-charcoal-muted hover:text-garden transition-colors"
+              >
+                Ingin pasokan rutin atau kontrak B2B khusus? <span className="underline font-semibold text-garden">Kirimkan Brief Kebutuhan →</span>
               </Link>
             </div>
           </div>

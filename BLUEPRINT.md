@@ -126,10 +126,10 @@ Salah satu keunggulan terbesar NOVIO Web adalah **Arsitektur Data Hibrida 5 Lapi
   - *Body Scroll Lock*: Scroll halaman belakang otomatis terkunci saat modal terbuka.
   - Tombol melayang di pojok kiri bawah otomatis tersembunyi saat modal aktif.
 
-### 4.2 Baki Kurasi Chef & Pengadaan (*Chef Curation Tray*)
-- Dirancang khusus untuk klien B2B (Chef Eksekutif, Manajer F&B Hotel, Konsultan Kafe).
-- Pengunjung dapat menekan tombol `+ Tambah ke Baki Kurasi` pada produk komoditas mana saja.
-- Drawer baki kurasi (`ChefDrawer.tsx`) menghitung total komoditas, estimasi kebutuhan porsi, dan otomatis menyusun pesan format pemesanan instan ke WhatsApp.
+### 4.2 Konsultasi Pasokan Dapur & Quick View Interaktif
+- Dirancang khusus untuk mempermudah pemesanan bahan baku dan sampel kuliner oleh Chef Eksekutif, Manajer F&B Hotel, dan Konsultan Kafe.
+- Modal *Product Quick View* (`ProductQuickViewModal.tsx`) menampilkan spesifikasi mutu, profil rasa, rekomendasi aplikasi kuliner, serta rincian logistik cold-chain tanpa berpindah halaman.
+- CTA terintegrasi langsung menghasilkan pesan WhatsApp terformat rapi sesuai produk yang sedang dilihat, serta tautan pembuatan brief pasokan rutin.
 
 ### 4.3 Wizard Pembuat Brief Proyek Biofilik (`ProjectBriefWizard.tsx`)
 - Alur 4 langkah interaktif untuk klien lanskap arsitektur:
@@ -192,7 +192,7 @@ novio-web/
 │   ├── TeamCard.tsx                    # Kartu anggota tim & spesialis
 │   ├── BeforeAfterSlider.tsx           # Slider visual Before-After portofolio
 │   ├── CommandPalette.tsx              # Modal pencarian cepat (Ctrl+K)
-│   ├── ChefCurationDrawer.tsx          # Laci baki kurasi produk & rekap WA
+│   ├── ProductQuickViewModal.tsx       # Modal ringkasan cepat spesifikasi & mutu produk
 │   ├── ProjectBriefWizard.tsx          # Wizard brief proyek biofilik 4-step
 │   ├── GoogleMap.tsx                   # Peta interaktif studio kebun
 │   ├── OfficeCard.tsx                  # Kartu detail alamat kantor Bandung/Bali
@@ -200,7 +200,7 @@ novio-web/
 │   └── LanguageSwitcher.tsx            # Pengalih bahasa ID / EN
 ├── context/                            # React State & Context Providers
 │   ├── SiteDataContext.tsx             # State sentral CRUD, Supabase sync, & 15 modal
-│   ├── ChefCurationContext.tsx         # State baki kurasi produk & drawer
+│   ├── ChefCurationContext.tsx         # State pencarian ⌘K & Product Quick View modal
 │   └── LiveCustomizerContext.tsx       # State kustomisasi teks dan heading dinamis
 ├── data/                               # Seed Data Statis Default
 │   ├── products.ts                     # Katalog produk default
@@ -362,7 +362,7 @@ CREATE POLICY "Allow Insert and Update Site Sections"
 |---|---|---|---|
 | `/` | Beranda | SSG (Static) | Hero banner, nilai komitmen, cuplikan produk, tim, artikel terbaru, & CTA. |
 | `/about` | Profil Perusahaan | SSG (Static) | Filosofi botani, profil studio Parongpong & Nusa Dua, serta sertifikasi. |
-| `/product` | Katalog Produk | SSG (Static + Client Filter) | Filter kategori instan, pencarian, & tombol baki kurasi chef. |
+| `/product` | Katalog Produk | SSG (Static + Client Filter) | Filter kategori instan, pencarian, & modal quick view produk. |
 | `/product/[slug]` | Detail Produk | SSG (Dynamic Paths) | Galeri foto spesimen, spesifikasi teknis, catatan chef, & tombol order WA. |
 | `/services` | Halaman Layanan | SSG (Static) | Paket layanan biofilik, timeline alur kerja, & FAQ terperinci. |
 | `/portfolio` | Galeri Portofolio | SSG (Static) | Filter kategori proyek lanskap resort, residensial, & kafe. |
@@ -436,7 +436,7 @@ CREATE POLICY "Allow Insert and Update Site Sections"
 ```
 
 1. **Fase 1 (Selesai):** Pembuatan fondasi App Router Next.js, implementasi katalog produk, portofolio, jurnal botani, formulir kontak ganda, dan mode edit visual di halaman.
-2. **Fase 2 (Selesai):** Integrasi hybrid database Supabase, perbaikan modal anti-bleedthrough, penguncian scroll, baki kurasi chef, pencarian Command Palette ⌘K, dan optimasi mobile responsif.
+2. **Fase 2 (Selesai):** Integrasi hybrid database Supabase, perbaikan modal anti-bleedthrough, penguncian scroll, Product Quick View modal, pencarian Command Palette ⌘K, dan optimasi mobile responsif.
 3. **Fase 3 (Masa Depan):**
    - **Payment Gateway Langsung:** Integrasi Midtrans / Xendit untuk pembayaran langsung sampel produk tisane dan cuka artisan.
    - **PWA Lengkap (*Progressive Web App*):** Dukungan instalasi aplikasi langsung di homescreen Android & iOS dengan kemampuan offline penuh.

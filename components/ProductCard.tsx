@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/types';
-import { ArrowUpRight, Eye, ChefHat, Check, Pencil, Trash2 } from 'lucide-react';
+import { ArrowUpRight, Eye, Pencil, Trash2 } from 'lucide-react';
 import { useChefCuration } from '@/context/ChefCurationContext';
 import { useSiteData } from '@/context/SiteDataContext';
 
@@ -13,19 +13,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { openQuickView, addItem, removeItem, isItemCurated } = useChefCuration();
+  const { openQuickView } = useChefCuration();
   const { isEditMode, isPreviewMode, openEditProduct, deleteProduct } = useSiteData();
-  const isCurated = isItemCurated(product.id);
-
-  const handleToggleCurate = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isCurated) {
-      removeItem(product.id);
-    } else {
-      addItem(product);
-    }
-  };
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -109,29 +98,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Quick Action Floating Overlay on Card Image */}
-        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
           <button
             type="button"
             onClick={handleQuickView}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-softwhite/95 hover:bg-softwhite text-charcoal text-xs font-semibold uppercase tracking-wider shadow-md backdrop-blur-sm border border-sage/40 transition-transform active:scale-95"
+            className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-softwhite/95 hover:bg-softwhite text-charcoal text-xs font-semibold uppercase tracking-wider shadow-md backdrop-blur-sm border border-sage/40 transition-transform active:scale-95"
             aria-label={`Lihat cepat ${product.name}`}
           >
             <Eye className="w-3.5 h-3.5 text-garden" />
             <span>Lihat Cepat</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleToggleCurate}
-            className={`p-2 rounded-lg text-xs font-semibold shadow-md backdrop-blur-sm border transition-all active:scale-95 ${
-              isCurated
-                ? 'bg-garden text-softwhite border-garden shadow-garden/25'
-                : 'bg-forest/90 hover:bg-forest text-softwhite border-sage/40'
-            }`}
-            aria-label={isCurated ? 'Hapus dari baki kurasi' : 'Tambah ke baki kurasi chef'}
-            title={isCurated ? 'Sudah di baki kurasi chef' : 'Tambah ke baki kurasi chef'}
-          >
-            {isCurated ? <Check className="w-4 h-4" /> : <ChefHat className="w-4 h-4 text-sage" />}
           </button>
         </div>
       </div>
@@ -154,24 +129,15 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Action Button */}
         <div className="pt-4 border-t border-cream-dark flex items-center justify-between">
-          <button
-            type="button"
-            onClick={handleToggleCurate}
-            className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
-              isCurated
-                ? 'text-garden hover:text-garden-light font-bold'
-                : 'text-charcoal-muted hover:text-charcoal'
-            }`}
-          >
-            <ChefHat className={`w-3.5 h-3.5 ${isCurated ? 'text-garden' : 'text-sage'}`} />
-            <span>{isCurated ? 'Di Baki Kurasi' : '+ Kurasi Chef'}</span>
-          </button>
+          <span className="text-xs text-charcoal/60 font-medium">
+            {product.origin || 'Kebun NOVIO'}
+          </span>
 
           <Link
             href={`/product/${product.slug}`}
             className="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-garden group-hover:text-forest transition-colors"
           >
-            <span>Detail</span>
+            <span>Lihat Detail</span>
             <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>

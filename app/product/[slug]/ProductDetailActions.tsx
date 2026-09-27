@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Product } from '@/types';
-import { useChefCuration } from '@/context/ChefCurationContext';
-import { ChefHat, Check, MessageSquare, Sparkles, Pencil } from 'lucide-react';
+import { MessageSquare, Sparkles, Pencil, FileText } from 'lucide-react';
 import { useSiteData } from '@/context/SiteDataContext';
 
 interface ProductDetailActionsProps {
@@ -15,19 +15,7 @@ export default function ProductDetailActions({
   product,
   whatsappInquiryUrl,
 }: ProductDetailActionsProps) {
-  const { isItemCurated, addItem, removeItem, openDrawer } = useChefCuration();
   const { isEditMode, isPreviewMode, openEditProduct } = useSiteData();
-  const isCurated = isItemCurated(product.id);
-
-  const handleToggle = () => {
-    if (isCurated) {
-      removeItem(product.id);
-    } else {
-      addItem(product);
-      // Open drawer to give instant feedback
-      openDrawer();
-    }
-  };
 
   return (
     <div className="p-6 rounded-xl bg-cream border border-sage/40 mb-8 space-y-4">
@@ -54,41 +42,13 @@ export default function ProductDetailActions({
           <Sparkles className="w-4 h-4" />
           <span>Pemesanan &amp; Konsultasi Pasokan Dapur</span>
         </div>
-        {isCurated && (
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-garden bg-softwhite px-2 py-0.5 rounded-full border border-sage/40">
-            Tersimpan di Baki
-          </span>
-        )}
       </div>
 
       <p className="text-xs text-charcoal/70 leading-relaxed">
-        Setiap produk diolah dengan standar kualitas tertinggi. Tambahkan produk ini ke Baki Kurasi untuk meminta sampel uji dapur, atau hubungi tim kami langsung via WhatsApp.
+        Setiap produk dipanen dan diolah dengan standar kualitas tertinggi. Hubungi tim kami langsung via WhatsApp untuk ketersediaan jadwal panen dan sampel, atau ajukan brief pasokan untuk kebutuhan reguler restoran Anda.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Add to Chef's Curation Tray */}
-        <button
-          type="button"
-          onClick={handleToggle}
-          className={`flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all shadow-xs ${
-            isCurated
-              ? 'bg-garden hover:bg-garden-light text-softwhite shadow-sm'
-              : 'bg-forest hover:bg-forest-light text-softwhite'
-          }`}
-        >
-          {isCurated ? (
-            <>
-              <Check className="w-4 h-4" />
-              <span>Sudah di Baki Kurasi</span>
-            </>
-          ) : (
-            <>
-              <ChefHat className="w-4 h-4 text-sage" />
-              <span>+ Baki Kurasi Chef</span>
-            </>
-          )}
-        </button>
-
         {/* WhatsApp Inquiry */}
         <a
           href={whatsappInquiryUrl}
@@ -97,8 +57,17 @@ export default function ProductDetailActions({
           className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs tracking-wider uppercase transition-all shadow-xs"
         >
           <MessageSquare className="w-4 h-4" />
-          <span>Tanya WhatsApp</span>
+          <span>Hubungi via WhatsApp</span>
         </a>
+
+        {/* Buat Brief Pasokan */}
+        <Link
+          href="/brief"
+          className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-forest hover:bg-forest-light text-softwhite font-semibold text-xs tracking-wider uppercase transition-all shadow-xs"
+        >
+          <FileText className="w-4 h-4 text-sage" />
+          <span>Buat Brief Pasokan</span>
+        </Link>
       </div>
     </div>
   );
