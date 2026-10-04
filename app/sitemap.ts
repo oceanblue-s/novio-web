@@ -1,7 +1,6 @@
 import { MetadataRoute } from 'next';
 import { products } from '@/data/products';
 import { blogPosts } from '@/data/blog';
-import { portfolioProjects } from '@/data/portfolio';
 import { siteConfig } from '@/data/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -22,22 +21,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/services`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
       url: `${baseUrl}/product`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/portfolio`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.85,
     },
     {
       url: `${baseUrl}/blog`,
@@ -51,12 +38,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/brief`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.85,
-    },
   ];
 
   // Dynamic product routes
@@ -69,14 +50,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     }));
 
-  // Dynamic portfolio case study routes
-  const portfolioRoutes: MetadataRoute.Sitemap = portfolioProjects.map((project) => ({
-    url: `${baseUrl}/portfolio/${project.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
-
   // Dynamic blog routes
   const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
@@ -85,5 +58,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.75,
   }));
 
-  return [...staticRoutes, ...productRoutes, ...portfolioRoutes, ...blogRoutes];
+  return [...staticRoutes, ...productRoutes, ...blogRoutes];
 }

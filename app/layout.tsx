@@ -31,7 +31,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://novio-web.vercel.app'),
+  metadataBase: new URL('https://noviotrade.com'),
   title: {
     default: 'NOVIO — Komponen Kuliner Alami × Hasil Tani Artisan Indonesia',
     template: '%s | NOVIO',
@@ -58,11 +58,11 @@ export const metadata: Metadata = {
     'Petani Lokal Parongpong',
     'Nusa Dua Bali',
   ],
-  authors: [{ name: 'PT. Novio Berkah Bersaudara', url: 'https://novio-web.vercel.app' }],
+  authors: [{ name: 'PT. Novio Berkah Bersaudara', url: 'https://noviotrade.com' }],
   creator: 'PT. Novio Berkah Bersaudara',
   publisher: 'NOVIO',
   alternates: {
-    canonical: 'https://novio-web.vercel.app',
+    canonical: 'https://noviotrade.com',
   },
   icons: {
     icon: '/novio-logo.png',
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'id_ID',
-    url: 'https://novio-web.vercel.app',
+    url: 'https://noviotrade.com',
     siteName: 'NOVIO',
     title: 'NOVIO — Komponen Kuliner Alami × Hasil Tani Artisan Indonesia',
     description:
@@ -116,8 +116,8 @@ export default function RootLayout({
     '@type': 'Organization',
     name: 'PT. Novio Berkah Bersaudara',
     alternateName: 'NOVIO',
-    url: 'https://novio-web.vercel.app',
-    logo: 'https://novio-web.vercel.app/novio-logo.png',
+    url: 'https://noviotrade.com',
+    logo: 'https://noviotrade.com/novio-logo.png',
     description:
       'Penyedia komponen kuliner alami dan hasil tani artisan Indonesia untuk para chef profesional, hotel, restoran, dan penikmat kuliner.',
     foundingLocation: 'Demak, Jawa Tengah, Indonesia',
@@ -164,7 +164,7 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'NOVIO',
-    url: 'https://novio-web.vercel.app',
+    url: 'https://noviotrade.com',
     description: 'Komponen Kuliner Alami × Hasil Tani Artisan Indonesia',
     inLanguage: 'id-ID',
     publisher: {
