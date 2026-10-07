@@ -38,6 +38,7 @@ import {
   CheckCircle2,
   Sparkles,
   ArrowRight,
+  Settings,
 } from 'lucide-react';
 
 const ADMIN_PIN = 'novio2026';
@@ -254,6 +255,15 @@ export default function AdminClient() {
             >
               <Sparkles className="w-3.5 h-3.5 text-cream" />
               <span>Mode Edit Visual On-Page</span>
+            </Link>
+
+            <Link
+              href="/setup"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-900/70 hover:bg-blue-800 text-blue-200 border border-blue-700/50 text-xs font-semibold uppercase tracking-wider transition-all"
+              title="Konfigurasi database dan verifikasi layanan"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Setup Wizard</span>
             </Link>
 
             <Link
